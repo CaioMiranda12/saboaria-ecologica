@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { historiaDaMarca, contatosDaMarca } from '../../data/marca'
+import { historiaDaMarca, contatosDaMarca } from '@/data/marca'
 
 // ─────────────────────────────────────────────────────────────
 // Preencha os caminhos das imagens aqui.
