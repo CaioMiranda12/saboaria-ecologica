@@ -8,7 +8,7 @@ const EtapaTimeline = ({ etapa, ultima }: Props) => {
       {/* Coluna esquerda: número + linha */}
       <div className="flex flex-col items-center">
         <div className="relative flex flex-col items-center pb-6 md:pb-10 w-full">
-          <div className="w-11 h-11 md:w-14 md:h-14 rounded-full bg-verde-principal text-white font-serif text-lg md:text-xl font-bold flex items-center justify-center z-10 flex-shrink-0">
+          <div className="w-11 h-11 md:w-14 md:h-14 rounded-full bg-verde-principal text-white font-serif text-lg md:text-xl font-bold flex items-center justify-center z-10 shrink-0">
             {etapa.numero}
           </div>
           {!ultima && (

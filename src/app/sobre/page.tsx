@@ -152,11 +152,11 @@ const ods = [
 
 const Sobre = () => {
   return (
-    <div className="bg-[#f7f3ec] text-[#1a2e1f]">
+    <div className="bg-creme text-[#1a2e1f]">
 
       {/* Hero */}
-      <section className="bg-[#396824] pt-28 pb-16 md:pb-20 px-6 md:px-20 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-center relative overflow-hidden">
-        <div className="absolute top-[-80px] right-[-80px] w-96 h-96 rounded-full bg-white/[0.04]" />
+      <section className="bg-verde-principal pt-28 pb-16 md:pb-20 px-6 md:px-20 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-center relative overflow-hidden">
+        <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-white/4" />
         <div className="relative z-10">
           <span className="inline-flex items-center gap-2 bg-white/10 text-white/80 px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-6 w-fit">
             Nossa história
@@ -189,24 +189,24 @@ const Sobre = () => {
       </section>
 
       {/* Missão, Visão e Valores */}
-      <div className="grid grid-cols-1 md:grid-cols-3 bg-white border-t border-[#396824]/10">
+      <div className="grid grid-cols-1 md:grid-cols-3 bg-white border-t border-verde-principal/10">
         {pilaresInstitucionais.map((pilar, i) => (
-          <div key={pilar.titulo} className={`p-8 md:p-10 ${i < 2 ? 'border-b md:border-b-0 md:border-r border-[#396824]/10' : ''}`}>
-            <div className="w-12 h-12 rounded-xl bg-[#e8f0e9] flex items-center justify-center mb-5">
+          <div key={pilar.titulo} className={`p-8 md:p-10 ${i < 2 ? 'border-b md:border-b-0 md:border-r border-verde-principal/10' : ''}`}>
+            <div className="w-12 h-12 rounded-xl bg-verde-claro flex items-center justify-center mb-5">
               {pilar.icone}
             </div>
-            <p className="text-xs font-medium tracking-widest uppercase text-[#396824] mb-2">{pilar.titulo}</p>
-            <p className="text-sm text-[#5a6b5e] leading-relaxed font-light">{pilar.texto}</p>
+            <p className="text-xs font-medium tracking-widest uppercase text-verde-principal mb-2">{pilar.titulo}</p>
+            <p className="text-sm text-verde-muted leading-relaxed font-light">{pilar.texto}</p>
           </div>
         ))}
       </div>
 
       {/* História + Números */}
-      <section className="grid grid-cols-1 md:grid-cols-2 border-t border-[#396824]/10">
-        <div className="px-6 md:px-20 py-16 md:py-20 bg-[#f7f3ec] flex flex-col gap-5">
-          <p className="text-xs font-medium tracking-widest uppercase text-[#396824]">Nossa trajetória</p>
-          <h2 className="font-serif text-3xl md:text-4xl text-[#396824] leading-tight">
-            Transformar resíduos em <em className="text-[#396824]">soluções reais</em>
+      <section className="grid grid-cols-1 md:grid-cols-2 border-t border-verde-principal/10">
+        <div className="px-6 md:px-20 py-16 md:py-20 bg-creme flex flex-col gap-5">
+          <p className="text-xs font-medium tracking-widest uppercase text-verde-principal">Nossa trajetória</p>
+          <h2 className="font-serif text-3xl md:text-4xl text-verde-principal leading-tight">
+            Transformar resíduos em <em className="text-verde-principal">soluções reais</em>
           </h2>
           {imagensDaPagina.trajetoria && (
             <div className="rounded-2xl overflow-hidden h-52 md:h-full">
@@ -217,7 +217,7 @@ const Sobre = () => {
               />
             </div>
           )}
-          <div className="flex flex-col gap-4 text-[#5a6b5e] text-sm leading-relaxed font-light">
+          <div className="flex flex-col gap-4 text-verde-muted text-sm leading-relaxed font-light">
             <p>
               A Saboaria Ecológica nasceu da observação de um problema cotidiano e silencioso: o descarte incorreto do óleo de cozinha usado. No Brasil, esse resíduo é frequentemente jogado no esgoto ou no solo, e cada litro descartado dessa forma é capaz de contaminar até 25.000 litros de água potável — um dano ambiental invisível, mas imenso.
             </p>
@@ -232,7 +232,7 @@ const Sobre = () => {
             </p>
           </div>
         </div>
-        <div className="bg-[#396824] px-6 md:px-16 py-16 md:py-20 flex flex-col justify-center gap-5">
+        <div className="bg-verde-principal px-6 md:px-16 py-16 md:py-20 flex flex-col justify-center gap-5">
           <p className="text-white/60 text-xs font-medium tracking-widest uppercase">Impacto consolidado 2023–2025</p>
           {numerosDeImpacto.map((item) => (
             <div key={item.numero} className="bg-white/10 border border-white/15 rounded-2xl p-6">
@@ -244,12 +244,12 @@ const Sobre = () => {
       </section>
 
       {/* Evolução anual */}
-      <section className="px-6 md:px-20 py-16 md:py-20 bg-white border-t border-[#396824]/10">
-        <p className="text-xs font-medium tracking-widest uppercase text-[#396824] mb-3">Crescimento ano a ano</p>
-        <h2 className="font-serif text-3xl md:text-4xl text-[#396824] mb-4">
-          Evolução do <em className="text-[#396824]">impacto socioambiental</em>
+      <section className="px-6 md:px-20 py-16 md:py-20 bg-white border-t border-verde-principal/10">
+        <p className="text-xs font-medium tracking-widest uppercase text-verde-principal mb-3">Crescimento ano a ano</p>
+        <h2 className="font-serif text-3xl md:text-4xl text-verde-principal mb-4">
+          Evolução do <em className="text-verde-principal">impacto socioambiental</em>
         </h2>
-        <p className="text-[#5a6b5e] font-light text-sm leading-relaxed max-w-2xl mb-8">
+        <p className="text-verde-muted font-light text-sm leading-relaxed max-w-2xl mb-8">
           Em apenas três anos de atuação, a Saboaria Ecológica multiplicou por mais de quinze vezes o número de mulheres atendidas e quadruplicou o volume de óleo reaproveitado. Cada ano representa uma fase distinta de crescimento, com aprendizados, conquistas e desafios que moldaram o projeto que existe hoje.
         </p>
         {imagensDaPagina.oficina && (
@@ -263,35 +263,35 @@ const Sobre = () => {
         )}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {evolucaoAnual.map((ano) => (
-            <div key={ano.ano} className="border border-[#396824]/15 rounded-2xl p-6 flex flex-col gap-4">
+            <div key={ano.ano} className="border border-verde-principal/15 rounded-2xl p-6 flex flex-col gap-4">
               <div className="flex items-center justify-between">
-                <span className="font-serif text-3xl font-bold text-[#396824]">{ano.ano}</span>
-                <span className="text-xs font-medium uppercase tracking-widest bg-[#e8f0e9] text-[#396824] px-3 py-1 rounded-full">
+                <span className="font-serif text-3xl font-bold text-verde-principal">{ano.ano}</span>
+                <span className="text-xs font-medium uppercase tracking-widest bg-verde-claro text-verde-principal px-3 py-1 rounded-full">
                   {ano.fase}
                 </span>
               </div>
-              <p className="text-xs text-[#5a6b5e] font-light leading-relaxed">{ano.descricao}</p>
-              <div className="grid grid-cols-2 gap-3 text-xs text-[#5a6b5e]">
-                <div className="bg-[#f7f3ec] rounded-xl p-3">
-                  <p className="font-semibold text-[#2d4f38] text-base">{ano.mulheres}</p>
+              <p className="text-xs text-verde-muted font-light leading-relaxed">{ano.descricao}</p>
+              <div className="grid grid-cols-2 gap-3 text-xs text-verde-muted">
+                <div className="bg-creme rounded-xl p-3">
+                  <p className="font-semibold text-verde-escuro text-base">{ano.mulheres}</p>
                   <p className="font-light">mulheres atendidas</p>
                 </div>
-                <div className="bg-[#f7f3ec] rounded-xl p-3">
-                  <p className="font-semibold text-[#2d4f38] text-base">{ano.oficinas}</p>
+                <div className="bg-creme rounded-xl p-3">
+                  <p className="font-semibold text-verde-escuro text-base">{ano.oficinas}</p>
                   <p className="font-light">oficinas realizadas</p>
                 </div>
-                <div className="bg-[#f7f3ec] rounded-xl p-3">
-                  <p className="font-semibold text-[#2d4f38] text-base">{ano.oleo}</p>
+                <div className="bg-creme rounded-xl p-3">
+                  <p className="font-semibold text-verde-escuro text-base">{ano.oleo}</p>
                   <p className="font-light">óleo reaproveitado</p>
                 </div>
-                <div className="bg-[#f7f3ec] rounded-xl p-3">
-                  <p className="font-semibold text-[#2d4f38] text-base">{ano.municipios}</p>
+                <div className="bg-creme rounded-xl p-3">
+                  <p className="font-semibold text-verde-escuro text-base">{ano.municipios}</p>
                   <p className="font-light">municípios/estados</p>
                 </div>
               </div>
-              <div className="bg-[#e8f0e9] rounded-xl p-3 text-xs">
-                <p className="font-medium text-[#2d4f38] mb-0.5">Água preservada</p>
-                <p className="font-light text-[#5a6b5e]">{ano.agua}</p>
+              <div className="bg-verde-claro rounded-xl p-3 text-xs">
+                <p className="font-medium text-verde-escuro mb-0.5">Água preservada</p>
+                <p className="font-light text-verde-muted">{ano.agua}</p>
               </div>
             </div>
           ))}
@@ -299,33 +299,33 @@ const Sobre = () => {
       </section>
 
       {/* Contribuições */}
-      <section className="px-6 md:px-20 py-16 md:py-20 bg-[#f7f3ec] border-t border-[#396824]/10">
+      <section className="px-6 md:px-20 py-16 md:py-20 bg-creme border-t border-verde-principal/10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-start">
           <div>
-            <p className="text-xs font-medium tracking-widest uppercase text-[#396824] mb-3">Nosso impacto</p>
-            <h2 className="font-serif text-3xl md:text-4xl text-[#396824] mb-4">
-              Contribuímos para um <em className="text-[#396824]">futuro melhor</em>
+            <p className="text-xs font-medium tracking-widest uppercase text-verde-principal mb-3">Nosso impacto</p>
+            <h2 className="font-serif text-3xl md:text-4xl text-verde-principal mb-4">
+              Contribuímos para um <em className="text-verde-principal">futuro melhor</em>
             </h2>
-            <p className="text-[#5a6b5e] font-light text-sm leading-relaxed mb-8">
+            <p className="text-verde-muted font-light text-sm leading-relaxed mb-8">
               O impacto da Saboaria Ecológica é multidimensional. Cada ação realizada conecta preservação ambiental, desenvolvimento humano e fortalecimento comunitário — porque acreditamos que sustentabilidade verdadeira só existe quando inclui as pessoas.
             </p>
             <div className="flex flex-col gap-5">
               {contribuicoes.map((item) => (
                 <div
                   key={item.titulo}
-                  className="p-6 rounded-2xl border border-[#396824]/12 hover:border-[#396824] hover:bg-white transition-all"
+                  className="p-6 rounded-2xl border border-verde-principal/12 hover:border-verde-principal hover:bg-white transition-all"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-[#e8f0e9] flex items-center justify-center mb-3">
-                    <span className="w-2 h-2 rounded-full bg-[#396824]" />
+                  <div className="w-8 h-8 rounded-lg bg-verde-claro flex items-center justify-center mb-3">
+                    <span className="w-2 h-2 rounded-full bg-verde-principal" />
                   </div>
-                  <p className="text-sm font-medium text-[#396824] mb-2">{item.titulo}</p>
-                  <p className="text-sm text-[#5a6b5e] leading-relaxed font-light">{item.texto}</p>
+                  <p className="text-sm font-medium text-verde-principal mb-2">{item.titulo}</p>
+                  <p className="text-sm text-verde-muted leading-relaxed font-light">{item.texto}</p>
                 </div>
               ))}
             </div>
           </div>
           {imagensDaPagina.produtos && (
-            <div className="rounded-2xl overflow-hidden md:sticky md:top-28 h-72 md:h-[600px]">
+            <div className="rounded-2xl overflow-hidden md:sticky md:top-28 h-72 md:h-150">
               <img
                 src={imagensDaPagina.produtos}
                 alt="Produtos da Saboaria Ecológica"
@@ -337,7 +337,7 @@ const Sobre = () => {
       </section>
 
       {/* ODS */}
-      <section className="px-6 md:px-20 py-16 md:py-20 bg-[#396824] border-t border-white/10">
+      <section className="px-6 md:px-20 py-16 md:py-20 bg-verde-principal border-t border-white/10">
         <p className="text-xs font-medium tracking-widest uppercase text-white/60 mb-3">Alinhamento global</p>
         <h2 className="font-serif text-3xl md:text-4xl text-white mb-4">
           Objetivos de <em className="text-white/50">Desenvolvimento Sustentável</em>
@@ -357,41 +357,41 @@ const Sobre = () => {
       </section>
 
       {/* Reconhecimentos + Parcerias */}
-      <section className="px-6 md:px-20 py-16 md:py-20 bg-white border-t border-[#396824]/10">
+      <section className="px-6 md:px-20 py-16 md:py-20 bg-white border-t border-verde-principal/10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
           <div>
-            <p className="text-xs font-medium tracking-widest uppercase text-[#396824] mb-3">Conquistas</p>
-            <h2 className="font-serif text-3xl md:text-4xl text-[#396824] mb-4">
-              Reconhecimentos e <em className="text-[#396824]">marcos</em>
+            <p className="text-xs font-medium tracking-widest uppercase text-verde-principal mb-3">Conquistas</p>
+            <h2 className="font-serif text-3xl md:text-4xl text-verde-principal mb-4">
+              Reconhecimentos e <em className="text-verde-principal">marcos</em>
             </h2>
-            <p className="text-[#5a6b5e] font-light text-sm leading-relaxed mb-8">
+            <p className="text-verde-muted font-light text-sm leading-relaxed mb-8">
               Ao longo de sua trajetória, a Saboaria Ecológica acumulou reconhecimentos que validam seu modelo de impacto e ampliam sua visibilidade no ecossistema de negócios sociais e sustentabilidade.
             </p>
             <div className="flex flex-col gap-5">
               {reconhecimentos.map((item) => (
                 <div key={item.titulo} className="flex gap-4 items-start">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#396824] mt-2 shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-verde-principal mt-2 shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-[#2d4f38] mb-1">{item.titulo}</p>
-                    <p className="text-xs text-[#5a6b5e] font-light leading-relaxed">{item.texto}</p>
+                    <p className="text-sm font-medium text-verde-escuro mb-1">{item.titulo}</p>
+                    <p className="text-xs text-verde-muted font-light leading-relaxed">{item.texto}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
           <div>
-            <p className="text-xs font-medium tracking-widest uppercase text-[#396824] mb-3">Rede de apoio</p>
-            <h2 className="font-serif text-3xl md:text-4xl text-[#396824] mb-4">
-              Parcerias e <em className="text-[#396824]">articulações</em>
+            <p className="text-xs font-medium tracking-widest uppercase text-verde-principal mb-3">Rede de apoio</p>
+            <h2 className="font-serif text-3xl md:text-4xl text-verde-principal mb-4">
+              Parcerias e <em className="text-verde-principal">articulações</em>
             </h2>
-            <p className="text-[#5a6b5e] font-light text-sm leading-relaxed mb-8">
+            <p className="text-verde-muted font-light text-sm leading-relaxed mb-8">
               A força do projeto está também em sua rede. A Saboaria Ecológica atua em articulação com instituições de ensino, organizações do terceiro setor, iniciativa privada e poder público, construindo pontes entre diferentes setores em prol de um objetivo comum: o desenvolvimento sustentável com equidade social.
             </p>
             <div className="flex flex-wrap gap-2">
               {parcerias.map((parceiro) => (
                 <span
                   key={parceiro}
-                  className="text-xs font-medium bg-[#f7f3ec] border border-[#396824]/15 text-[#2d4f38] px-4 py-2 rounded-full"
+                  className="text-xs font-medium bg-creme border border-verde-principal/15 text-verde-escuro px-4 py-2 rounded-full"
                 >
                   {parceiro}
                 </span>
@@ -402,7 +402,7 @@ const Sobre = () => {
       </section>
 
       {/* CTA */}
-      <section className="px-6 md:px-20 py-16 md:py-20 bg-[#396824] flex flex-col items-center text-center">
+      <section className="px-6 md:px-20 py-16 md:py-20 bg-verde-principal flex flex-col items-center text-center">
         <h2 className="font-serif text-3xl md:text-4xl text-white mb-3">
           Conheça nossos <em className="text-white/50">produtos</em>
         </h2>
@@ -410,7 +410,7 @@ const Sobre = () => {
           Cada compra é um ato de consciência. Veja o que produzimos com responsabilidade e cuidado.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-          <Link href="/produtos" className="bg-white text-[#396824] px-8 py-3 rounded-full text-sm font-medium hover:opacity-90 transition-opacity text-center">
+          <Link href="/produtos" className="bg-white text-verde-principal px-8 py-3 rounded-full text-sm font-medium hover:opacity-90 transition-opacity text-center">
             Ver produtos
           </Link>
           <a

@@ -85,7 +85,7 @@ const Home = () => {
                 key={pilar.titulo}
                 className="flex gap-4 items-start p-4 rounded-xl border border-verde-medio/10 hover:border-verde-medio hover:bg-verde-claro transition-all"
               >
-                <div className="w-10 h-10 rounded-lg bg-verde-claro flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-lg bg-verde-claro flex items-center justify-center shrink-0">
                   <span className="w-2 h-2 rounded-full bg-verde-medio" />
                 </div>
                 <div>

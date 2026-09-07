@@ -61,7 +61,7 @@ const Contato = () => {
 
       {/* Hero */}
       <section className="bg-verde-principal pt-24 md:pt-28 pb-16 md:pb-20 px-5 md:px-20 relative overflow-hidden">
-        <div className="absolute top-[-80px] right-[-80px] w-72 md:w-96 h-72 md:h-96 rounded-full bg-white/[0.04]" />
+        <div className="absolute -top-20 -right-20 w-72 md:w-96 h-72 md:h-96 rounded-full bg-white/4" />
         <div className="flex justify-between items-center">
           <div className="relative z-10 max-w-xl">
             <span className="inline-flex items-center gap-2 bg-white/10 text-white/80 px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-5 w-fit">
@@ -128,9 +128,9 @@ const Contato = () => {
                   href={canal.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-3 bg-white/[0.08] border border-white/10 rounded-xl px-4 py-3 hover:bg-white/[0.14] transition-colors no-underline"
+                  className="flex items-center gap-3 bg-white/8 border border-white/10 rounded-xl px-4 py-3 hover:bg-white/[0.14] transition-colors no-underline"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
                     <div className="[&_svg]:stroke-white/80">{canal.icone}</div>
                   </div>
                   <div>
@@ -147,7 +147,7 @@ const Contato = () => {
             href="https://maps.google.com/?q=Av.+Ulisses+Guimarães,+3132,+Iparana"
             target="_blank"
             rel="noreferrer"
-            className="block bg-white/[0.06] border border-white/10 rounded-2xl overflow-hidden hover:bg-white/[0.1] transition-colors no-underline"
+            className="block bg-white/6 border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 transition-colors no-underline"
           >
             <div className="h-32 flex flex-col items-center justify-center gap-2">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2">
@@ -163,11 +163,11 @@ const Contato = () => {
           </a>
 
           {/* Horário */}
-          <div className="bg-white/[0.06] rounded-2xl px-5 py-4">
+          <div className="bg-white/6 rounded-2xl px-5 py-4">
             <p className="text-xs text-white/55 font-light uppercase tracking-widest mb-3">
               Horário de atendimento
             </p>
-            <div className="flex flex-col divide-y divide-white/[0.06]">
+            <div className="flex flex-col divide-y divide-white/6">
               {horarioDeAtendimento.map((item) => (
                 <div key={item.dia} className="flex justify-between items-center py-2.5">
                   <span className="text-sm text-white/70 font-light">{item.dia}</span>

@@ -19,7 +19,7 @@ const Processo = () => {
 
       {/* Hero */}
       <section className="bg-verde-principal pt-24 md:pt-28 pb-16 md:pb-20 px-5 md:px-20 relative overflow-hidden">
-        <div className="absolute top-[-60px] right-[-60px] w-72 md:w-96 h-72 md:h-96 rounded-full bg-white/[0.04]" />
+        <div className="absolute -top-15 -right-15 w-72 md:w-96 h-72 md:h-96 rounded-full bg-white/4" />
         <div className="flex justify-between items-center">
           <div className="relative z-10 max-w-2xl">
             <span className="inline-flex items-center gap-2 bg-white/10 text-white/80 px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-5 w-fit">
@@ -114,7 +114,7 @@ const Processo = () => {
                   key={ing.nome}
                   className="flex items-center gap-4 bg-white px-4 py-3 rounded-xl border border-verde-principal/10"
                 >
-                  <span className="w-2 h-2 rounded-full bg-verde-principal flex-shrink-0" />
+                  <span className="w-2 h-2 rounded-full bg-verde-principal shrink-0" />
                   <div>
                     <p className="text-sm font-medium text-verde-principal">{ing.nome}</p>
                     <p className="text-xs text-verde-muted font-light">{ing.descricao}</p>

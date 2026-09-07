@@ -33,7 +33,7 @@ const Produtos = () => {
 
       {/* Hero */}
       <section className="bg-azul-principal pt-28 pb-16 px-6 md:px-20 relative overflow-hidden">
-        <div className="absolute top-[-80px] right-[-80px] w-96 h-96 rounded-full bg-white/[0.04]" />
+        <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-white/4" />
         <div className="flex justify-between">
           <div className="relative z-10 max-w-xl">
             <span className="inline-flex items-center gap-2 bg-white/10 text-white/80 px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-6 w-fit">
