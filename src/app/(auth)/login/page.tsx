@@ -2,26 +2,33 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-
-const loginFormSchema = z.object({
-  email: z.string().email("Informe um e-mail válido"),
-  password: z.string().min(8, "A senha deve ter no mínimo 8 caracteres"),
-});
-
-type LoginFormValues = z.infer<typeof loginFormSchema>;
+import { useRouter } from "next/navigation";
+import { isAxiosError } from "axios";
+import { toast } from "react-toastify";
+import { httpClient } from "@/lib/http";
+import { loginSchema, type LoginFormValues } from "@/schemas/auth.schema";
 
 export default function LoginPage() {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginFormSchema),
+    resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (values: LoginFormValues) => {
-    console.log(values);
+  const onSubmit = async (values: LoginFormValues) => {
+    try {
+      await httpClient.post("/auth/login", values);
+      router.push("/admin");
+    } catch (error) {
+      const message = isAxiosError(error)
+        ? error.response?.data?.message ?? "Não foi possível entrar"
+        : "Não foi possível entrar";
+      toast.error(message);
+    }
   };
 
   return (
@@ -30,12 +37,8 @@ export default function LoginPage() {
         <p className="font-serif text-lg font-bold text-verde-principal tracking-wide">
           SABOARIA <em className="font-normal not-italic text-verde-medio">ecológica</em>
         </p>
-        <h1 className="font-serif text-2xl text-verde-escuro mt-4 mb-1">
-          Painel administrativo
-        </h1>
-        <p className="text-xs text-verde-muted font-light">
-          Acesso restrito a administradores
-        </p>
+        <h1 className="font-serif text-2xl text-verde-escuro mt-4 mb-1">Painel administrativo</h1>
+        <p className="text-xs text-verde-muted font-light">Acesso restrito a administradores</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -51,9 +54,7 @@ export default function LoginPage() {
             className="border border-verde-medio/20 rounded-xl px-4 py-2.5 text-sm text-verde-escuro placeholder:text-verde-muted/60 focus:outline-none focus:border-verde-medio transition-colors"
             placeholder="admin@saboariaecologica.com"
           />
-          {errors.email && (
-            <span className="text-xs text-red-600">{errors.email.message}</span>
-          )}
+          {errors.email && <span className="text-xs text-red-600">{errors.email.message}</span>}
         </div>
 
         <div className="flex flex-col gap-1.5">
@@ -68,9 +69,7 @@ export default function LoginPage() {
             className="border border-verde-medio/20 rounded-xl px-4 py-2.5 text-sm text-verde-escuro focus:outline-none focus:border-verde-medio transition-colors"
             placeholder="••••••••"
           />
-          {errors.password && (
-            <span className="text-xs text-red-600">{errors.password.message}</span>
-          )}
+          {errors.password && <span className="text-xs text-red-600">{errors.password.message}</span>}
         </div>
 
         <button
