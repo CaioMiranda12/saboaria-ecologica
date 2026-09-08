@@ -16,3 +16,34 @@ model Admin {
 
   @@map("admins")
 }
+
+enum ProductType {
+  BAR
+  PASTE
+  LIQUID
+  POWDER
+  SOAP
+}
+
+model Product {
+  id                  String      @id @default(cuid())
+  slug                String      @unique
+  mainName            String
+  complementName      String?
+  shortDescription    String
+  fullDescription     String
+  weight              String?
+  type                ProductType
+  ingredients         String[]
+  variants            String[]
+  usageInstructions   String?
+  badge               String?
+  isFeatured          Boolean     @default(false)
+  hasFragranceOptions Boolean     @default(false)
+  hasSizeOptions      Boolean     @default(false)
+  imageUrl            String?
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+
+  @@map("products")
+}

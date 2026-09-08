@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { QueryProvider } from "@/components/providers/QueryProvider";
 
 export const metadata: Metadata = {
   title: "Saboaria Ecológica",
@@ -16,8 +17,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
-        {children}
-        <ToastContainer position="top-right" />
+        <QueryProvider>
+          {children}
+          <ToastContainer position="top-right" />
+        </QueryProvider>
       </body>
     </html>
   );
