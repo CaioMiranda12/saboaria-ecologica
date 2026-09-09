@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { teamMemberFormSchema, type TeamMemberFormValues } from "@/schemas/team-member.schema";
+import { FormField, formInputClass } from "@/components/ui/FormField";
 
 type TeamMemberFormProps = {
   defaultValues?: Partial<TeamMemberFormValues>;
@@ -33,25 +34,25 @@ export function TeamMemberForm({ defaultValues, onSubmit, isSubmitting, submitLa
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 max-w-xl">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Field label="Nome" error={errors.name?.message}>
-          <input {...register("name")} className={inputClass} />
-        </Field>
-        <Field label="Iniciais" error={errors.initials?.message}>
-          <input {...register("initials")} maxLength={3} className={inputClass} placeholder="LN" />
-        </Field>
+        <FormField label="Nome" error={errors.name?.message}>
+          <input {...register("name")} className={formInputClass} />
+        </FormField>
+        <FormField label="Iniciais" error={errors.initials?.message}>
+          <input {...register("initials")} maxLength={3} className={formInputClass} placeholder="LN" />
+        </FormField>
       </div>
 
-      <Field label="Cargo" error={errors.role?.message}>
-        <input {...register("role")} className={inputClass} />
-      </Field>
+      <FormField label="Cargo" error={errors.role?.message}>
+        <input {...register("role")} className={formInputClass} />
+      </FormField>
 
-      <Field label="Bio" error={errors.bio?.message}>
-        <textarea {...register("bio")} rows={4} className={inputClass} />
-      </Field>
+      <FormField label="Bio" error={errors.bio?.message}>
+        <textarea {...register("bio")} rows={4} className={formInputClass} />
+      </FormField>
 
-      <Field label="Ordem de exibição" error={errors.order?.message}>
-        <input type="number" {...register("order")} className={inputClass} />
-      </Field>
+      <FormField label="Ordem de exibição" error={errors.order?.message}>
+        <input type="number" {...register("order")} className={formInputClass} />
+      </FormField>
 
       <button
         type="submit"
@@ -61,15 +62,5 @@ export function TeamMemberForm({ defaultValues, onSubmit, isSubmitting, submitLa
         {isSubmitting ? "Salvando..." : submitLabel}
       </button>
     </form>
-  );
-}
-
-function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-medium text-verde-escuro">{label}</label>
-      {children}
-      {error && <span className="text-xs text-red-600">{error}</span>}
-    </div>
   );
 }

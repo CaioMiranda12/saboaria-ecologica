@@ -10,6 +10,7 @@ import {
   type ProductFormInput,
 } from "@/schemas/product.schema";
 import { PRODUCT_TYPE_LABELS } from "@/constants/product";
+import { FormField, formInputClass } from "@/components/ui/FormField";
 
 type ProductFormProps = {
   defaultValues?: Partial<ProductFormValues>;
@@ -62,55 +63,55 @@ export function ProductForm({ defaultValues, onSubmit, isSubmitting, submitLabel
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-6 max-w-2xl">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Field label="Nome principal" error={errors.mainName?.message}>
-          <input {...register("mainName")} className={inputClass} />
-        </Field>
-        <Field label="Complemento" error={errors.complementName?.message}>
-          <input {...register("complementName")} className={inputClass} />
-        </Field>
+        <FormField label="Nome principal" error={errors.mainName?.message}>
+          <input {...register("mainName")} className={formInputClass} />
+        </FormField>
+        <FormField label="Complemento" error={errors.complementName?.message}>
+          <input {...register("complementName")} className={formInputClass} />
+        </FormField>
       </div>
 
-      <Field label="Descrição curta" error={errors.shortDescription?.message}>
-        <textarea {...register("shortDescription")} rows={2} className={inputClass} />
-      </Field>
+      <FormField label="Descrição curta" error={errors.shortDescription?.message}>
+        <textarea {...register("shortDescription")} rows={2} className={formInputClass} />
+      </FormField>
 
-      <Field label="Descrição completa" error={errors.fullDescription?.message}>
-        <textarea {...register("fullDescription")} rows={4} className={inputClass} />
-      </Field>
+      <FormField label="Descrição completa" error={errors.fullDescription?.message}>
+        <textarea {...register("fullDescription")} rows={4} className={formInputClass} />
+      </FormField>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Field label="Peso" error={errors.weight?.message}>
-          <input {...register("weight")} className={inputClass} placeholder="250g" />
-        </Field>
-        <Field label="Tipo" error={errors.type?.message}>
-          <select {...register("type")} className={inputClass}>
+        <FormField label="Peso" error={errors.weight?.message}>
+          <input {...register("weight")} className={formInputClass} placeholder="250g" />
+        </FormField>
+        <FormField label="Tipo" error={errors.type?.message}>
+          <select {...register("type")} className={formInputClass}>
             {productTypeValues.map((value) => (
               <option key={value} value={value}>
                 {PRODUCT_TYPE_LABELS[value]}
               </option>
             ))}
           </select>
-        </Field>
-        <Field label="Badge" error={errors.badge?.message}>
-          <input {...register("badge")} className={inputClass} placeholder="Biodegradável" />
-        </Field>
+        </FormField>
+        <FormField label="Badge" error={errors.badge?.message}>
+          <input {...register("badge")} className={formInputClass} placeholder="Biodegradável" />
+        </FormField>
       </div>
 
-      <Field label="Modo de uso" error={errors.usageInstructions?.message}>
-        <textarea {...register("usageInstructions")} rows={2} className={inputClass} />
-      </Field>
+      <FormField label="Modo de uso" error={errors.usageInstructions?.message}>
+        <textarea {...register("usageInstructions")} rows={2} className={formInputClass} />
+      </FormField>
 
-      <Field label="URL da imagem" error={errors.imageUrl?.message}>
-        <input {...register("imageUrl")} className={inputClass} placeholder="/produto.jpg" />
-      </Field>
+      <FormField label="URL da imagem" error={errors.imageUrl?.message}>
+        <input {...register("imageUrl")} className={formInputClass} placeholder="/produto.jpg" />
+      </FormField>
 
-      <Field label="Ingredientes (separados por vírgula)">
-        <input {...register("ingredientsText")} className={inputClass} placeholder="Óleo vegetal, Hidróxido de sódio, Água" />
-      </Field>
+      <FormField label="Ingredientes (separados por vírgula)">
+        <input {...register("ingredientsText")} className={formInputClass} placeholder="Óleo vegetal, Hidróxido de sódio, Água" />
+      </FormField>
 
-      <Field label="Variantes / fragrâncias (separadas por vírgula)">
-        <input {...register("variantsText")} className={inputClass} placeholder="Tradicional, Leite de coco" />
-      </Field>
+      <FormField label="Variantes / fragrâncias (separadas por vírgula)">
+        <input {...register("variantsText")} className={formInputClass} placeholder="Tradicional, Leite de coco" />
+      </FormField>
 
       <div className="flex flex-wrap gap-6">
         <Checkbox label="Produto em destaque" {...register("isFeatured")} />
@@ -126,19 +127,6 @@ export function ProductForm({ defaultValues, onSubmit, isSubmitting, submitLabel
         {isSubmitting ? "Salvando..." : submitLabel}
       </button>
     </form>
-  );
-}
-
-const inputClass =
-  "border border-verde-medio/20 rounded-xl px-4 py-2.5 text-sm text-verde-escuro focus:outline-none focus:border-verde-medio transition-colors w-full";
-
-function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-medium text-verde-escuro">{label}</label>
-      {children}
-      {error && <span className="text-xs text-red-600">{error}</span>}
-    </div>
   );
 }
 

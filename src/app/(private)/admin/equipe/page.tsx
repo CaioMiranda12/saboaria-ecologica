@@ -5,17 +5,22 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useTeamMembers } from "@/hooks/useTeamMembers";
 import { useDeleteTeamMember } from "@/hooks/useTeamMemberMutations";
+import { useConfirmDialog } from "@/hooks/useConfirmDialog";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 
 export default function AdminTeamPage() {
   const { data: teamMembers, isLoading } = useTeamMembers();
   const deleteTeamMember = useDeleteTeamMember();
+  const confirmDialog = useConfirmDialog<{ id: string; name: string }>();
 
-  const handleDelete = (id: string, name: string) => {
-    const confirmed = window.confirm(`Remover "${name}" da equipe?`);
-    if (!confirmed) return;
+  const handleConfirmDelete = () => {
+    if (!confirmDialog.target) return;
 
-    deleteTeamMember.mutate(id, {
-      onSuccess: () => toast.success("Membro removido"),
+    deleteTeamMember.mutate(confirmDialog.target.id, {
+      onSuccess: () => {
+        toast.success("Membro removido");
+        confirmDialog.close();
+      },
       onError: () => toast.error("Não foi possível remover o membro"),
     });
   };
@@ -60,7 +65,7 @@ export default function AdminTeamPage() {
                   <Pencil size={16} />
                 </Link>
                 <button
-                  onClick={() => handleDelete(member.id, member.name)}
+                  onClick={() => confirmDialog.open({ id: member.id, name: member.name })}
                   className="p-2 rounded-lg text-verde-muted hover:text-red-600 hover:bg-red-50 transition-colors"
                   aria-label="Remover"
                 >
@@ -71,6 +76,15 @@ export default function AdminTeamPage() {
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        title="Remover membro da equipe"
+        description={`Tem certeza que deseja remover "${confirmDialog.target?.name}"? Essa ação não pode ser desfeita.`}
+        isConfirming={deleteTeamMember.isPending}
+        onConfirm={handleConfirmDelete}
+        onCancel={confirmDialog.close}
+      />
     </div>
   );
 }

@@ -60,3 +60,12 @@ model TeamMember {
 
   @@map("team_members")
 }
+
+model Partnership {
+  id        String   @id @default(cuid())
+  name      String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@map("partnerships")
+}

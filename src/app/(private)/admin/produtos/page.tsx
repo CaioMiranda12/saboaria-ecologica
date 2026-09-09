@@ -6,20 +6,22 @@ import { toast } from "react-toastify";
 import { useProducts } from "@/hooks/useProducts";
 import { useDeleteProduct } from "@/hooks/useProductMutations";
 import { PRODUCT_TYPE_LABELS } from "@/constants/product";
+import { useConfirmDialog } from "@/hooks/useConfirmDialog";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 
 export default function AdminProductsPage() {
   const { data: products, isLoading } = useProducts();
   const deleteProduct = useDeleteProduct();
+  const confirmDialog = useConfirmDialog<{ id: string; name: string }>();
 
-  const handleDelete = (id: string, name: string) => {
-    const confirmed = window.confirm(`Remover o produto "${name}"? Essa ação não pode ser desfeita.`);
+  const handleConfirmDelete = () => {
+    if (!confirmDialog.target) return;
 
-    if (!confirmed) {
-      return;
-    }
-
-    deleteProduct.mutate(id, {
-      onSuccess: () => toast.success("Produto removido"),
+    deleteProduct.mutate(confirmDialog.target.id, {
+      onSuccess: () => {
+        toast.success("Produto removido");
+        confirmDialog.close();
+      },
       onError: () => toast.error("Não foi possível remover o produto"),
     });
   };
@@ -72,7 +74,7 @@ export default function AdminProductsPage() {
                         <Pencil size={16} />
                       </Link>
                       <button
-                        onClick={() => handleDelete(product.id, product.mainName)}
+                        onClick={() => confirmDialog.open({ id: product.id, name: product.mainName })}
                         className="p-2 rounded-lg text-verde-muted hover:text-red-600 hover:bg-red-50 transition-colors"
                         aria-label="Remover"
                       >
@@ -86,6 +88,15 @@ export default function AdminProductsPage() {
           </table>
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        title="Remover produto"
+        description={`Tem certeza que deseja remover "${confirmDialog.target?.name}"? Essa ação não pode ser desfeita.`}
+        isConfirming={deleteProduct.isPending}
+        onConfirm={handleConfirmDelete}
+        onCancel={confirmDialog.close}
+      />
     </div>
   );
 }
