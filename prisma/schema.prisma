@@ -69,3 +69,20 @@ model Partnership {
 
   @@map("partnerships")
 }
+
+model SiteContent {
+  id          String   @id @default("singleton")
+  mission     String
+  vision      String
+  values      String
+  description String
+  foundedYear String
+  whatsapp    String
+  instagram   String
+  email       String
+  linkedin    String
+  address     String
+  updatedAt   DateTime @updatedAt
+
+  @@map("site_content")
+}
