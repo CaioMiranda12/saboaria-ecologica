@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   productFormSchema,
@@ -11,6 +11,7 @@ import {
 } from "@/schemas/product.schema";
 import { PRODUCT_TYPE_LABELS } from "@/constants/product";
 import { FormField, formInputClass } from "@/components/ui/FormField";
+import { ImageUpload } from "@/components/ui/ImageUpload";
 
 type ProductFormProps = {
   defaultValues?: Partial<ProductFormValues>;
@@ -26,6 +27,7 @@ function splitCommaList(value: string) {
 export function ProductForm({ defaultValues, onSubmit, isSubmitting, submitLabel }: ProductFormProps) {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<ProductFormInput>({
@@ -101,8 +103,19 @@ export function ProductForm({ defaultValues, onSubmit, isSubmitting, submitLabel
         <textarea {...register("usageInstructions")} rows={2} className={formInputClass} />
       </FormField>
 
-      <FormField label="URL da imagem" error={errors.imageUrl?.message}>
-        <input {...register("imageUrl")} className={formInputClass} placeholder="/produto.jpg" />
+      <FormField label="Imagem do produto">
+        <Controller
+          name="imageUrl"
+          control={control}
+          render={({ field }) => (
+            <ImageUpload
+              value={field.value ?? ""}
+              onChange={field.onChange}
+              error={errors.imageUrl?.message}
+              disabled={isSubmitting}
+            />
+          )}
+        />
       </FormField>
 
       <FormField label="Ingredientes (separados por vírgula)">
