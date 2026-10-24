@@ -1,4 +1,6 @@
 import { contatosDaMarca } from '@/data/marca'
+import { localizacoes } from '@/data/localizacoes'
+import { MapaBrasil } from '@/components/MapaBrasil'
 
 const canaisDeContato = [
   {
@@ -105,13 +107,22 @@ const Contato = () => {
         ))}
       </div>
 
-      {/* Logo + Info lateral */}
+      {/* Mapa + Info lateral */}
       <div className="grid grid-cols-1 md:grid-cols-2 border-t border-verde-medio/10">
-        <div className="flex justify-center items-center">
-          <img
-            src="/logo-2.png"
-            alt="Logo da Saboaria Ecológica"
-          />
+        <div className="flex flex-col items-center justify-center gap-8 px-5 md:px-14 py-14 md:py-20">
+          <div className="text-center max-w-sm">
+            <span className="inline-flex items-center gap-2 bg-verde-claro text-verde-principal px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-4">
+              Onde estamos
+            </span>
+            <h2 className="font-serif text-2xl md:text-3xl text-verde-escuro mb-2">
+              Presença por todo o <em className="text-verde-principal">Brasil</em>
+            </h2>
+            <p className="text-sm text-verde-muted font-light leading-relaxed">
+              Passe o mouse (ou toque) sobre os pontos para conhecer cada localização.
+            </p>
+          </div>
+
+          <MapaBrasil localizacoes={localizacoes} />
         </div>
 
         {/* Info lateral */}
