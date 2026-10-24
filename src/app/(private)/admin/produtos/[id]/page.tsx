@@ -37,7 +37,7 @@ export default function EditProductPage({ params }: EditProductPageProps) {
   }
 
   return (
-    <div>
+    <div className="flex flex-col items-center">
       <h1 className="font-serif text-2xl text-verde-escuro mb-6">Editar produto</h1>
       <ProductForm
         defaultValues={{
