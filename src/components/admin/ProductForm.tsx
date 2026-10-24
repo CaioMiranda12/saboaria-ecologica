@@ -12,6 +12,7 @@ import {
 import { PRODUCT_TYPE_LABELS } from "@/constants/product";
 import { FormField, formInputClass } from "@/components/ui/FormField";
 import { ImageUpload } from "@/components/ui/ImageUpload";
+import { ItemListInput } from "@/components/ui/ItemListInput";
 
 type ProductFormProps = {
   defaultValues?: Partial<ProductFormValues>;
@@ -118,8 +119,19 @@ export function ProductForm({ defaultValues, onSubmit, isSubmitting, submitLabel
         />
       </FormField>
 
-      <FormField label="Ingredientes (separados por vírgula)">
-        <input {...register("ingredientsText")} className={formInputClass} placeholder="Óleo vegetal, Hidróxido de sódio, Água" />
+      <FormField label="Ingredientes">
+        <Controller
+          name="ingredientsText"
+          control={control}
+          render={({ field }) => (
+            <ItemListInput
+              value={splitCommaList(field.value ?? "")}
+              onChange={(items) => field.onChange(items.join(", "))}
+              placeholder="Ex.: Óleo vegetal"
+              disabled={isSubmitting}
+            />
+          )}
+        />
       </FormField>
 
       <FormField label="Variantes / fragrâncias (separadas por vírgula)">
