@@ -2,6 +2,18 @@ import { z } from "zod";
 
 export const productTypeValues = ["BAR", "PASTE", "LIQUID", "POWDER", "SOAP"] as const;
 
+/** Aceita vazio, caminho local (/foto.jpg), URL http(s) e data URL de imagens já salvas. */
+function isValidImageUrl(value: string) {
+  if (value === "" || value.startsWith("/")) return true;
+
+  try {
+    const { protocol } = new URL(value);
+    return protocol === "https:" || protocol === "http:" || protocol === "data:";
+  } catch {
+    return false;
+  }
+}
+
 export const productFormSchema = z.object({
   mainName: z.string().min(2, "Informe o nome do produto"),
   complementName: z.string().optional(),
@@ -16,7 +28,7 @@ export const productFormSchema = z.object({
   isFeatured: z.boolean().default(false),
   hasFragranceOptions: z.boolean().default(false),
   hasSizeOptions: z.boolean().default(false),
-  imageUrl: z.string().url("Informe uma URL válida").optional().or(z.literal("")),
+  imageUrl: z.string().refine(isValidImageUrl, "Informe uma URL válida").optional(),
 });
 
 export type ProductFormValues = z.infer<typeof productFormSchema>;

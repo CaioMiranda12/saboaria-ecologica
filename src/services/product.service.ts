@@ -1,9 +1,11 @@
+import { revalidatePath } from "next/cache";
 import {
   createProduct,
   deleteProduct,
   findAllProducts,
   findProductById,
   findProductBySlug,
+  findPublicProducts,
   updateProduct,
 } from "@/repositories/product.repository";
 import { createSlug } from "@/utils/slug";
@@ -14,6 +16,15 @@ export class DuplicateProductSlugError extends Error {}
 
 export function listProducts() {
   return findAllProducts();
+}
+
+export function listPublicProducts() {
+  return findPublicProducts();
+}
+
+/** Faz o catálogo público refletir na hora o que foi salvo no admin. */
+function revalidatePublicCatalog() {
+  revalidatePath("/produtos");
 }
 
 export async function getProductOrThrow(id: string) {
@@ -58,16 +69,22 @@ function mapFormValuesToProductData(values: ProductFormValues) {
 
 export async function createProductFromForm(values: ProductFormValues) {
   const slug = await ensureUniqueSlug(values.mainName);
-  return createProduct({ slug, ...mapFormValuesToProductData(values) });
+  const product = await createProduct({ slug, ...mapFormValuesToProductData(values) });
+  revalidatePublicCatalog();
+  return product;
 }
 
 export async function updateProductFromForm(id: string, values: ProductFormValues) {
   await getProductOrThrow(id);
   const slug = await ensureUniqueSlug(values.mainName, id);
-  return updateProduct(id, { slug, ...mapFormValuesToProductData(values) });
+  const product = await updateProduct(id, { slug, ...mapFormValuesToProductData(values) });
+  revalidatePublicCatalog();
+  return product;
 }
 
 export async function removeProduct(id: string) {
   await getProductOrThrow(id);
-  return deleteProduct(id);
+  const product = await deleteProduct(id);
+  revalidatePublicCatalog();
+  return product;
 }

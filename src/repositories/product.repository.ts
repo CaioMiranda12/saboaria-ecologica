@@ -5,6 +5,12 @@ export function findAllProducts() {
   return prisma.product.findMany({ orderBy: { createdAt: "desc" } });
 }
 
+export function findPublicProducts() {
+  return prisma.product.findMany({
+    orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
+  });
+}
+
 export function findProductById(id: string) {
   return prisma.product.findUnique({ where: { id } });
 }
