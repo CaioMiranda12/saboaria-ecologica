@@ -53,9 +53,10 @@ export function AdminSidebar() {
 
   return (
     <aside
-      className={`hidden md:flex shrink-0 flex-col bg-verde-principal text-white py-6 overflow-hidden transition-[width,padding] duration-300 ease-in-out ${collapsed ? "w-[76px] px-3" : "w-64 px-4"
+      className={`hidden md:flex sticky top-0 h-screen self-start shrink-0 flex-col bg-verde-principal text-white py-6 overflow-hidden transition-[width,padding] duration-300 ease-in-out ${collapsed ? "w-[76px] px-3" : "w-64 px-4"
         }`}
     >
+      {/* Topo: logo + botão de alternar */}
       <div
         className={`mb-8 flex items-center ${collapsed ? "justify-center" : "justify-between gap-2 px-2"
           }`}
@@ -78,7 +79,8 @@ export function AdminSidebar() {
         </button>
       </div>
 
-      <nav className="flex-1 flex flex-col gap-1">
+      {/* Navegação */}
+      <nav className="flex-1 flex flex-col gap-1 overflow-y-auto">
         {navItems.map(({ href, label, icon: Icon }) => {
           const isActive = href === "/admin" ? pathname === href : pathname.startsWith(href);
 
