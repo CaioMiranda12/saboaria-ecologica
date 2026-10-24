@@ -14,6 +14,7 @@ import {
   type ProductFilters,
 } from "@/components/admin/ProductFilterModal";
 import { PRODUCT_TYPE_LABELS } from "@/constants/product";
+import { optimizeImageUrl } from "@/utils/cloudinary";
 
 function isFiltersActive(filters: ProductFilters) {
   return (
@@ -131,7 +132,7 @@ export default function AdminProductsPage() {
                   <td className="px-5 py-3">
                     {product.imageUrl ? (
                       <img
-                        src={product.imageUrl}
+                        src={optimizeImageUrl(product.imageUrl, 96)}
                         alt={product.mainName}
                         loading="lazy"
                         className="h-12 w-12 rounded-lg border border-verde-medio/10 bg-verde-claro object-cover"

@@ -1,7 +1,9 @@
 "use client";
 
 import { useRef, useState, type DragEvent } from "react";
-import { FileImage, UploadCloud, X } from "lucide-react";
+import { isAxiosError } from "axios";
+import { FileImage, Loader2, UploadCloud, X } from "lucide-react";
+import { httpClient } from "@/lib/http";
 
 const ACCEPTED_TYPES = ["image/png", "image/jpeg"];
 const MAX_SIZE_BYTES = 200 * 1024;
@@ -9,6 +11,7 @@ const MAX_SIZE_BYTES = 200 * 1024;
 type FileMeta = { name: string; size: number | null };
 
 type ImageUploadProps = {
+  /** URL atual da imagem. String vazia = nenhuma imagem. */
   value: string;
   onChange: (value: string) => void;
   error?: string;
@@ -20,21 +23,14 @@ function formatSize(bytes: number) {
   return `${(bytes / 1024).toFixed(1).replace(".", ",")} KB`;
 }
 
+/** Descobre o nome quando já existe um valor salvo (ex.: edição de produto). */
 function metaFromValue(value: string): FileMeta {
   if (value.startsWith("data:")) {
     const base64 = value.split(",")[1] ?? "";
     return { name: "Imagem do produto", size: Math.round((base64.length * 3) / 4) };
   }
-  return { name: value.split("/").pop() || value, size: null };
-}
-
-function readAsDataURL(file: File) {
-  return new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
-  });
+  const lastSegment = value.split("?")[0].split("/").pop();
+  return { name: lastSegment || "Imagem do produto", size: null };
 }
 
 export function ImageUpload({ value, onChange, error, disabled }: ImageUploadProps) {
@@ -42,10 +38,12 @@ export function ImageUpload({ value, onChange, error, disabled }: ImageUploadPro
   const [meta, setMeta] = useState<FileMeta | null>(null);
   const [localError, setLocalError] = useState<string>();
   const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const hasImage = Boolean(value);
   const currentMeta = hasImage ? (meta ?? metaFromValue(value)) : null;
   const message = localError ?? error;
+  const isBlocked = disabled || isUploading;
 
   async function handleFile(file?: File) {
     if (!file) return;
@@ -59,13 +57,22 @@ export function ImageUpload({ value, onChange, error, disabled }: ImageUploadPro
       return;
     }
 
+    setLocalError(undefined);
+    setIsUploading(true);
+
     try {
-      const dataUrl = await readAsDataURL(file);
-      setLocalError(undefined);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const { data } = await httpClient.post<{ url: string }>("/admin/upload", formData);
+
       setMeta({ name: file.name, size: file.size });
-      onChange(dataUrl);
-    } catch {
-      setLocalError("Não foi possível ler a imagem. Tente novamente.");
+      onChange(data.url);
+    } catch (err) {
+      const apiMessage = isAxiosError(err) ? err.response?.data?.message : undefined;
+      setLocalError(apiMessage ?? "Não foi possível enviar a imagem. Tente novamente.");
+    } finally {
+      setIsUploading(false);
     }
   }
 
@@ -79,18 +86,19 @@ export function ImageUpload({ value, onChange, error, disabled }: ImageUploadPro
   function handleDrop(event: DragEvent<HTMLButtonElement>) {
     event.preventDefault();
     setIsDragging(false);
-    if (disabled) return;
+    if (isBlocked) return;
     handleFile(event.dataTransfer.files?.[0]);
   }
 
   return (
     <div className="flex flex-col gap-2">
+      {/* stopPropagation evita que um <label> pai reative o clique */}
       <input
         ref={inputRef}
         type="file"
         accept={ACCEPTED_TYPES.join(",")}
         className="hidden"
-        disabled={disabled}
+        disabled={isBlocked}
         onClick={(event) => event.stopPropagation()}
         onChange={(event) => {
           handleFile(event.target.files?.[0]);
@@ -98,7 +106,7 @@ export function ImageUpload({ value, onChange, error, disabled }: ImageUploadPro
         }}
       />
 
-      {currentMeta ? (
+      {currentMeta && !isUploading ? (
         <div className="flex items-center justify-between gap-4 rounded-xl border border-verde-principal/30 bg-verde-principal/5 px-4 py-3">
           <div className="flex min-w-0 items-center gap-3">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-verde-principal/10 text-verde-principal">
@@ -126,24 +134,33 @@ export function ImageUpload({ value, onChange, error, disabled }: ImageUploadPro
       ) : (
         <button
           type="button"
-          disabled={disabled}
+          disabled={isBlocked}
           onClick={() => inputRef.current?.click()}
           onDragOver={(event) => {
             event.preventDefault();
-            if (!disabled) setIsDragging(true);
+            if (!isBlocked) setIsDragging(true);
           }}
           onDragLeave={() => setIsDragging(false)}
           onDrop={handleDrop}
-          className={`flex w-full flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed px-4 py-8 text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-verde-principal/40 disabled:opacity-60 ${isDragging
-            ? "border-verde-principal bg-verde-principal/10"
-            : message
-              ? "border-red-400 bg-red-50/50"
-              : "border-verde-principal/30 hover:border-verde-principal hover:bg-verde-principal/5"
+          className={`flex w-full flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed px-4 py-8 text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-verde-principal/40 disabled:cursor-not-allowed disabled:opacity-60 ${isDragging
+              ? "border-verde-principal bg-verde-principal/10"
+              : message
+                ? "border-red-400 bg-red-50/50"
+                : "border-verde-principal/30 hover:border-verde-principal hover:bg-verde-principal/5"
             }`}
         >
-          <UploadCloud size={28} className="text-verde-principal" />
-          <span className="text-sm font-medium text-verde-escuro">Clique para enviar</span>
-          <span className="text-xs text-verde-escuro/60">PNG ou JPEG até 200kb</span>
+          {isUploading ? (
+            <>
+              <Loader2 size={28} className="animate-spin text-verde-principal" />
+              <span className="text-sm font-medium text-verde-escuro">Enviando imagem...</span>
+            </>
+          ) : (
+            <>
+              <UploadCloud size={28} className="text-verde-principal" />
+              <span className="text-sm font-medium text-verde-escuro">Clique para enviar</span>
+              <span className="text-xs text-verde-escuro/60">PNG ou JPEG até 200kb</span>
+            </>
+          )}
         </button>
       )}
 
