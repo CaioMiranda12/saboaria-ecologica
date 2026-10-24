@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Plus, Pencil, Trash2, Search, Filter } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, Filter, ImageIcon } from "lucide-react";
 import { toast } from "react-toastify";
 import { useProducts } from "@/hooks/useProducts";
 import { useDeleteProduct } from "@/hooks/useProductMutations";
@@ -117,6 +117,7 @@ export default function AdminProductsPage() {
           <table className="w-full text-sm">
             <thead className="bg-verde-claro/40 text-left">
               <tr>
+                <th className="px-5 py-3 w-20 font-medium text-verde-escuro">Imagem</th>
                 <th className="px-5 py-3 font-medium text-verde-escuro">Nome</th>
                 <th className="px-5 py-3 font-medium text-verde-escuro">Tipo</th>
                 <th className="px-5 py-3 font-medium text-verde-escuro">Peso</th>
@@ -127,6 +128,20 @@ export default function AdminProductsPage() {
             <tbody className="divide-y divide-verde-medio/10">
               {filteredProducts.map((product) => (
                 <tr key={product.id}>
+                  <td className="px-5 py-3">
+                    {product.imageUrl ? (
+                      <img
+                        src={product.imageUrl}
+                        alt={product.mainName}
+                        loading="lazy"
+                        className="h-12 w-12 rounded-lg border border-verde-medio/10 bg-verde-claro object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-verde-claro/50 text-verde-muted">
+                        <ImageIcon size={18} />
+                      </div>
+                    )}
+                  </td>
                   <td className="px-5 py-3 text-verde-escuro font-medium">{product.mainName}</td>
                   <td className="px-5 py-3 text-verde-muted">{PRODUCT_TYPE_LABELS[product.type]}</td>
                   <td className="px-5 py-3 text-verde-muted">{product.weight ?? "—"}</td>
