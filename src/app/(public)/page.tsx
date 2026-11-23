@@ -2,12 +2,7 @@ import CardProduto from '@/components/CardProduto'
 import { listaDeProdutos } from '@/data/produtos'
 import { historiaDaMarca, contatosDaMarca } from '@/data/marca'
 import Link from 'next/link'
-
-const pilaresInstitucionais = [
-  { titulo: 'Missão', texto: historiaDaMarca.missao },
-  { titulo: 'Visão', texto: historiaDaMarca.visao },
-  { titulo: 'Valores', texto: historiaDaMarca.valores },
-]
+import { getPublicCmsSections } from '@/services/cms.service'
 
 const etapasDoProcesso = [
   { numero: '1', titulo: 'Coleta do óleo', texto: 'Óleo saturado de frituras é coletado de residências e estabelecimentos locais.' },
@@ -16,11 +11,31 @@ const etapasDoProcesso = [
   { numero: '4', titulo: 'Impacto social', texto: 'Geração de renda local e educação ambiental nas comunidades parceiras.' },
 ]
 
-const Home = () => {
+export const dynamic = 'force-dynamic'
+const Home = async () => {
+  // A página mantém o conteúdo original caso o CMS ainda não tenha sido inicializado.
+  let cms: Awaited<ReturnType<typeof getPublicCmsSections>> = []
+  try { cms = await getPublicCmsSections('inicio') } catch (error) { console.error('CMS da home indisponível:', error) }
+  const hero = cms.find(s => s.key === 'hero')
+  const about = cms.find(s => s.key === 'sobre')
+  const field = (section: typeof hero, key: string, fallback: string) => {
+    const value = section?.content && typeof section.content === 'object' && !Array.isArray(section.content) ? (section.content as Record<string, unknown>)[key] : undefined
+    return typeof value === 'string' ? value : fallback
+  }
+  const heroTitle = field(hero, 'title', 'Limpeza que cuida do planeta')
+  const aboutTitle = field(about, 'title', 'Um movimento de consciência ambiental')
+  const heroImage = field(hero, 'imageUrl', '/logo.png')
+  const aboutImage = field(about, 'imageUrl', '/economia-circular.jpg')
+  const pilares = [
+    { titulo: 'Missão', texto: field(about, 'mission', historiaDaMarca.missao) },
+    { titulo: 'Visão', texto: field(about, 'vision', historiaDaMarca.visao) },
+    { titulo: 'Valores', texto: field(about, 'values', historiaDaMarca.valores) },
+  ]
   return (
     <div className="bg-creme text-[#1a2e1f]">
 
       {/* Hero */}
+      {(!hero || hero.enabled) && (
       <section className="min-h-screen grid grid-cols-1 md:grid-cols-2 pt-20">
         <div className="flex flex-col justify-center px-6 md:px-20 py-16 md:py-20">
           <span className="inline-flex items-center gap-2 bg-verde-claro text-verde-principal px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-8 w-fit">
@@ -28,32 +43,33 @@ const Home = () => {
             Negócio social sustentável
           </span>
           <h1 className="font-serif text-4xl md:text-6xl leading-tight text-verde-principal mb-6">
-            Limpeza que<br />
-            <em className="text-verde-medio">cuida do planeta</em>
+{heroTitle}
           </h1>
           <p className="text-verde-muted text-base md:text-lg leading-relaxed font-light max-w-md mb-10">
-            Transformamos óleo de fritura em produtos de limpeza biodegradáveis, gerando renda em comunidades e preservando o meio ambiente.
+            {field(hero, 'description', 'Transformamos óleo de fritura em produtos de limpeza biodegradáveis, gerando renda em comunidades e preservando o meio ambiente.')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
             <Link
               href="/produtos"
               className="bg-verde-principal text-white px-8 py-3.5 rounded-full text-sm font-medium hover:bg-verde-escuro transition-all hover:-translate-y-0.5 text-center"
             >
-              Ver produtos
+              {field(hero, 'primaryButton', 'Ver produtos')}
             </Link>
             <Link
               href="/sobre"
               className="text-verde-principal text-sm font-medium flex items-center gap-1 hover:gap-2 transition-all"
             >
-              Nossa história →
+              {field(hero, 'secondaryButton', 'Nossa história')} →
             </Link>
           </div>
         </div>
         <div className="relative bg-verde-principal flex items-center justify-center overflow-hidden min-h-64 md:min-h-0">
           <div className="absolute inset-0 opacity-5 bg-[repeating-linear-gradient(45deg,#fff,#fff_1px,transparent_1px,transparent_30px)]" />
-          <img src='/logo.png' alt="Saboaria Ecológica" />
+          <img src={heroImage} alt="Saboaria Ecológica" className="max-h-[420px] w-full object-contain" />
         </div>
       </section>
+
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-3 border-y border-verde-medio/15">
@@ -70,17 +86,18 @@ const Home = () => {
       </div>
 
       {/* Sobre */}
+      {(!about || about.enabled) && (
       <section className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-24 px-6 md:px-20 py-16 md:py-24 bg-white border-t border-verde-medio/10">
         <div>
           <p className="text-xs font-medium tracking-widest uppercase text-verde-medio mb-3">Quem somos</p>
           <h2 className="font-serif text-3xl md:text-4xl text-verde-principal leading-tight mb-5">
-            Um movimento de <em className="text-verde-medio">consciência ambiental</em>
+{aboutTitle}
           </h2>
           <p className="text-verde-muted leading-relaxed font-light mb-8">
-            Mais do que uma saboaria, representamos o empoderamento de mulheres em comunidades vulneráveis através da economia circular e da produção artesanal responsável.
+            {field(about, 'description', 'Mais do que uma saboaria, representamos o empoderamento de mulheres em comunidades vulneráveis através da economia circular e da produção artesanal responsável.')}
           </p>
           <div className="flex flex-col gap-4">
-            {pilaresInstitucionais.map((pilar) => (
+            {pilares.map((pilar) => (
               <div
                 key={pilar.titulo}
                 className="flex gap-4 items-start p-4 rounded-xl border border-verde-medio/10 hover:border-verde-medio hover:bg-verde-claro transition-all"
@@ -98,12 +115,14 @@ const Home = () => {
         </div>
         <div className="drop-shadow-xl">
           <img
-            src='/economia-circular.jpg'
+            src={aboutImage}
             alt="Economia Circular"
             className="w-full h-full object-contain"
           />
         </div>
       </section>
+
+      )}
 
       {/* Produtos */}
       <section className="px-6 md:px-20 py-16 md:py-24 bg-creme">

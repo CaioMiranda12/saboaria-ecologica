@@ -25,6 +25,23 @@ export async function PUT(request: Request, context: Context) {
   catch { return NextResponse.json({ message: "JSON inválido" }, { status: 400 }); }
   const parsed = cmsPageUpdateSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ message: "Dados inválidos", errors: parsed.error.flatten() }, { status: 400 });
+  if (slug === 'inicio') {
+    const allowed = new Set(['hero', 'sobre']);
+    if (parsed.data.sections.some(s => !allowed.has(s.key))) return NextResponse.json({ message: 'Seção desconhecida' }, { status: 400 });
+    for (const section of parsed.data.sections) {
+      const permitted = section.key === 'hero'
+        ? ['title', 'description', 'primaryButton', 'secondaryButton', 'imageUrl']
+        : ['title', 'description', 'mission', 'vision', 'values', 'imageUrl'];
+      if (Object.keys(section.content).some(k => !permitted.includes(k)) ||
+          Object.entries(section.content).some(([k, v]) => typeof v !== 'string' || v.length > (k === 'imageUrl' ? 2048 : 3000))) {
+        return NextResponse.json({ message: 'Campos de conteúdo inválidos' }, { status: 400 });
+      }
+      const image = section.content.imageUrl;
+      if (typeof image === 'string' && image && !image.startsWith('/') && !/^https:\/\//.test(image)) {
+        return NextResponse.json({ message: 'URL de imagem inválida' }, { status: 400 });
+      }
+    }
+  }
   try { return NextResponse.json({ page: await saveCmsPage(slug, parsed.data) }); }
   catch (error) { console.error("CMS save:", error); return NextResponse.json({ message: "Erro ao salvar página" }, { status: 500 }); }
 }

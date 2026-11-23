@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, FileText, LockKeyhole } from "lucide-react";
 
 const pages = [
-  { title: "Página inicial", path: "/", note: "Editor visual previsto para a Sprint 3." },
+  { title: "Página inicial", path: "/", note: "Edite o banner principal e a seção Quem somos.", edit: "/admin/paginas/inicio" },
   { title: "Sobre nós", path: "/sobre", note: "Editor de página previsto para a Sprint 4." },
   { title: "Nosso processo", path: "/processo", note: "Editor de página previsto para a Sprint 4." },
   { title: "Produtos", path: "/produtos", note: "Os produtos já podem ser gerenciados.", edit: "/admin/produtos" },
