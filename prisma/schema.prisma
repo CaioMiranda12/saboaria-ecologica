@@ -120,3 +120,20 @@ model CmsSection {
   @@index([pageId, position])
   @@map("cms_sections")
 }
+
+
+model MediaAsset {
+  id        String   @id @default(cuid())
+  publicId  String   @unique
+  url       String
+  filename  String
+  mimeType  String
+  bytes     Int
+  width     Int?
+  height    Int?
+  altText   String   @default("")
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@map("media_assets")
+}

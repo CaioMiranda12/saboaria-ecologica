@@ -1,45 +1,21 @@
 import { v2 as cloudinary } from "cloudinary";
 
-const UPLOAD_FOLDER = "saboaria/produtos";
-
-let configured = false;
-
 function configure() {
-  if (configured) return;
-
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-  const apiKey = process.env.CLOUDINARY_API_KEY;
-  const apiSecret = process.env.CLOUDINARY_API_SECRET;
-
-  if (!cloudName || !apiKey || !apiSecret) {
-    throw new Error(
-      "Cloudinary não configurado: defina CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY e CLOUDINARY_API_SECRET.",
-    );
-  }
-
-  cloudinary.config({
-    cloud_name: cloudName,
-    api_key: apiKey,
-    api_secret: apiSecret,
-    secure: true,
-  });
-
-  configured = true;
+  const { CLOUDINARY_CLOUD_NAME: cloud_name, CLOUDINARY_API_KEY: api_key, CLOUDINARY_API_SECRET: api_secret } = process.env;
+  if (!cloud_name || !api_key || !api_secret) throw new Error("Configure CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY e CLOUDINARY_API_SECRET.");
+  cloudinary.config({ cloud_name, api_key, api_secret, secure: true });
 }
 
-/** Envia a imagem para o Cloudinary e devolve a URL https pública. */
-export function uploadProductImage(buffer: Buffer): Promise<string> {
+export type UploadedImage = { url: string; publicId: string; width: number; height: number; bytes: number };
+export async function uploadMediaImage(buffer: Buffer): Promise<UploadedImage> {
   configure();
-
   return new Promise((resolve, reject) => {
-    cloudinary.uploader
-      .upload_stream({ folder: UPLOAD_FOLDER, resource_type: "image" }, (error, result) => {
-        if (error || !result) {
-          reject(error ?? new Error("Resposta vazia do Cloudinary."));
-          return;
-        }
-        resolve(result.secure_url);
-      })
-      .end(buffer);
+    cloudinary.uploader.upload_stream({ folder: "saboaria/midia", resource_type: "image", transformation: [{ width: 2000, height: 2000, crop: "limit", quality: "auto", fetch_format: "auto" }] }, (error, result) => {
+      if (error || !result) return reject(error ?? new Error("Upload sem resposta"));
+      resolve({ url: result.secure_url, publicId: result.public_id, width: result.width, height: result.height, bytes: result.bytes });
+    }).end(buffer);
   });
+}
+export async function uploadProductImage(buffer: Buffer): Promise<string> {
+  return (await uploadMediaImage(buffer)).url;
 }

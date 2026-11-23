@@ -2,11 +2,12 @@
 
 import { useRef, useState, type DragEvent } from "react";
 import { isAxiosError } from "axios";
-import { FileImage, Loader2, UploadCloud, X } from "lucide-react";
+import { FileImage, Loader2, UploadCloud, X, Images } from "lucide-react";
 import { httpClient } from "@/lib/http";
+import { MediaPicker } from "@/components/admin/MediaPicker";
 
-const ACCEPTED_TYPES = ["image/png", "image/jpeg"];
-const MAX_SIZE_BYTES = 200 * 1024;
+const ACCEPTED_TYPES = ["image/png", "image/jpeg", "image/webp"];
+const MAX_SIZE_BYTES = 8 * 1024 * 1024;
 
 type FileMeta = { name: string; size: number | null };
 
@@ -39,6 +40,7 @@ export function ImageUpload({ value, onChange, error, disabled }: ImageUploadPro
   const [localError, setLocalError] = useState<string>();
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   const hasImage = Boolean(value);
   const currentMeta = hasImage ? (meta ?? metaFromValue(value)) : null;
@@ -49,7 +51,7 @@ export function ImageUpload({ value, onChange, error, disabled }: ImageUploadPro
     if (!file) return;
 
     if (!ACCEPTED_TYPES.includes(file.type)) {
-      setLocalError("Formato inválido. Envie uma imagem PNG ou JPEG.");
+      setLocalError("Formato inválido. Envie PNG, JPEG ou WebP.");
       return;
     }
     if (file.size > MAX_SIZE_BYTES) {
@@ -158,12 +160,14 @@ export function ImageUpload({ value, onChange, error, disabled }: ImageUploadPro
             <>
               <UploadCloud size={28} className="text-verde-principal" />
               <span className="text-sm font-medium text-verde-escuro">Clique para enviar</span>
-              <span className="text-xs text-verde-escuro/60">PNG ou JPEG até 200kb</span>
+              <span className="text-xs text-verde-escuro/60">PNG, JPEG ou WebP até 8 MB</span>
             </>
           )}
         </button>
       )}
 
+      <button type="button" disabled={isBlocked} onClick={() => setPickerOpen(true)} className="inline-flex items-center justify-center gap-2 rounded-xl border border-verde-principal/30 bg-white px-4 py-3 text-sm font-medium text-verde-escuro hover:bg-verde-principal/5 disabled:opacity-50"><Images size={18}/> Escolher da biblioteca</button>
+      {pickerOpen && <MediaPicker onClose={() => setPickerOpen(false)} onSelect={asset => { onChange(asset.url); setMeta({ name: asset.filename, size: asset.bytes }); setPickerOpen(false); }}/>}
       {message && <p className="text-xs text-red-600">{message}</p>}
     </div>
   );

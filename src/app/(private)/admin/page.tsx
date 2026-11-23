@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { ArrowRight, BookOpenText, FileText, Handshake, Package, Users, ExternalLink, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpenText, FileText, Handshake, Package, Users, ExternalLink, Sparkles, Images } from "lucide-react";
 
 const shortcuts = [
   { href: "/admin/paginas", title: "Páginas do site", description: "Veja as páginas públicas e saiba o que já pode editar.", icon: BookOpenText },
   { href: "/admin/produtos", title: "Produtos", description: "Cadastre e atualize os produtos do catálogo.", icon: Package },
   { href: "/admin/equipe", title: "Equipe", description: "Gerencie os integrantes e suas informações.", icon: Users },
   { href: "/admin/parcerias", title: "Parcerias", description: "Organize as parcerias da Saboaria.", icon: Handshake },
+  { href: "/admin/midia", title: "Biblioteca de mídia", description: "Envie e reutilize imagens do site.", icon: Images },
   { href: "/admin/conteudo", title: "Conteúdo institucional", description: "Edite missão, visão, valores e dados de contato.", icon: FileText },
 ];
 
