@@ -26,7 +26,7 @@ function ResetForm() {
     } catch (error) { setMessage(error instanceof Error ? error.message : "Erro ao redefinir senha."); }
     finally { setBusy(false); }
   }
-  return <main className="w-full max-w-md rounded-3xl border border-emerald-200 bg-gradient-to-br from-white via-emerald-50 to-lime-50 p-8 shadow-xl shadow-emerald-950/10">
+  return <main className="mx-5 my-10 w-full max-w-md rounded-3xl border border-emerald-200 bg-gradient-to-br from-white via-emerald-50 to-lime-50 p-8 shadow-xl shadow-emerald-950/10">
     <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800"><LockKeyhole /></div>
     <h1 className="font-serif text-2xl text-emerald-950">Criar nova senha</h1>
     <p className="mt-2 text-sm text-emerald-900/70">Escolha uma senha forte. As sessões anteriores serão encerradas.</p>

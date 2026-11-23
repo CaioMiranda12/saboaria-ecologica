@@ -18,7 +18,7 @@ export default function ForgotPasswordPage() {
     } catch { setError("Não foi possível enviar a solicitação. Tente novamente."); }
     finally { setBusy(false); }
   }
-  return <main className="w-full max-w-md rounded-3xl border border-emerald-200/70 bg-gradient-to-br from-white via-emerald-50/80 to-lime-50 p-8 shadow-xl shadow-emerald-950/10">
+  return <main className="mx-5 my-10 w-full max-w-md rounded-3xl border border-emerald-200/70 bg-gradient-to-br from-white via-emerald-50/80 to-lime-50 p-8 shadow-xl shadow-emerald-950/10">
     <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800"><Mail /></div>
     <h1 className="font-serif text-2xl text-emerald-950">Recuperar acesso</h1>
     <p className="mt-2 text-sm text-emerald-900/70">Informe o e-mail cadastrado para receber um link de recuperação válido por 30 minutos.</p>

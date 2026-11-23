@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PanelLeftClose, PanelLeftOpen, ExternalLink } from "lucide-react";
+import { PanelLeftClose, PanelLeftOpen, ExternalLink, LogOut } from "lucide-react";
 import { SignOutButton } from "@/components/SignOutButton";
 import { adminNavigation } from "./admin-navigation";
 
@@ -37,7 +37,7 @@ export function AdminSidebar() {
       </nav>
       <div className="border-t border-white/20 pt-4 space-y-2">
         <Link href="/" target="_blank" rel="noopener noreferrer" className={`flex items-center rounded-xl text-sm text-white/80 hover:bg-white/10 p-3 ${collapsed ? "justify-center" : "gap-3"}`} title="Visualizar site"><ExternalLink size={19}/>{!collapsed && "Visualizar site"}</Link>
-        <SignOutButton className={`flex items-center gap-2 text-sm font-medium text-white/80 hover:text-white transition-colors py-3 ${collapsed ? "justify-center w-full" : "px-3"}`}/>
+        <SignOutButton icon={<LogOut size={19} className="shrink-0" />} collapsed={collapsed} className={`flex w-full items-center rounded-xl border border-white/15 bg-white/10 text-sm font-semibold text-white transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-white ${collapsed ? "justify-center p-3" : "gap-3 px-3 py-3"}`}/>
       </div>
     </aside>
   );

@@ -36,55 +36,49 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="w-full max-w-sm rounded-3xl border border-emerald-200/70 bg-gradient-to-br from-white via-emerald-50/80 to-lime-50 p-8 shadow-xl shadow-emerald-950/10">
-      <div className="mb-8 text-center">
-        <p className="font-serif text-lg font-bold text-verde-principal tracking-wide">
-          SABOARIA <em className="font-normal not-italic text-verde-medio">ecológica</em>
-        </p>
-        <h1 className="font-serif text-2xl text-verde-escuro mt-4 mb-1">Painel administrativo</h1>
-        <p className="text-xs text-verde-muted font-light">Acesso restrito a administradores</p>
-      </div>
-
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="email" className="text-xs font-medium text-verde-escuro">
-            E-mail
-          </label>
-          <input
-            id="email"
-            type="email"
-            autoComplete="email"
-            {...register("email")}
-            className="border border-verde-medio/20 rounded-xl px-4 py-2.5 text-sm text-verde-escuro placeholder:text-verde-muted/60 focus:outline-none focus:border-verde-medio transition-colors"
-            placeholder="admin@saboariaecologica.com"
-          />
-          {errors.email && <span className="text-xs text-red-600">{errors.email.message}</span>}
+    <main className="grid min-h-screen w-full lg:grid-cols-2">
+      <section className="relative hidden min-h-screen overflow-hidden bg-emerald-950 lg:block" aria-label="Saboaria Ecológica">
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/hero.jpg')" }} />
+        <div className="absolute inset-0 bg-gradient-to-t from-emerald-950 via-emerald-950/40 to-emerald-900/20" />
+        <div className="absolute inset-0 flex flex-col justify-between p-10 xl:p-16 text-white">
+          <Link href="/" className="w-fit rounded-full border border-white/30 bg-white/10 px-5 py-2 text-sm font-semibold tracking-widest backdrop-blur-sm hover:bg-white/20">SABOARIA ECOLÓGICA</Link>
+          <div className="max-w-xl">
+            <span className="mb-5 inline-block rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-semibold tracking-wide backdrop-blur-md">CUIDADO COM AS PESSOAS E COM O PLANETA</span>
+            <h2 className="font-serif text-4xl leading-tight xl:text-6xl">Um cuidado que transforma.</h2>
+            <p className="mt-5 max-w-md text-base leading-relaxed text-white/85">Um espaço para cuidar dos conteúdos e das histórias da Saboaria Ecológica.</p>
+          </div>
         </div>
+      </section>
 
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="password" className="text-xs font-medium text-verde-escuro">
-            Senha
-          </label>
-          <div className="relative"><input
-            id="password"
-            type={showPassword ? "text" : "password"}
-            autoComplete="current-password"
-            {...register("password")}
-            className="border border-verde-medio/20 rounded-xl px-4 py-2.5 text-sm text-verde-escuro focus:outline-none focus:border-verde-medio transition-colors"
-            placeholder="••••••••"
-          /><button type="button" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"} className="absolute right-3 top-2.5 text-emerald-800">{showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}</button></div>
-          {errors.password && <span className="text-xs text-red-600">{errors.password.message}</span>}
+      <section className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#f7fbf4] via-[#edf7eb] to-[#e0efdf] px-5 py-12 sm:px-10">
+        <div className="w-full max-w-[440px]">
+          <div className="mb-8 lg:hidden"><Link href="/" className="font-serif text-lg font-bold text-emerald-900">SABOARIA <span className="font-normal text-emerald-700">ecológica</span></Link></div>
+          <div className="rounded-[2rem] border border-emerald-200/70 bg-white/80 p-7 shadow-[0_24px_70px_-35px_rgba(18,78,45,.35)] backdrop-blur-xl sm:p-10">
+            <div className="mb-8">
+              <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800">ÁREA RESTRITA</span>
+              <h1 className="mt-4 font-serif text-3xl text-emerald-950">Bem-vindo de volta</h1>
+              <p className="mt-2 text-sm leading-relaxed text-emerald-900/65">Entre com suas credenciais para acessar o painel administrativo.</p>
+            </div>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              <div className="space-y-2">
+                <label htmlFor="email" className="block text-sm font-semibold text-emerald-950">E-mail administrativo</label>
+                <input id="email" type="email" autoComplete="email" {...register("email")} aria-invalid={!!errors.email} aria-describedby={errors.email ? "login-email-error" : undefined} className="w-full rounded-2xl border border-emerald-200 bg-emerald-50/60 px-4 py-3.5 text-sm text-emerald-950 placeholder:text-emerald-900/40 outline-none transition focus:border-emerald-600 focus:bg-white focus:ring-4 focus:ring-emerald-100" placeholder="seuemail@exemplo.com" />
+                {errors.email && <p id="login-email-error" role="alert" className="text-xs text-red-700">{errors.email.message}</p>}
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between gap-3"><label htmlFor="password" className="text-sm font-semibold text-emerald-950">Senha</label><Link href="/esqueci-senha" className="text-xs font-semibold text-emerald-800 underline-offset-4 hover:underline focus-visible:underline">Esqueceu sua senha?</Link></div>
+                <div className="relative">
+                  <input id="password" type={showPassword ? "text" : "password"} autoComplete="current-password" {...register("password")} aria-invalid={!!errors.password} aria-describedby={errors.password ? "login-password-error" : undefined} className="w-full rounded-2xl border border-emerald-200 bg-emerald-50/60 px-4 py-3.5 pr-12 text-sm text-emerald-950 outline-none transition focus:border-emerald-600 focus:bg-white focus:ring-4 focus:ring-emerald-100" placeholder="Digite sua senha" />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"} aria-pressed={showPassword} className="absolute inset-y-0 right-2 flex w-10 items-center justify-center rounded-xl text-emerald-700 hover:bg-emerald-100 focus-visible:outline-2 focus-visible:outline-emerald-600">{showPassword ? <EyeOff size={19}/> : <Eye size={19}/>}</button>
+                </div>
+                {errors.password && <p id="login-password-error" role="alert" className="text-xs text-red-700">{errors.password.message}</p>}
+              </div>
+              <button type="submit" disabled={isSubmitting} className="mt-2 w-full rounded-2xl bg-gradient-to-r from-emerald-800 to-green-700 px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-900/15 transition hover:from-emerald-900 hover:to-green-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 disabled:cursor-wait disabled:opacity-60">{isSubmitting ? "Entrando..." : "Entrar no painel"}</button>
+            </form>
+          </div>
+          <p className="mt-6 text-center text-xs text-emerald-900/60">Acesso exclusivo à equipe autorizada da Saboaria Ecológica.</p>
         </div>
-
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="bg-verde-principal text-white rounded-full py-3 text-sm font-medium hover:bg-verde-escuro transition-colors mt-2 disabled:opacity-60"
-        >
-          {isSubmitting ? "Entrando..." : "Entrar"}
-        </button>
-        <Link href="/esqueci-senha" className="text-center text-xs font-medium text-emerald-800 hover:underline">Esqueceu sua senha?</Link>
-      </form>
-    </div>
+      </section>
+    </main>
   );
 }
