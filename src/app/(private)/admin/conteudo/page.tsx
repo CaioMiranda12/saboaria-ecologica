@@ -1,122 +1,46 @@
-"use client";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { Archive, ArrowLeft, Download, FileText, ShieldCheck } from "lucide-react";
+import { requireAdminRole } from "@/lib/admin-authorization";
+import { getSiteContent } from "@/services/site-content.service";
 
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "react-toastify";
-import { siteContentFormSchema, type SiteContentFormValues } from "@/schemas/site-content.schema";
-import { useSiteContent } from "@/hooks/useSiteContent";
-import { useUpdateSiteContent } from "@/hooks/useSiteContentMutation";
-import { FormField, formInputClass } from "@/components/ui/FormField";
+const fields = [
+  { key: "description", label: "Descrição da marca", destination: "Sobre nós", href: "/admin/paginas/sobre" },
+  { key: "mission", label: "Missão", destination: "Sobre nós", href: "/admin/paginas/sobre" },
+  { key: "vision", label: "Visão", destination: "Sobre nós", href: "/admin/paginas/sobre" },
+  { key: "values", label: "Valores", destination: "Sobre nós", href: "/admin/paginas/sobre" },
+  { key: "foundedYear", label: "Ano de fundação", destination: "Sobre nós (revisar)", href: "/admin/paginas/sobre" },
+  { key: "whatsapp", label: "WhatsApp", destination: "Contato", href: "/admin/paginas/contato" },
+  { key: "instagram", label: "Instagram", destination: "Contato", href: "/admin/paginas/contato" },
+  { key: "email", label: "E-mail", destination: "Contato", href: "/admin/paginas/contato" },
+  { key: "linkedin", label: "LinkedIn", destination: "Contato (revisar)", href: "/admin/paginas/contato" },
+  { key: "address", label: "Endereço", destination: "Contato", href: "/admin/paginas/contato" },
+] as const;
 
-const emptyValues: SiteContentFormValues = {
-  mission: "",
-  vision: "",
-  values: "",
-  description: "",
-  foundedYear: "",
-  whatsapp: "",
-  instagram: "",
-  email: "",
-  linkedin: "",
-  address: "",
-};
-
-export default function AdminSiteContentPage() {
-  const { data: siteContent, isLoading } = useSiteContent();
-  const updateSiteContent = useUpdateSiteContent();
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<SiteContentFormValues>({
-    resolver: zodResolver(siteContentFormSchema),
-    defaultValues: emptyValues,
-  });
-
-  useEffect(() => {
-    if (siteContent) {
-      reset(siteContent);
-    }
-  }, [siteContent, reset]);
-
-  const onSubmit = (values: SiteContentFormValues) => {
-    updateSiteContent.mutate(values, {
-      onSuccess: () => toast.success("Conteúdo atualizado"),
-      onError: () => toast.error("Não foi possível salvar"),
-    });
-  };
-
-  if (isLoading) {
-    return <p className="text-sm text-verde-muted font-light">Carregando...</p>;
-  }
+export default async function LegacyContentArchive() {
+  const admin = await requireAdminRole();
+  if (!admin) redirect("/admin/paginas");
+  const record = await getSiteContent();
 
   return (
-    <div>
-      <h1 className="font-serif text-2xl text-verde-escuro mb-3">Dados gerais (legado)</h1><div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950"><strong>Importante:</strong> esta tela utiliza a tabela antiga de informações institucionais e não controla a publicação das páginas do CMS. Para editar os textos que aparecem no site, use <a href="/admin/paginas" className="font-semibold underline">Páginas do site</a>. Mantivemos esta tela para não apagar dados anteriores.</div>
-
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8 max-w-2xl">
-        <section className="flex flex-col gap-4">
-          <h2 className="text-xs font-medium uppercase tracking-widest text-verde-principal">
-            Institucional
-          </h2>
-
-          <FormField label="Descrição da marca" error={errors.description?.message}>
-            <textarea {...register("description")} rows={3} className={formInputClass} />
-          </FormField>
-
-          <FormField label="Missão" error={errors.mission?.message}>
-            <textarea {...register("mission")} rows={2} className={formInputClass} />
-          </FormField>
-
-          <FormField label="Visão" error={errors.vision?.message}>
-            <textarea {...register("vision")} rows={2} className={formInputClass} />
-          </FormField>
-
-          <FormField label="Valores" error={errors.values?.message}>
-            <textarea {...register("values")} rows={2} className={formInputClass} />
-          </FormField>
-
-          <FormField label="Ano de fundação" error={errors.foundedYear?.message}>
-            <input {...register("foundedYear")} className={formInputClass} placeholder="2023" />
-          </FormField>
+    <div className="mx-auto max-w-5xl space-y-6 pb-12">
+      <Link href="/admin/paginas" className="inline-flex items-center gap-2 text-sm font-medium text-verde-principal hover:underline"><ArrowLeft size={16}/> Páginas do site</Link>
+      <header className="rounded-3xl border border-emerald-200/80 bg-gradient-to-br from-[#e9f6e5] via-[#f6fbf4] to-white p-6 shadow-sm sm:p-8">
+        <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/80 px-3 py-1 text-xs font-semibold text-emerald-800"><Archive size={14}/> Arquivo legado • somente leitura</div>
+        <h1 className="font-serif text-3xl text-verde-escuro">Dados institucionais antigos</h1>
+        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-verde-muted">Esta área preserva dados do sistema anterior. Ela não altera o site público e não publica conteúdo. Para editar as páginas atuais, utilize os editores do CMS.</p>
+        <div className="mt-5 flex flex-wrap gap-3">
+          <Link href="/admin/paginas" className="inline-flex items-center gap-2 rounded-xl bg-verde-principal px-4 py-2.5 text-sm font-semibold text-white hover:bg-verde-escuro"><FileText size={16}/> Abrir páginas do site</Link>
+          {record && <a href="/api/admin/site-content/export" className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-4 py-2.5 text-sm font-semibold text-verde-escuro hover:bg-emerald-50"><Download size={16}/> Exportar backup JSON</a>}
+        </div>
+      </header>
+      <div className="flex items-start gap-3 rounded-2xl border border-emerald-200 bg-[#f3f9f0] p-4 text-sm text-verde-escuro"><ShieldCheck className="mt-0.5 shrink-0" size={20}/><p><strong>Sem migração automática:</strong> compare cada informação com a página correspondente antes de copiar. Dados antigos não serão sobrescritos nem excluídos.</p></div>
+      {!record ? <div className="rounded-2xl border border-emerald-100 bg-white p-8 text-center text-verde-muted">Nenhum registro legado encontrado. Utilize <Link href="/admin/paginas" className="font-semibold text-verde-principal underline">Páginas do site</Link>.</div> : (
+        <section className="space-y-4" aria-label="Campos do arquivo legado">
+          <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="font-semibold text-lg text-verde-escuro">Informações preservadas</h2><p className="text-xs text-verde-muted">Última alteração: {new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short", timeZone: "America/Fortaleza" }).format(record.updatedAt)}</p></div>
+          <div className="grid gap-3 md:grid-cols-2">{fields.map(({ key, label, destination, href }) => <article key={key} className="min-w-0 rounded-2xl border border-emerald-200/70 bg-gradient-to-br from-white to-[#f4faf1] p-5 shadow-sm"><div className="flex flex-wrap items-center justify-between gap-2"><h3 className="text-sm font-semibold text-verde-escuro">{label}</h3><Link href={href} className="text-xs font-medium text-verde-principal underline underline-offset-2">Editar em {destination}</Link></div><p className="mt-3 whitespace-pre-wrap break-words text-sm leading-relaxed text-verde-muted">{record[key] || "Não preenchido"}</p></article>)}</div>
         </section>
-
-        <section className="flex flex-col gap-4">
-          <h2 className="text-xs font-medium uppercase tracking-widest text-verde-principal">
-            Contato
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField label="WhatsApp" error={errors.whatsapp?.message}>
-              <input {...register("whatsapp")} className={formInputClass} placeholder="5585987052241" />
-            </FormField>
-            <FormField label="Instagram" error={errors.instagram?.message}>
-              <input {...register("instagram")} className={formInputClass} placeholder="saboariaecologica" />
-            </FormField>
-            <FormField label="E-mail" error={errors.email?.message}>
-              <input {...register("email")} className={formInputClass} />
-            </FormField>
-            <FormField label="LinkedIn" error={errors.linkedin?.message}>
-              <input {...register("linkedin")} className={formInputClass} />
-            </FormField>
-          </div>
-
-          <FormField label="Endereço" error={errors.address?.message}>
-            <input {...register("address")} className={formInputClass} />
-          </FormField>
-        </section>
-
-        <button
-          type="submit"
-          disabled={updateSiteContent.isPending}
-          className="self-start bg-verde-principal text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-verde-escuro transition-colors disabled:opacity-60"
-        >
-          {updateSiteContent.isPending ? "Salvando..." : "Salvar alterações"}
-        </button>
-      </form>
+      )}
     </div>
   );
 }

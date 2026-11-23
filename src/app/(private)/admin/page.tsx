@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, BookOpenText, FileText, Handshake, Package, Users, ExternalLink, Sparkles, Images } from "lucide-react";
+import { ArrowRight, BookOpenText, Handshake, Package, Users, ExternalLink, Sparkles, Images } from "lucide-react";
 
 const shortcuts = [
   { href: "/admin/paginas", title: "Páginas do site", description: "Veja as páginas públicas e saiba o que já pode editar.", icon: BookOpenText },
@@ -7,7 +7,6 @@ const shortcuts = [
   { href: "/admin/equipe", title: "Equipe", description: "Gerencie os integrantes e suas informações.", icon: Users },
   { href: "/admin/parcerias", title: "Parcerias", description: "Organize as parcerias da Saboaria.", icon: Handshake },
   { href: "/admin/midia", title: "Biblioteca de mídia", description: "Envie e reutilize imagens do site.", icon: Images },
-  { href: "/admin/conteudo", title: "Dados gerais (legado)", description: "Configurações antigas; para editar o site, prefira Páginas do site.", icon: FileText },
 ];
 
 export default function AdminDashboardPage() {
@@ -24,6 +23,6 @@ export default function AdminDashboardPage() {
         {shortcuts.map(({href,title,description,icon:Icon}) => <Link href={href} key={href} className="group flex min-h-44 flex-col rounded-2xl border border-emerald-200/70 bg-gradient-to-br from-white via-[#f8fcf6] to-[#eef7e9] p-6 shadow-[0_8px_28px_-20px_rgba(39,92,53,0.5)] transition hover:-translate-y-0.5 hover:border-emerald-400/60 hover:shadow-lg focus-visible:outline-2 focus-visible:outline-verde-principal"><span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-verde-claro text-verde-principal"><Icon size={23}/></span><span className="text-base font-semibold text-verde-escuro">{title}</span><span className="mt-1 text-sm leading-relaxed text-verde-muted flex-1">{description}</span><span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-verde-principal">Acessar <ArrowRight size={16} className="transition-transform group-hover:translate-x-1"/></span></Link>)}
       </div>
     </section>
-    <section className="rounded-2xl border border-emerald-200/70 bg-gradient-to-r from-white to-[#f1f8ee] p-5 sm:p-6"><h2 className="font-semibold text-verde-escuro">Dica para começar</h2><p className="mt-2 text-sm leading-relaxed text-verde-muted">Quer alterar informações sobre a Saboaria? Acesse <Link className="font-semibold text-verde-principal underline underline-offset-2" href="/admin/conteudo">Conteúdo institucional</Link>. Para editar as páginas públicas, prefira o menu Páginas do site. Esta tela mantém dados gerais antigos e não publica o conteúdo do CMS.</p></section>
+    <section className="rounded-2xl border border-emerald-200/70 bg-gradient-to-r from-white to-[#f1f8ee] p-5 sm:p-6"><h2 className="font-semibold text-verde-escuro">Dica para começar</h2><p className="mt-2 text-sm leading-relaxed text-verde-muted">Quer alterar informações sobre a Saboaria? Acesse <Link className="font-semibold text-verde-principal underline underline-offset-2" href="/admin/paginas">Páginas do site</Link>. Para editar as páginas públicas, prefira o menu Páginas do site. Os dados antigos continuam preservados em um arquivo de consulta restrito a administradores.</p></section>
   </div>;
 }

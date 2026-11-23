@@ -1,36 +1,15 @@
 import { NextResponse } from "next/server";
-import { getAdminSession } from "@/lib/session";
-import { siteContentFormSchema } from "@/schemas/site-content.schema";
-import { getSiteContent, saveSiteContent } from "@/services/site-content.service";
+import { requireAdminRole } from "@/lib/admin-authorization";
+import { getSiteContent } from "@/services/site-content.service";
 
+// API legada preservada para consulta; alterações devem ocorrer no CMS.
 export async function GET() {
-  const session = await getAdminSession();
-  if (!session) {
-    return NextResponse.json({ message: "Não autorizado" }, { status: 401 });
-  }
-
+  const admin = await requireAdminRole();
+  if (!admin) return NextResponse.json({ message: "Acesso restrito a administradores" }, { status: 403 });
   const siteContent = await getSiteContent();
-  return NextResponse.json({ siteContent });
+  return NextResponse.json({ siteContent }, { headers: { "Cache-Control": "no-store" } });
 }
 
-export async function PATCH(request: Request) {
-  const session = await getAdminSession();
-  if (!session) {
-    return NextResponse.json({ message: "Não autorizado" }, { status: 401 });
-  }
-
-  const body = await request.json();
-  const parseResult = siteContentFormSchema.safeParse(body);
-
-  if (!parseResult.success) {
-    return NextResponse.json({ message: "Dados inválidos" }, { status: 400 });
-  }
-
-  try {
-    const siteContent = await saveSiteContent(parseResult.data);
-    return NextResponse.json({ siteContent });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ message: "Erro ao salvar conteúdo" }, { status: 500 });
-  }
+export async function PATCH() {
+  return NextResponse.json({ message: "Edição legada desativada. Utilize /admin/paginas para editar o conteúdo do site." }, { status: 410 });
 }

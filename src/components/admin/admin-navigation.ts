@@ -1,4 +1,4 @@
-import { LayoutDashboard, Files, Package, Users, Handshake, FileText, Images, ClipboardList, UserCog } from "lucide-react";
+import { LayoutDashboard, Files, Package, Users, Handshake, Images, ClipboardList, UserCog } from "lucide-react";
 
 export const adminNavigation = [
   { href: "/admin", label: "Visão geral", icon: LayoutDashboard },
@@ -8,6 +8,5 @@ export const adminNavigation = [
   { href: "/admin/parcerias", label: "Parcerias", icon: Handshake },
   { href: "/admin/midia", label: "Biblioteca de mídia", icon: Images },
   { href: "/admin/usuarios", label: "Usuários", icon: UserCog },
-  { href: "/admin/auditoria", label: "Auditoria", icon: ClipboardList, UserCog },
-  { href: "/admin/conteudo", label: "Dados gerais (legado)", icon: FileText, UserCog },
+  { href: "/admin/auditoria", label: "Auditoria", icon: ClipboardList },
 ];
