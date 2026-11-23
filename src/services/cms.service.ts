@@ -12,6 +12,6 @@ export function saveCmsPage(slug: CmsPageSlug, values: z.infer<typeof cmsPageUpd
 // Para páginas públicas: só seções habilitadas, com fallback estático
 // até os editores de conteúdo das Sprints 3 e 4 estarem prontos.
 export async function getPublicCmsSections(slug: CmsPageSlug) {
-  const page = await getCmsPage(slug);
-  return (page?.sections ?? []).filter(section => section.enabled);
+  const { getPublishedSections } = await import("@/services/cms-publication.service");
+  return getPublishedSections(slug);
 }

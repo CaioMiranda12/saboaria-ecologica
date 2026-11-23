@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { CMS_EDITOR_FIELDS, type InstitutionalSlug } from "@/constants/cms-editor-fields";
 import { Save, ExternalLink, RotateCcw } from "lucide-react";
+import CmsPublishingControls from "./CmsPublishingControls";
 type Section = { key: string; title: string; enabled: boolean; position: number; content: Record<string, unknown> };
 export default function InstitutionalEditor({ slug }: { slug: InstitutionalSlug }) {
   const config = CMS_EDITOR_FIELDS[slug];
@@ -28,20 +29,28 @@ export default function InstitutionalEditor({ slug }: { slug: InstitutionalSlug 
     setMessage("");
     setSections(old => old.map(s => s.key === key ? { ...s, content: { ...s.content, [field]: field === "steps" ? value.split("\n").filter(Boolean) : value } } : s));
   }
+  async function reloadDraft() {
+    const r = await fetch(`/api/admin/cms/pages/${slug}`, { cache: "no-store" });
+    if (!r.ok) throw new Error("Erro ao recarregar rascunho");
+    const result = await r.json();
+    const loaded: Section[] = result.page.sections.map((s: Section) => ({ ...s, content: s.content || {} }));
+    setSections(loaded); setSnapshot(JSON.stringify(loaded));
+  }
   async function save() {
     setSaving(true); setError(""); setMessage("");
     try {
       const r = await fetch(`/api/admin/cms/pages/${slug}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sections: sections.map(({ key, title, position, enabled, content }) => ({ key, title, position, enabled, content })) }) });
       const result = await r.json();
       if (!r.ok) throw new Error(result.message || "Não foi possível salvar");
-      setSnapshot(JSON.stringify(sections)); setMessage("Alterações salvas! Confira a página pública.");
+      setSnapshot(JSON.stringify(sections)); setMessage("Rascunho salvo. Publique para atualizar a página pública.");
     } catch (e) { setError(e instanceof Error ? e.message : "Erro inesperado"); } finally { setSaving(false); }
   }
   if (loading) return <p role="status" className="rounded-xl bg-white p-6">Carregando conteúdo...</p>;
   if (!snapshot) return <p role="alert" className="rounded-xl bg-red-50 p-6 text-red-800">{error || "Nenhuma seção encontrada. Execute o seed do CMS."}</p>;
   return <div className="space-y-5">
+    <CmsPublishingControls slug={slug} dirty={dirty} onRestored={reloadDraft} />
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-white p-4 border border-verde-medio/15">
-      <span className="text-sm text-verde-muted">{dirty ? "● Alterações não salvas" : "✓ Tudo salvo"} · Salvar atualiza o site público.</span>
+      <span className="text-sm text-verde-muted">{dirty ? "● Alterações não salvas" : "✓ Tudo salvo"} · Salvar mantém um rascunho.</span>
       <div className="flex flex-wrap gap-2">
         <a href={config.path} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm"><ExternalLink size={16}/> Ver página</a>
         <button disabled={!dirty || saving} onClick={() => { setSections(JSON.parse(snapshot)); setMessage(""); }} className="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm disabled:opacity-40"><RotateCcw size={16}/> Descartar</button>

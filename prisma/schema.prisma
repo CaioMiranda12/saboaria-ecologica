@@ -98,6 +98,8 @@ model CmsPage {
   slug      String       @unique
   title     String
   sections  CmsSection[]
+  publication CmsPublication?
+  versions CmsVersion[]
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 
@@ -136,4 +138,24 @@ model MediaAsset {
 
   @@index([createdAt])
   @@map("media_assets")
+}
+
+// Conteúdo publicado, separado do rascunho em cms_sections.
+model CmsPublication {
+  id String @id @default(cuid())
+  pageId String @unique
+  page CmsPage @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  sections Json
+  publishedAt DateTime @default(now())
+  @@map("cms_publications")
+}
+
+model CmsVersion {
+  id String @id @default(cuid())
+  pageId String
+  page CmsPage @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  sections Json
+  createdAt DateTime @default(now())
+  @@index([pageId, createdAt])
+  @@map("cms_versions")
 }

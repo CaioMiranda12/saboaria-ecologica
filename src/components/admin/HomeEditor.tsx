@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ExternalLink, Eye, Save, RotateCcw } from 'lucide-react';
+import CmsPublishingControls from './CmsPublishingControls';
 
 type SectionKey = 'hero' | 'sobre';
 type Section = { key: SectionKey; title: string; position: number; enabled: boolean; content: Record<string, string> };
@@ -32,6 +33,16 @@ export default function HomeEditor() {
   const [error, setError] = useState('');
   const dirty = !!original && JSON.stringify(sections) !== original;
 
+  const reloadDraft = async () => {
+    const response = await fetch('/api/admin/cms/pages/inicio', { cache: 'no-store' });
+    if (!response.ok) throw new Error('Falha ao recarregar rascunho');
+    const result = await response.json();
+    const loaded: Section[] = defaults.map(base => {
+      const stored = result.page?.sections?.find((s: {key:string}) => s.key === base.key);
+      return stored ? { ...base, enabled: stored.enabled, position: stored.position, content: {...base.content, ...stored.content} } : base;
+    });
+    setSections(loaded); setOriginal(JSON.stringify(loaded));
+  };
   useEffect(() => {
     let mounted = true;
     fetch('/api/admin/cms/pages/inicio', { cache: 'no-store' }).then(async response => {
@@ -64,7 +75,7 @@ export default function HomeEditor() {
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Erro ao salvar conteúdo.');
       setOriginal(JSON.stringify(sections));
-      setNotice('Alterações salvas! Abra o site público para conferir.');
+      setNotice('Rascunho salvo. Clique em Publicar página para atualizar o site.');
     } catch (e) { setError(e instanceof Error ? e.message : 'Erro inesperado.'); }
     finally { setSaving(false); }
   };
@@ -72,8 +83,9 @@ export default function HomeEditor() {
   if (loading) return <div role="status" className="rounded-2xl bg-white p-8 text-verde-muted">Carregando conteúdo...</div>;
   if (error && !original) return <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-5 text-red-800">{error}</div>;
   return <div className="space-y-5">
+    <CmsPublishingControls slug="inicio" dirty={dirty} onRestored={reloadDraft} />
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-verde-medio/15 bg-white p-4">
-      <span className="text-sm text-verde-muted">{dirty ? '● Alterações não salvas' : '✓ Tudo salvo'} · As alterações são publicadas ao salvar.</span>
+      <span className="text-sm text-verde-muted">{dirty ? '● Alterações não salvas' : '✓ Tudo salvo'} · Salvar não publica no site.</span>
       <div className="flex flex-wrap gap-2">
         <a href="/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-verde-medio/30 px-4 py-2 text-sm font-medium text-verde-principal"><ExternalLink size={16}/> Ver site</a>
         <button type="button" disabled={!dirty || saving} onClick={() => { setSections(JSON.parse(original)); setNotice(''); }} className="inline-flex items-center gap-2 rounded-lg border border-verde-medio/30 px-4 py-2 text-sm disabled:opacity-40"><RotateCcw size={16}/> Descartar</button>
