@@ -23,3 +23,24 @@
 button {
   cursor: pointer;
 }
+/* Identidade visual do painel administrativo — Sprint 9.1 */
+.admin-shell {
+  background: radial-gradient(ellipse at 85% 0%, rgba(210,235,203,.65), transparent 42%),
+              linear-gradient(145deg, #f7fbf4 0%, #eef6e9 52%, #f9fbf6 100%);
+}
+.admin-sidebar {
+  background: linear-gradient(165deg, #315d32 0%, #254b35 53%, #183c30 100%);
+  box-shadow: 6px 0 30px -20px rgba(20,65,37,.65);
+}
+.admin-hero {
+  background: linear-gradient(115deg, #315e35 0%, #3f783f 55%, #658e4c 100%);
+  box-shadow: 0 18px 38px -26px rgba(29,78,39,.65);
+}
+.admin-page-heading {
+  background: linear-gradient(110deg, #e5f3e0 0%, #f4faf0 65%, #ffffff 100%);
+  border: 1px solid #cfe5ca;
+  box-shadow: 0 12px 34px -27px rgba(38,93,43,.45);
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-shell * { scroll-behavior: auto; }
+}
