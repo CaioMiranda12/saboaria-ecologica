@@ -30,6 +30,8 @@ export default function AdminProductsPage() {
   const confirmDialog = useConfirmDialog<{ id: string; name: string }>();
 
   const [search, setSearch] = useState("");
+  const [visibility, setVisibility] = useState("ALL");
+  const [sort, setSort] = useState("order");
   const [filters, setFilters] = useState<ProductFilters>(DEFAULT_PRODUCT_FILTERS);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
@@ -51,9 +53,10 @@ export default function AdminProductsPage() {
       const matchesFeatured =
         filters.featured === "ALL" || (filters.featured === "YES" ? product.isFeatured : !product.isFeatured);
 
-      return matchesSearch && matchesType && matchesWeight && matchesFeatured;
-    });
-  }, [products, search, filters]);
+      const matchesVisibility = visibility === "ALL" || (visibility === "PUBLIC" ? product.isPublished : !product.isPublished);
+      return matchesSearch && matchesType && matchesWeight && matchesFeatured && matchesVisibility;
+    }).sort((a, b) => sort === "name" ? a.mainName.localeCompare(b.mainName) : sort === "newest" ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime() : a.displayOrder - b.displayOrder);
+  }, [products, search, filters, visibility, sort]);
 
   const handleConfirmDelete = () => {
     if (!confirmDialog.target) return;
@@ -80,7 +83,7 @@ export default function AdminProductsPage() {
         </Link>
       </div>
 
-      <div className="flex items-center gap-3 mb-5">
+      <div className="flex flex-wrap items-center gap-3 mb-5">
         <div className="relative flex-1 max-w-xs">
           <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-verde-muted" />
           <input
@@ -91,6 +94,12 @@ export default function AdminProductsPage() {
           />
         </div>
 
+        <select aria-label="Visibilidade dos produtos" value={visibility} onChange={(e) => setVisibility(e.target.value)} className="border border-verde-medio/20 rounded-xl px-3 py-2.5 text-sm bg-white">
+          <option value="ALL">Todos os produtos</option><option value="PUBLIC">Publicados</option><option value="HIDDEN">Ocultos</option>
+        </select>
+        <select aria-label="Ordenação dos produtos" value={sort} onChange={(e) => setSort(e.target.value)} className="border border-verde-medio/20 rounded-xl px-3 py-2.5 text-sm bg-white">
+          <option value="order">Ordem de exibição</option><option value="name">Nome (A-Z)</option><option value="newest">Mais recentes</option>
+        </select>
         <button
           onClick={() => setIsFilterModalOpen(true)}
           className="relative flex items-center gap-2 border border-verde-medio/20 text-verde-escuro px-4 py-2.5 rounded-xl text-sm font-medium hover:border-verde-medio transition-colors"
@@ -103,6 +112,7 @@ export default function AdminProductsPage() {
         </button>
       </div>
 
+      {products && <p className="text-xs text-verde-muted mb-3" aria-live="polite">{filteredProducts.length} de {products.length} produtos</p>}
       {isLoading && <p className="text-sm text-verde-muted font-light">Carregando...</p>}
 
       {products && products.length > 0 && filteredProducts.length === 0 && (
@@ -115,7 +125,7 @@ export default function AdminProductsPage() {
 
       {filteredProducts.length > 0 && (
         <div className="bg-white rounded-2xl border border-verde-medio/10 overflow-hidden">
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto"><table className="w-full min-w-[760px] text-sm">
             <thead className="bg-verde-claro/40 text-left">
               <tr>
                 <th className="px-5 py-3 w-20 font-medium text-verde-escuro">Imagem</th>
@@ -123,6 +133,8 @@ export default function AdminProductsPage() {
                 <th className="px-5 py-3 font-medium text-verde-escuro">Tipo</th>
                 <th className="px-5 py-3 font-medium text-verde-escuro">Peso</th>
                 <th className="px-5 py-3 font-medium text-verde-escuro">Destaque</th>
+                <th className="px-5 py-3 font-medium text-verde-escuro">No site</th>
+                <th className="px-5 py-3 font-medium text-verde-escuro">Ordem</th>
                 <th className="px-5 py-3" />
               </tr>
             </thead>
@@ -147,6 +159,8 @@ export default function AdminProductsPage() {
                   <td className="px-5 py-3 text-verde-muted">{PRODUCT_TYPE_LABELS[product.type]}</td>
                   <td className="px-5 py-3 text-verde-muted">{product.weight ?? "—"}</td>
                   <td className="px-5 py-3 text-verde-muted">{product.isFeatured ? "Sim" : "Não"}</td>
+                  <td className="px-5 py-3 text-verde-muted">{product.isPublished ? "Publicado" : "Oculto"}</td>
+                  <td className="px-5 py-3 text-verde-muted">{product.displayOrder}</td>
                   <td className="px-5 py-3">
                     <div className="flex justify-end gap-2">
                       <Link
@@ -168,7 +182,7 @@ export default function AdminProductsPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
 

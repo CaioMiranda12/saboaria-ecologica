@@ -26,6 +26,8 @@ export const productFormSchema = z.object({
   usageInstructions: z.string().optional(),
   badge: z.string().optional(),
   isFeatured: z.boolean().default(false),
+  isPublished: z.boolean().default(true),
+  displayOrder: z.coerce.number().int().min(0, "Use uma ordem igual ou maior que zero").default(0),
   hasFragranceOptions: z.boolean().default(false),
   hasSizeOptions: z.boolean().default(false),
   imageUrl: z.string().refine(isValidImageUrl, "Informe uma URL válida").optional(),

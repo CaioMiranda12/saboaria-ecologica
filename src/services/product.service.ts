@@ -25,6 +25,7 @@ export function listPublicProducts() {
 /** Faz o catálogo público refletir na hora o que foi salvo no admin. */
 function revalidatePublicCatalog() {
   revalidatePath("/produtos");
+  revalidatePath("/");
 }
 
 export async function getProductOrThrow(id: string) {
@@ -61,6 +62,8 @@ function mapFormValuesToProductData(values: ProductFormValues) {
     usageInstructions: values.usageInstructions || null,
     badge: values.badge || null,
     isFeatured: values.isFeatured,
+    isPublished: values.isPublished,
+    displayOrder: values.displayOrder,
     hasFragranceOptions: values.hasFragranceOptions,
     hasSizeOptions: values.hasSizeOptions,
     imageUrl: values.imageUrl || null,

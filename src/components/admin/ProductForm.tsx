@@ -44,6 +44,8 @@ export function ProductForm({ defaultValues, onSubmit, isSubmitting, submitLabel
       badge: defaultValues?.badge ?? "",
       imageUrl: defaultValues?.imageUrl ?? "",
       isFeatured: defaultValues?.isFeatured ?? false,
+      isPublished: defaultValues?.isPublished ?? true,
+      displayOrder: defaultValues?.displayOrder ?? 0,
       hasFragranceOptions: defaultValues?.hasFragranceOptions ?? false,
       hasSizeOptions: defaultValues?.hasSizeOptions ?? false,
       ingredientsText: defaultValues?.ingredients?.join(", ") ?? "",
@@ -138,6 +140,13 @@ export function ProductForm({ defaultValues, onSubmit, isSubmitting, submitLabel
         <input {...register("variantsText")} className={formInputClass} placeholder="Tradicional, Leite de coco" />
       </FormField>
 
+      <div className="rounded-2xl border border-verde-medio/20 bg-verde-claro/30 p-4 space-y-3">
+        <p className="font-semibold text-sm text-verde-escuro">Exibição no site</p>
+        <Checkbox label="Produto visível no catálogo público" {...register("isPublished")} />
+        <FormField label="Ordem de exibição (menor número primeiro)" error={errors.displayOrder?.message}>
+          <input type="number" min="0" {...register("displayOrder", { valueAsNumber: true })} className={formInputClass} />
+        </FormField>
+      </div>
       <div className="flex flex-wrap gap-6">
         <Checkbox label="Produto em destaque" {...register("isFeatured")} />
         <Checkbox label="Permite consultar fragrâncias" {...register("hasFragranceOptions")} />

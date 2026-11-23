@@ -3,6 +3,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { teamMemberFormSchema, type TeamMemberFormValues } from "@/schemas/team-member.schema";
+import { Controller } from "react-hook-form";
+import { ImageUpload } from "@/components/ui/ImageUpload";
 import { FormField, formInputClass } from "@/components/ui/FormField";
 
 type TeamMemberFormProps = {
@@ -18,6 +20,7 @@ const inputClass =
 export function TeamMemberForm({ defaultValues, onSubmit, isSubmitting, submitLabel }: TeamMemberFormProps) {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<TeamMemberFormValues>({
@@ -28,6 +31,7 @@ export function TeamMemberForm({ defaultValues, onSubmit, isSubmitting, submitLa
       bio: defaultValues?.bio ?? "",
       initials: defaultValues?.initials ?? "",
       order: defaultValues?.order ?? 0,
+      imageUrl: defaultValues?.imageUrl ?? "",
     },
   });
 
@@ -50,6 +54,9 @@ export function TeamMemberForm({ defaultValues, onSubmit, isSubmitting, submitLa
         <textarea {...register("bio")} rows={4} className={formInputClass} />
       </FormField>
 
+      <FormField label="Foto do integrante (opcional)">
+        <Controller name="imageUrl" control={control} render={({ field }) => <ImageUpload value={field.value ?? ""} onChange={field.onChange} disabled={isSubmitting} error={errors.imageUrl?.message} />} />
+      </FormField>
       <FormField label="Ordem de exibição" error={errors.order?.message}>
         <input type="number" {...register("order")} className={formInputClass} />
       </FormField>

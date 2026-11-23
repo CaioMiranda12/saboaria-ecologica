@@ -2,12 +2,13 @@ import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 
 export function findAllProducts() {
-  return prisma.product.findMany({ orderBy: { createdAt: "desc" } });
+  return prisma.product.findMany({ orderBy: [{ displayOrder: "asc" }, { createdAt: "desc" }] });
 }
 
 export function findPublicProducts() {
   return prisma.product.findMany({
-    orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
+    where: { isPublished: true },
+    orderBy: [{ isFeatured: "desc" }, { displayOrder: "asc" }, { createdAt: "desc" }],
   });
 }
 
