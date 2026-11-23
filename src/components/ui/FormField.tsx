@@ -5,7 +5,7 @@ type FormFieldProps = {
 };
 
 export const formInputClass =
-  "border border-verde-medio/20 rounded-xl px-4 py-2.5 text-sm text-verde-escuro focus:outline-none focus:border-verde-medio transition-colors w-full";
+  "admin-control rounded-xl px-4 py-3 text-sm text-verde-escuro transition-colors w-full";
 
 export function FormField({ label, error, children }: FormFieldProps) {
   return (

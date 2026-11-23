@@ -9,5 +9,5 @@ export const adminNavigation = [
   { href: "/admin/midia", label: "Biblioteca de mídia", icon: Images },
   { href: "/admin/usuarios", label: "Usuários", icon: UserCog },
   { href: "/admin/auditoria", label: "Auditoria", icon: ClipboardList, UserCog },
-  { href: "/admin/conteudo", label: "Conteúdo institucional", icon: FileText, UserCog },
+  { href: "/admin/conteudo", label: "Dados gerais (legado)", icon: FileText, UserCog },
 ];

@@ -55,7 +55,7 @@ export default function AdminSiteContentPage() {
 
   return (
     <div>
-      <h1 className="font-serif text-2xl text-verde-escuro mb-6">Conteúdo do site</h1>
+      <h1 className="font-serif text-2xl text-verde-escuro mb-3">Dados gerais (legado)</h1><div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950"><strong>Importante:</strong> esta tela utiliza a tabela antiga de informações institucionais e não controla a publicação das páginas do CMS. Para editar os textos que aparecem no site, use <a href="/admin/paginas" className="font-semibold underline">Páginas do site</a>. Mantivemos esta tela para não apagar dados anteriores.</div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8 max-w-2xl">
         <section className="flex flex-col gap-4">
