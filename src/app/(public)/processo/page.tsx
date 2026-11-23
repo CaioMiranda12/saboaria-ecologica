@@ -1,3 +1,4 @@
+import { publicSection, cmsText } from "@/lib/cms-public";
 import Link from 'next/link'
 import EtapaTimeline from '@/components/EtapaTimeline'
 import {
@@ -13,7 +14,9 @@ const numerosDoProcesso = [
   { valor: '2 anos', label: 'Validade dos produtos' },
 ]
 
-const Processo = () => {
+const Processo = async () => {
+  const section = await publicSection("processo", "etapas");
+  const content = section?.content ?? {};
   return (
     <div className="bg-creme text-[#1a2e1f]">
 
@@ -26,11 +29,10 @@ const Processo = () => {
               Como produzimos
             </span>
             <h1 className="font-serif text-4xl md:text-5xl text-white leading-tight mb-4">
-              Do resíduo ao produto<br />
-              <em className="text-white/50">sustentável</em>
+              {cmsText(content.title, "Do resíduo ao produto sustentável")}
             </h1>
             <p className="text-white/65 font-light leading-relaxed text-sm md:text-base max-w-xl">
-              Cada produto nasce de um processo artesanal responsável, que transforma óleo saturado de fritura em limpeza eficaz e biodegradável, sem agredir o meio ambiente.
+              {cmsText(content.description, "Cada produto nasce de um processo artesanal responsável, que transforma óleo saturado de fritura em limpeza eficaz e biodegradável, sem agredir o meio ambiente.")}
             </p>
           </div>
           <img
@@ -58,6 +60,7 @@ const Processo = () => {
         ))}
       </div>
 
+      {Array.isArray(content.steps) && content.steps.length > 0 && <div className="bg-white px-5 md:px-20 py-8"><h2 className="font-serif text-2xl text-verde-principal mb-4">Resumo das etapas</h2><ol className="grid gap-3 md:grid-cols-4">{content.steps.filter((step): step is string => typeof step === "string").map((step,i) => <li key={i} className="rounded-xl bg-verde-claro p-4 text-sm text-verde-principal"><strong>{i+1}.</strong> {step}</li>)}</ol></div>}
       {/* Timeline de etapas */}
       <section className="px-5 md:px-20 py-16 md:py-20 bg-creme">
         <p className="text-xs font-medium tracking-widest uppercase text-verde-principal mb-2">Passo a passo</p>

@@ -1,6 +1,9 @@
+import { publicSection, cmsText } from "@/lib/cms-public";
 import { equipe } from "@/data/marca";
 
-export default function Equipe() {
+export default async function Equipe() {
+  const section = await publicSection("equipe", "introducao");
+  const content = section?.content ?? {};
   return (
     <section className="px-5 md:px-20 py-14 md:py-20 bg-creme relative">
       <img
@@ -11,10 +14,10 @@ export default function Equipe() {
 
       <div className="max-w-5xl mx-auto pt-32 md:pt-0">
         <h2 className="font-serif text-3xl md:text-5xl text-verde-escuro mb-4">
-          Nossa <em className="text-verde-principal">equipe</em>
+          {cmsText(content.title, "Nossa equipe")}
         </h2>
         <p className="text-verde-muted font-light leading-relaxed max-w-xl mb-12">
-          Pessoas comprometidas com o impacto social e ambiental que move a Saboaria Ecológica.
+          {cmsText(content.description, "Pessoas comprometidas com o impacto social e ambiental que move a Saboaria Ecológica.")}
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

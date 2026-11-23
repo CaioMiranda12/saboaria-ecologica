@@ -3,11 +3,11 @@ import { ArrowLeft, ArrowUpRight, FileText, LockKeyhole } from "lucide-react";
 
 const pages = [
   { title: "Página inicial", path: "/", note: "Edite o banner principal e a seção Quem somos.", edit: "/admin/paginas/inicio" },
-  { title: "Sobre nós", path: "/sobre", note: "Editor de página previsto para a Sprint 4." },
-  { title: "Nosso processo", path: "/processo", note: "Editor de página previsto para a Sprint 4." },
+  { title: "Sobre nós", path: "/sobre", note: "Edite a história, missão, visão e valores.", edit: "/admin/paginas/sobre" },
+  { title: "Nosso processo", path: "/processo", note: "Edite a apresentação e as etapas do processo.", edit: "/admin/paginas/processo" },
   { title: "Produtos", path: "/produtos", note: "Os produtos já podem ser gerenciados.", edit: "/admin/produtos" },
-  { title: "Equipe", path: "/equipe", note: "Os integrantes já podem ser gerenciados.", edit: "/admin/equipe" },
-  { title: "Contato", path: "/contato", note: "Dados institucionais editáveis; editor completo na Sprint 4.", edit: "/admin/conteudo" },
+  { title: "Equipe", path: "/equipe", note: "Edite a apresentação da equipe. Integrantes no cadastro de equipe.", edit: "/admin/paginas/equipe" },
+  { title: "Contato", path: "/contato", note: "Edite canais de contato, endereço e horários.", edit: "/admin/paginas/contato" },
 ];
 
 export default function AdminPagesHub() {

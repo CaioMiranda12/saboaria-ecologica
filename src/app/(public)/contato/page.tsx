@@ -1,3 +1,4 @@
+import { publicSection, cmsText } from "@/lib/cms-public";
 import { contatosDaMarca } from '@/data/marca'
 import { localizacoes } from '@/data/localizacoes'
 import { MapaBrasil } from '@/components/MapaBrasil'
@@ -57,7 +58,15 @@ const horarioDeAtendimento = [
   { dia: 'Sábado e Domingo', hora: 'Fechado' },
 ]
 
-const Contato = () => {
+const Contato = async () => {
+  const section = await publicSection("contato", "contatos");
+  const content = section?.content ?? {};
+  const whatsapp = cmsText(content.whatsapp, contatosDaMarca.whatsapp).replace(/\D/g, "");
+  const instagram = cmsText(content.instagram, contatosDaMarca.instagram).replace(/^@/, "");
+  const email = cmsText(content.email, contatosDaMarca.email);
+  const linkedin = cmsText(content.linkedin, contatosDaMarca.linkedin);
+  const canais = canaisDeContato.map(c => c.nome === "WhatsApp" ? {...c,valor:whatsapp,href:`https://wa.me/${whatsapp}`} : c.nome === "Instagram" ? {...c,valor:`@${instagram}`,href:`https://instagram.com/${instagram}`} : c.nome === "E-mail" ? {...c,valor:email,href:`mailto:${email}`} : {...c,href:`https://linkedin.com/in/${linkedin}`});
+  const hours = cmsText(content.hours, "").split("\n").filter(Boolean);
   return (
     <div className="bg-creme text-[#1a2e1f]">
 
@@ -70,10 +79,10 @@ const Contato = () => {
               Fale com a gente
             </span>
             <h1 className="font-serif text-4xl md:text-5xl text-white leading-tight mb-4">
-              Entre em <em className="text-white/50">contato</em>
+              {cmsText(content.title, "Entre em contato")}
             </h1>
             <p className="text-white/65 font-light leading-relaxed text-sm md:text-base">
-              Tire suas dúvidas, faça seu pedido ou saiba como contribuir com a nossa causa. Estamos prontos para te atender pelos canais abaixo.
+              {cmsText(content.description, "Tire suas dúvidas, faça seu pedido ou saiba como contribuir com a nossa causa. Estamos prontos para te atender pelos canais abaixo.")}
             </p>
           </div>
           <img
@@ -87,7 +96,7 @@ const Contato = () => {
 
       {/* Canais rápidos */}
       <div className="grid grid-cols-2 md:grid-cols-4 bg-white border-b border-verde-medio/10">
-        {canaisDeContato.map((canal, i) => (
+        {canais.map((canal, i) => (
           <a
             key={canal.nome}
             href={canal.href}
@@ -133,7 +142,7 @@ const Contato = () => {
               Prefere um contato direto? Escolha o canal mais conveniente para você.
             </p>
             <div className="flex flex-col gap-3">
-              {canaisDeContato.map((canal) => (
+              {canais.map((canal) => (
                 <a
                   key={canal.nome}
                   href={canal.href}
@@ -179,7 +188,7 @@ const Contato = () => {
               Horário de atendimento
             </p>
             <div className="flex flex-col divide-y divide-white/6">
-              {horarioDeAtendimento.map((item) => (
+              {(hours.length ? hours.map(line => { const [dia, ...rest] = line.split(":"); return {dia, hora: rest.join(":").trim()}; }) : horarioDeAtendimento).map((item) => (
                 <div key={item.dia} className="flex justify-between items-center py-2.5">
                   <span className="text-sm text-white/70 font-light">{item.dia}</span>
                   <span className="text-sm text-white font-medium">{item.hora}</span>

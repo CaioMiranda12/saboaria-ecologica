@@ -1,3 +1,4 @@
+import { publicSection, cmsText } from "@/lib/cms-public";
 import Link from 'next/link'
 import { historiaDaMarca, contatosDaMarca } from '@/data/marca'
 
@@ -150,7 +151,11 @@ const ods = [
   { numero: '13', titulo: 'Ação Contra a Mudança do Clima', descricao: 'Mitigação de 89,23 toneladas de CO₂ equivalente entre 2023 e 2025.' },
 ]
 
-const Sobre = () => {
+const Sobre = async () => {
+  const section = await publicSection("sobre", "institucional");
+  const content = section?.content ?? {};
+  const ano = cmsText(content.foundedYear, historiaDaMarca.fundacao);
+  const pilares = pilaresInstitucionais.map((pilar, i) => ({...pilar, texto: cmsText(content[["mission","vision","values"][i]], pilar.texto)}));
   return (
     <div className="bg-creme text-[#1a2e1f]">
 
@@ -162,25 +167,24 @@ const Sobre = () => {
             Nossa história
           </span>
           <h1 className="font-serif text-4xl md:text-5xl text-white leading-tight mb-5">
-            Mais do que uma saboaria,<br />
-            <em className="text-white/50">um movimento</em>
+            {cmsText(content.title, "Mais do que uma saboaria, um movimento")}
           </h1>
           <p className="text-white/65 font-light leading-relaxed text-base max-w-lg">
-            Fundada em {historiaDaMarca.fundacao} com o propósito de transformar resíduos em soluções sustentáveis, unindo consciência ambiental, empoderamento comunitário e inovação social. Um negócio apoiado pelo Instituto Aço Cearense e alinhado aos princípios ESG.
+            {cmsText(content.intro, `Fundada em ${ano} com o propósito de transformar resíduos em soluções sustentáveis, unindo consciência ambiental, empoderamento comunitário e inovação social. Um negócio apoiado pelo Instituto Aço Cearense e alinhado aos princípios ESG.`)}
           </p>
         </div>
         <div className="relative z-10 flex flex-col gap-4">
           {imagensDaPagina.hero && (
             <div className="rounded-2xl overflow-hidden h-52 md:h-60">
               <img
-                src={imagensDaPagina.hero}
+                src={cmsText(content.imageUrl, imagensDaPagina.hero)}
                 alt="Saboaria Ecológica"
                 className="w-full h-full object-contain"
               />
             </div>
           )}
           <div className="bg-white/10 border border-white/15 rounded-2xl p-6">
-            <h3 className="font-serif text-2xl text-white mb-2">Fundada em {historiaDaMarca.fundacao}</h3>
+            <h3 className="font-serif text-2xl text-white mb-2">Fundada em {ano}</h3>
             <p className="text-white/60 text-sm font-light leading-relaxed">
               Um negócio social que nasceu da necessidade de transformar óleo saturado de frituras em produtos de limpeza ecológicos e acessíveis, gerando renda para mulheres de comunidades vulneráveis e preservando recursos naturais.
             </p>
@@ -190,7 +194,7 @@ const Sobre = () => {
 
       {/* Missão, Visão e Valores */}
       <div className="grid grid-cols-1 md:grid-cols-3 bg-white border-t border-verde-principal/10">
-        {pilaresInstitucionais.map((pilar, i) => (
+        {pilares.map((pilar, i) => (
           <div key={pilar.titulo} className={`p-8 md:p-10 ${i < 2 ? 'border-b md:border-b-0 md:border-r border-verde-principal/10' : ''}`}>
             <div className="w-12 h-12 rounded-xl bg-verde-claro flex items-center justify-center mb-5">
               {pilar.icone}
