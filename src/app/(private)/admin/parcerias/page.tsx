@@ -38,12 +38,12 @@ function PartnershipLogoInput({ value, onChange }: { value: string; onChange: (u
   }
   return <div className="space-y-3">
     <p className="text-sm font-semibold text-emerald-950">Logotipo da parceria <span className="font-normal text-emerald-700">(opcional)</span></p>
-    <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50/50 p-3">
-      <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-emerald-100 bg-white">{value ? <img src={value} alt="Prévia do logotipo selecionado" className="h-full w-full object-contain p-2" /> : <ImageIcon className="text-emerald-300" size={28} />}</div>
+    <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-100/80 via-lime-50 to-white p-4 shadow-sm">
+      <div className="flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-emerald-200 bg-white/80 shadow-inner">{value ? <img src={value} alt="Prévia do logotipo selecionado" className="h-full w-full object-contain p-2" /> : <ImageIcon className="text-emerald-300" size={28} />}</div>
       <div className="flex flex-1 flex-wrap gap-2">
         <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" aria-label="Selecionar logotipo no computador" onChange={e => void upload(e.target.files?.[0])} />
-        <button type="button" disabled={uploading} onClick={() => fileRef.current?.click()} className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-3 py-2 text-sm font-semibold text-emerald-900 hover:bg-emerald-100 disabled:opacity-50">{uploading ? <Loader2 size={16} className="animate-spin" /> : <UploadCloud size={16} />}{uploading ? "Enviando..." : "Enviar do computador"}</button>
-        <button type="button" disabled={uploading} onClick={() => setPickerOpen(true)} className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-3 py-2 text-sm font-semibold text-emerald-900 hover:bg-emerald-100"><Images size={16}/> Escolher da biblioteca</button>
+        <button type="button" disabled={uploading} onClick={() => fileRef.current?.click()} className="inline-flex items-center gap-2 rounded-xl border border-emerald-300 bg-emerald-800 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-900 focus-visible:outline-2 focus-visible:outline-emerald-600 disabled:opacity-50">{uploading ? <Loader2 size={16} className="animate-spin" /> : <UploadCloud size={16} />}{uploading ? "Enviando..." : "Enviar do computador"}</button>
+        <button type="button" disabled={uploading} onClick={() => setPickerOpen(true)} className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-100/80 px-3 py-2 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-200 focus-visible:outline-2 focus-visible:outline-emerald-600"><Images size={16}/> Escolher da biblioteca</button>
         {value && <button type="button" onClick={() => onChange("")} className="rounded-xl px-3 py-2 text-sm text-rose-700 hover:bg-rose-50">Remover imagem</button>}
       </div>
     </div>
