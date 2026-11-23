@@ -11,7 +11,7 @@ export function AdminTopbar({ adminEmail }: { adminEmail: string }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean).slice(1);
-  const crumbLabels: Record<string,string> = { paginas:"Páginas", inicio:"Início", sobre:"Sobre", processo:"Processo", contato:"Contato", produtos:"Produtos", equipe:"Equipe", parcerias:"Parcerias", usuarios:"Usuários", auditoria:"Auditoria", midia:"Mídia", conteudo:"Conteúdo", novo:"Novo cadastro" };
+  const crumbLabels: Record<string,string> = { paginas:"Páginas", inicio:"Início", sobre:"Sobre", processo:"Processo", contato:"Contato", produtos:"Produtos", equipe:"Equipe", parcerias:"Parcerias", usuarios:"Usuários", "minha-conta":"Minha conta", auditoria:"Auditoria", midia:"Mídia", conteudo:"Conteúdo", novo:"Novo cadastro" };
   return <header className="relative z-20 shrink-0 bg-white border-b border-verde-medio/15">
     <div className="min-h-16 px-4 sm:px-6 flex items-center justify-between gap-3">
       <div className="min-w-0"><nav aria-label="Caminho de navegação" className="flex items-center gap-1 text-xs text-verde-muted mb-1"><Link href="/admin" className="hover:text-verde-principal">Painel</Link>{segments.map((segment,index)=><span key={`${segment}-${index}`} className="inline-flex items-center gap-1"><ChevronRight size={12}/><span aria-current={index===segments.length-1?"page":undefined} className={index===segments.length-1?"font-semibold text-verde-escuro":""}>{crumbLabels[segment] ?? (segment.length>12?"Editar registro":segment)}</span></span>)}</nav><p className="truncate text-sm font-semibold text-verde-escuro" title={adminEmail}>{adminEmail}</p></div>
