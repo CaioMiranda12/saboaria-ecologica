@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { MediaPicker } from "@/components/admin/MediaPicker";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, Trash2, Pencil, Check, X, Handshake, Search, Image as ImageIcon, ArrowUpDown, UploadCloud, Images, Loader2 } from "lucide-react";
+import { Plus, Trash2, Pencil, Check, X, Handshake, Search, Image as ImageIcon, ArrowUpDown, UploadCloud, Images, Loader2, GripVertical, ArrowUp, ArrowDown } from "lucide-react";
 import { toast } from "react-toastify";
 import { partnershipFormSchema, type PartnershipFormValues } from "@/schemas/partnership.schema";
 import { usePartnerships } from "@/hooks/usePartnerships";
@@ -57,7 +58,35 @@ export default function AdminPartnershipsPage() {
   const { data: partnerships, isLoading } = usePartnerships();
   const [search, setSearch] = useState("");
   const [showCreate, setShowCreate] = useState(false);
-  const visiblePartnerships = (partnerships ?? []).filter((item) => item.name.toLowerCase().includes(search.toLowerCase())).sort((a,b) => a.order - b.order);
+  const queryClient = useQueryClient();
+  const [orderedIds, setOrderedIds] = useState<string[]>([]);
+  const [savingOrder, setSavingOrder] = useState(false);
+  const [dragId, setDragId] = useState<string | null>(null);
+  useEffect(() => {
+    if (partnerships && !savingOrder) setOrderedIds([...partnerships].sort((a,b) => a.order - b.order || a.id.localeCompare(b.id)).map(p => p.id));
+  }, [partnerships, savingOrder]);
+  async function persistOrder(ids: string[]) {
+    setSavingOrder(true);
+    try {
+      const response = await fetch("/api/admin/partnerships/reorder", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ids }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Não foi possível salvar a ordem");
+      setOrderedIds(ids);
+      toast.success("Ordem das parcerias salva");
+      await queryClient.invalidateQueries({ queryKey: ["partnerships"] });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Erro ao reorganizar");
+      await queryClient.invalidateQueries({ queryKey: ["partnerships"] });
+    } finally { setSavingOrder(false); }
+  }
+  function move(id: string, target: number) {
+    const from = orderedIds.indexOf(id);
+    if (from < 0 || target < 0 || target >= orderedIds.length || from === target) return;
+    const ids = [...orderedIds]; ids.splice(from, 1); ids.splice(target, 0, id);
+    void persistOrder(ids);
+  }
+
+  const visiblePartnerships = (partnerships ?? []).filter((item) => item.name.toLowerCase().includes(search.toLowerCase())).sort((a,b) => orderedIds.indexOf(a.id) - orderedIds.indexOf(b.id));
   const createPartnership = useCreatePartnership();
 
   const {
@@ -88,8 +117,8 @@ export default function AdminPartnershipsPage() {
     <div>
       <header className="admin-page-heading mb-6 flex flex-wrap items-center justify-between gap-4 rounded-3xl p-6"><div className="flex items-center gap-3"><span className="rounded-2xl bg-emerald-100 p-3 text-emerald-800"><Handshake size={25}/></span><div><h1 className="font-serif text-3xl text-verde-escuro">Parcerias</h1><p className="mt-1 text-sm text-verde-muted">Organize as instituições parceiras e seus logotipos.</p></div></div><button type="button" onClick={()=>setShowCreate(v=>!v)} className="inline-flex items-center gap-2 rounded-xl bg-emerald-800 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-900"><Plus size={17}/>{showCreate?"Fechar cadastro":"Adicionar parceria"}</button></header>
       <div className="mb-5 grid gap-3 sm:grid-cols-2"><div className="admin-panel p-4"><p className="text-xs font-medium text-emerald-800">Parcerias cadastradas</p><p className="mt-1 text-3xl font-bold text-emerald-950">{partnerships?.length ?? "—"}</p></div><div className="admin-panel p-4"><p className="text-xs font-medium text-emerald-800">Com logotipo</p><p className="mt-1 text-3xl font-bold text-emerald-950">{partnerships?.filter(p=>Boolean(p.logoUrl)).length ?? "—"}</p></div></div>
-      {showCreate && <form onSubmit={handleSubmit(handleCreate)} className="admin-panel mb-6 space-y-4 p-5 sm:p-6" aria-label="Cadastrar parceria"><div><h2 className="font-semibold text-emerald-950">Nova parceria</h2><p className="text-sm text-verde-muted">Preencha o nome e, se disponível, o endereço do logotipo. A ordem define a posição no site.</p></div><div className="grid gap-4 sm:grid-cols-[1fr_110px]"><FormField label="Nome da instituição" error={errors.name?.message}><input {...register("name")} className={formInputClass} placeholder="Ex.: Instituto parceiro" /></FormField><FormField label="Ordem" error={errors.order?.message}><input type="number" {...register("order")} className={formInputClass}/></FormField></div><PartnershipLogoInput value={createLogo} onChange={url => setValue("logoUrl", url, { shouldValidate: true, shouldDirty: true })} />{errors.logoUrl && <p role="alert" className="text-sm text-rose-700">{errors.logoUrl.message}</p>}<div className="flex justify-end gap-2"><button type="button" onClick={()=>setShowCreate(false)} className="rounded-xl border border-emerald-200 px-4 py-2 text-sm text-emerald-900">Cancelar</button><button type="submit" disabled={createPartnership.isPending} className="rounded-xl bg-emerald-800 px-5 py-2 text-sm font-semibold text-white disabled:opacity-50">{createPartnership.isPending?"Salvando...":"Cadastrar parceria"}</button></div></form>}
-      <div className="admin-panel mb-5 flex flex-wrap items-center justify-between gap-3 p-4"><label className="relative w-full max-w-md"><Search size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-700"/><input aria-label="Buscar parceria" placeholder="Buscar pelo nome da instituição" value={search} onChange={e=>setSearch(e.target.value)} className="admin-control w-full py-3 pl-10 pr-4 text-sm" /></label><span className="flex items-center gap-1 text-xs text-emerald-800"><ArrowUpDown size={15}/> Ordenadas pela posição</span></div>
+      {showCreate && <form onSubmit={handleSubmit(handleCreate)} className="admin-panel mb-6 space-y-4 p-5 sm:p-6" aria-label="Cadastrar parceria"><div><h2 className="font-semibold text-emerald-950">Nova parceria</h2><p className="text-sm text-verde-muted">Preencha o nome e, se disponível, o endereço do logotipo. Você poderá reorganizar os cartões após cadastrar a parceria.</p></div><div className="grid gap-4"><FormField label="Nome da instituição" error={errors.name?.message}><input {...register("name")} className={formInputClass} placeholder="Ex.: Instituto parceiro" /></FormField></div><PartnershipLogoInput value={createLogo} onChange={url => setValue("logoUrl", url, { shouldValidate: true, shouldDirty: true })} />{errors.logoUrl && <p role="alert" className="text-sm text-rose-700">{errors.logoUrl.message}</p>}<div className="flex justify-end gap-2"><button type="button" onClick={()=>setShowCreate(false)} className="rounded-xl border border-emerald-200 px-4 py-2 text-sm text-emerald-900">Cancelar</button><button type="submit" disabled={createPartnership.isPending} className="rounded-xl bg-emerald-800 px-5 py-2 text-sm font-semibold text-white disabled:opacity-50">{createPartnership.isPending?"Salvando...":"Cadastrar parceria"}</button></div></form>}
+      <div className="admin-panel mb-5 flex flex-wrap items-center justify-between gap-3 p-4"><label className="relative w-full max-w-md"><Search size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-700"/><input aria-label="Buscar parceria" placeholder="Buscar pelo nome da instituição" value={search} onChange={e=>setSearch(e.target.value)} className="admin-control w-full py-3 pl-10 pr-4 text-sm" /></label><span className="flex items-center gap-1 text-xs text-emerald-800"><ArrowUpDown size={15}/> Arraste os cartões ou use as setas para mudar a ordem</span></div>
       {partnerships && <p className="text-xs text-verde-muted mb-3">{visiblePartnerships.length} de {partnerships.length} parcerias</p>}
       {isLoading && <p className="text-sm text-verde-muted font-light" role="status">Carregando parcerias...</p>}
 
@@ -99,9 +128,12 @@ export default function AdminPartnershipsPage() {
 
       {partnerships && partnerships.length > 0 && visiblePartnerships.length === 0 && <div className="admin-empty" role="status">Nenhuma parceria corresponde à busca.</div>}
       {partnerships && partnerships.length > 0 && (
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {visiblePartnerships.map((partnership) => (
-            <PartnershipTag key={partnership.id} id={partnership.id} name={partnership.name} order={partnership.order} logoUrl={partnership.logoUrl} />
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3" aria-label="Parcerias em ordem de exibição">
+          {visiblePartnerships.map((partnership, index) => (
+            <div key={partnership.id} draggable={!search && !savingOrder} onDragStart={event => { setDragId(partnership.id); event.dataTransfer.effectAllowed = "move"; }} onDragEnd={() => setDragId(null)} onDragOver={event => { if (!search) event.preventDefault(); }} onDrop={event => { event.preventDefault(); if (dragId && dragId !== partnership.id && !search) move(dragId, orderedIds.indexOf(partnership.id)); setDragId(null); }} className={`min-w-0 rounded-2xl ${dragId === partnership.id ? "opacity-50 ring-2 ring-emerald-500" : ""}`}>
+              <div className="mb-2 flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50/80 px-3 py-2 text-xs text-emerald-900"><span className="flex items-center gap-1"><GripVertical size={15}/> Posição {orderedIds.indexOf(partnership.id) + 1}</span><div className="flex gap-1"><button type="button" aria-label={`Mover ${partnership.name} para cima`} title="Mover para cima" disabled={!!search || savingOrder || index === 0} onClick={() => move(partnership.id, orderedIds.indexOf(partnership.id)-1)} className="rounded-lg p-1.5 hover:bg-emerald-200 disabled:opacity-30"><ArrowUp size={16}/></button><button type="button" aria-label={`Mover ${partnership.name} para baixo`} title="Mover para baixo" disabled={!!search || savingOrder || index === visiblePartnerships.length - 1} onClick={() => move(partnership.id, orderedIds.indexOf(partnership.id)+1)} className="rounded-lg p-1.5 hover:bg-emerald-200 disabled:opacity-30"><ArrowDown size={16}/></button></div></div>
+              <PartnershipTag id={partnership.id} name={partnership.name} order={partnership.order} logoUrl={partnership.logoUrl} />
+            </div>
           ))}
         </div>
       )}
@@ -120,7 +152,7 @@ function PartnershipTag({ id, name, order, logoUrl }: PartnershipTagProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(name);
   const [editedLogo, setEditedLogo] = useState(logoUrl ?? "");
-  const [editedOrder, setEditedOrder] = useState(order);
+
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const updatePartnership = useUpdatePartnership();
   const deletePartnership = useDeletePartnership();
@@ -132,7 +164,7 @@ function PartnershipTag({ id, name, order, logoUrl }: PartnershipTagProps) {
     if (editedLogo && !/^https?:\/\//i.test(editedLogo)) { toast.error("Informe uma URL válida para o logotipo."); return; }
 
     updatePartnership.mutate(
-      { id, values: { name: editedName.trim(), order: editedOrder, logoUrl: editedLogo } },
+      { id, values: { name: editedName.trim(), order, logoUrl: editedLogo } },
       {
         onSuccess: () => {
           toast.success("Parceria atualizada");
@@ -154,8 +186,8 @@ function PartnershipTag({ id, name, order, logoUrl }: PartnershipTagProps) {
   };
 
   return <article className="admin-record-card flex flex-col gap-3 p-4 sm:p-5">
-    <div className="flex items-start gap-3"><div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-emerald-100 bg-white">{logoUrl?<img src={logoUrl} alt={`Logotipo de ${name}`} className="h-full w-full object-contain p-2"/>:<ImageIcon size={24} className="text-emerald-300"/>}</div><div className="min-w-0 flex-1"><h3 className="break-words font-semibold text-emerald-950">{name}</h3><p className="mt-1 text-xs text-emerald-700">Posição no site: {order}</p><p className="mt-1 text-xs text-emerald-700">{logoUrl?"Logotipo cadastrado":"Sem logotipo"}</p></div></div>
-    {isEditing?<div className="space-y-3 border-t border-emerald-100 pt-3"><label className="block text-xs font-semibold text-emerald-900">Nome<input value={editedName} onChange={e=>setEditedName(e.target.value)} className="admin-control mt-1 w-full p-2.5 text-sm" autoFocus/></label><PartnershipLogoInput value={editedLogo} onChange={setEditedLogo} /><label className="block text-xs font-semibold text-emerald-900">Posição<input type="number" value={editedOrder} onChange={e=>setEditedOrder(Number(e.target.value))} className="admin-control mt-1 w-full p-2.5 text-sm"/></label><div className="flex gap-2"><button type="button" onClick={handleSave} disabled={updatePartnership.isPending||!editedName.trim()} className="flex items-center gap-1 rounded-xl bg-emerald-800 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50"><Check size={15}/> Salvar</button><button type="button" onClick={()=>{setEditedName(name);setEditedLogo(logoUrl??"");setEditedOrder(order);setIsEditing(false)}} className="flex items-center gap-1 rounded-xl border border-emerald-200 px-3 py-2 text-xs text-emerald-900"><X size={15}/> Cancelar</button></div></div>:<div className="mt-auto flex gap-2 border-t border-emerald-100 pt-3"><button type="button" onClick={()=>setIsEditing(true)} className="flex flex-1 items-center justify-center gap-1 rounded-xl border border-emerald-200 bg-white px-3 py-2 text-xs font-semibold text-emerald-900 hover:bg-emerald-50"><Pencil size={14}/> Editar</button><button type="button" onClick={()=>setIsConfirmOpen(true)} className="flex items-center gap-1 rounded-xl border border-rose-200 px-3 py-2 text-xs text-rose-800 hover:bg-rose-50"><Trash2 size={14}/> Excluir</button></div>}
+    <div className="flex items-start gap-3"><div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-emerald-100 bg-white">{logoUrl?<img src={logoUrl} alt={`Logotipo de ${name}`} className="h-full w-full object-contain p-2"/>:<ImageIcon size={24} className="text-emerald-300"/>}</div><div className="min-w-0 flex-1"><h3 className="break-words font-semibold text-emerald-950">{name}</h3><p className="mt-1 text-xs text-emerald-700">Use as setas ou arraste para alterar a posição</p><p className="mt-1 text-xs text-emerald-700">{logoUrl?"Logotipo cadastrado":"Sem logotipo"}</p></div></div>
+    {isEditing?<div className="space-y-3 border-t border-emerald-100 pt-3"><label className="block text-xs font-semibold text-emerald-900">Nome<input value={editedName} onChange={e=>setEditedName(e.target.value)} className="admin-control mt-1 w-full p-2.5 text-sm" autoFocus/></label><PartnershipLogoInput value={editedLogo} onChange={setEditedLogo} /><div className="flex gap-2"><button type="button" onClick={handleSave} disabled={updatePartnership.isPending||!editedName.trim()} className="flex items-center gap-1 rounded-xl bg-emerald-800 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50"><Check size={15}/> Salvar</button><button type="button" onClick={()=>{setEditedName(name);setEditedLogo(logoUrl??"");setIsEditing(false)}} className="flex items-center gap-1 rounded-xl border border-emerald-200 px-3 py-2 text-xs text-emerald-900"><X size={15}/> Cancelar</button></div></div>:<div className="mt-auto flex gap-2 border-t border-emerald-100 pt-3"><button type="button" onClick={()=>setIsEditing(true)} className="flex flex-1 items-center justify-center gap-1 rounded-xl border border-emerald-200 bg-white px-3 py-2 text-xs font-semibold text-emerald-900 hover:bg-emerald-50"><Pencil size={14}/> Editar</button><button type="button" onClick={()=>setIsConfirmOpen(true)} className="flex items-center gap-1 rounded-xl border border-rose-200 px-3 py-2 text-xs text-rose-800 hover:bg-rose-50"><Trash2 size={14}/> Excluir</button></div>}
     <ConfirmDialog isOpen={isConfirmOpen} title="Remover parceria" description={`Tem certeza que deseja remover "${name}"?`} isConfirming={deletePartnership.isPending} onConfirm={handleConfirmDelete} onCancel={()=>setIsConfirmOpen(false)}/>
   </article>;
 }

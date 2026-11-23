@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 import { recordAudit } from "@/lib/audit";
 import { NextResponse } from "next/server";
 import { getAdminSession } from "@/lib/session";
@@ -28,7 +29,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const partnership = await createPartnershipFromForm(parseResult.data);
+    const last = await prisma.partnership.aggregate({ _max: { order: true } });
+    const partnership = await createPartnershipFromForm({ ...parseResult.data, order: (last._max.order ?? -1) + 1 });
     await recordAudit(session, "CREATE", "partnerships", partnership.id);
     return NextResponse.json({ partnership }, { status: 201 });
   } catch (error) {
