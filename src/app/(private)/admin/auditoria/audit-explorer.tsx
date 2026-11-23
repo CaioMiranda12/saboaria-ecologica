@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { CalendarDateInput } from "@/components/ui/CalendarDateInput";
 import { useCallback, useEffect, useState } from "react";
 import { Download, Search, ShieldCheck, ChevronLeft, ChevronRight, X, Clock3 } from "lucide-react";

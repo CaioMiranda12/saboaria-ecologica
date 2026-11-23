@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useId, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 type ConfirmDialogProps = {
   isOpen: boolean;
@@ -35,8 +36,8 @@ export function ConfirmDialog({ isOpen, title, description, confirmLabel = 'Remo
     document.addEventListener('keydown', onKeyDown);
     return () => { document.body.style.overflow = originalOverflow; document.removeEventListener('keydown', onKeyDown); previous?.focus(); };
   }, [isOpen, isConfirming, onCancel]);
-  if (!isOpen) return null;
-  return <div className="fixed inset-0 z-50 flex items-center justify-center bg-verde-escuro/50 p-5 backdrop-blur-sm" onMouseDown={event => { if (event.target === event.currentTarget && !isConfirming) onCancel(); }} role="presentation">
+  if (!isOpen || typeof document === "undefined") return null;
+  return createPortal(<div className="fixed inset-0 z-[200] flex items-center justify-center bg-verde-escuro/50 p-5 backdrop-blur-sm" onMouseDown={event => { if (event.target === event.currentTarget && !isConfirming) onCancel(); }} role="presentation">
     <div role="alertdialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descriptionId} className="w-full max-w-md rounded-2xl bg-gradient-to-br from-white to-[#f3faef] border border-[#cce3c7] p-6 shadow-2xl">
       <h2 id={titleId} className="mb-2 font-serif text-xl text-verde-escuro">{title}</h2>
       <p id={descriptionId} className="mb-6 text-sm leading-relaxed text-verde-muted">{description}</p>
@@ -45,5 +46,5 @@ export function ConfirmDialog({ isOpen, title, description, confirmLabel = 'Remo
         <button ref={confirmRef} type="button" disabled={isConfirming} onClick={onConfirm} className="rounded-full bg-verde-principal px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-verde-principal disabled:opacity-60">{isConfirming ? 'Aguarde...' : confirmLabel}</button>
       </div>
     </div>
-  </div>;
+  </div>, document.body);
 }
