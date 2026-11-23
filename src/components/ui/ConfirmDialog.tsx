@@ -1,3 +1,6 @@
+'use client';
+import { useEffect, useId, useRef } from 'react';
+
 type ConfirmDialogProps = {
   isOpen: boolean;
   title: string;
@@ -8,48 +11,39 @@ type ConfirmDialogProps = {
   onCancel: () => void;
 };
 
-export function ConfirmDialog({
-  isOpen,
-  title,
-  description,
-  confirmLabel = "Remover",
-  isConfirming = false,
-  onConfirm,
-  onCancel,
-}: ConfirmDialogProps) {
-  if (!isOpen) {
-    return null;
-  }
-
-  return (
-    <div
-      className="fixed inset-0 z-50 bg-verde-escuro/40 backdrop-blur-sm flex items-center justify-center p-5"
-      onClick={onCancel}
-      role="dialog"
-      aria-modal="true"
-    >
-      <div
-        className="bg-white rounded-2xl p-6 max-w-sm w-full"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <h2 className="font-serif text-lg text-verde-escuro mb-2">{title}</h2>
-        <p className="text-sm text-verde-muted font-light leading-relaxed mb-6">{description}</p>
-        <div className="flex justify-end gap-3">
-          <button
-            onClick={onCancel}
-            className="px-4 py-2 rounded-full text-sm font-medium text-verde-muted hover:bg-verde-claro transition-colors"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={onConfirm}
-            disabled={isConfirming}
-            className="px-4 py-2 rounded-full text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors disabled:opacity-60"
-          >
-            {isConfirming ? "Removendo..." : confirmLabel}
-          </button>
-        </div>
+export function ConfirmDialog({ isOpen, title, description, confirmLabel = 'Remover', isConfirming = false, onConfirm, onCancel }: ConfirmDialogProps) {
+  const titleId = useId();
+  const descriptionId = useId();
+  const cancelRef = useRef<HTMLButtonElement>(null);
+  const confirmRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!isOpen) return;
+    const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    cancelRef.current?.focus();
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape' && !isConfirming) { event.preventDefault(); onCancel(); }
+      if (event.key === 'Tab') {
+        const first = cancelRef.current;
+        const last = confirmRef.current;
+        if (!first || !last) return;
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      }
+    }
+    document.addEventListener('keydown', onKeyDown);
+    return () => { document.body.style.overflow = originalOverflow; document.removeEventListener('keydown', onKeyDown); previous?.focus(); };
+  }, [isOpen, isConfirming, onCancel]);
+  if (!isOpen) return null;
+  return <div className="fixed inset-0 z-50 flex items-center justify-center bg-verde-escuro/50 p-5 backdrop-blur-sm" onMouseDown={event => { if (event.target === event.currentTarget && !isConfirming) onCancel(); }} role="presentation">
+    <div role="alertdialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descriptionId} className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+      <h2 id={titleId} className="mb-2 font-serif text-xl text-verde-escuro">{title}</h2>
+      <p id={descriptionId} className="mb-6 text-sm leading-relaxed text-verde-muted">{description}</p>
+      <div className="flex flex-wrap justify-end gap-3">
+        <button ref={cancelRef} type="button" disabled={isConfirming} onClick={onCancel} className="rounded-full px-4 py-2 text-sm font-medium text-verde-muted transition-colors hover:bg-verde-claro focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-verde-principal disabled:opacity-60">Cancelar</button>
+        <button ref={confirmRef} type="button" disabled={isConfirming} onClick={onConfirm} className="rounded-full bg-verde-principal px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-verde-principal disabled:opacity-60">{isConfirming ? 'Aguarde...' : confirmLabel}</button>
       </div>
     </div>
-  );
+  </div>;
 }
