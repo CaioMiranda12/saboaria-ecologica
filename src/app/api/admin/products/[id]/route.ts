@@ -1,3 +1,5 @@
+import { requireAdminRole } from "@/lib/admin-authorization";
+import { recordAudit } from "@/lib/audit";
 import { NextResponse } from "next/server";
 import { getAdminSession } from "@/lib/session";
 import { productFormSchema } from "@/schemas/product.schema";
@@ -47,6 +49,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 
   try {
     const product = await updateProductFromForm(id, parseResult.data);
+    await recordAudit(session, "UPDATE", "products", id);
     return NextResponse.json({ product });
   } catch (error) {
     if (error instanceof ProductNotFoundError) {
@@ -66,10 +69,12 @@ export async function DELETE(_request: Request, { params }: RouteParams) {
     return NextResponse.json({ message: "Não autorizado" }, { status: 401 });
   }
 
+  if (!await requireAdminRole()) return NextResponse.json({ message: "Apenas administradores podem excluir registros" }, { status: 403 });
   const { id } = await params;
 
   try {
     await removeProduct(id);
+    await recordAudit(session, "DELETE", "products", id);
     return NextResponse.json({ message: "Produto removido" });
   } catch (error) {
     if (error instanceof ProductNotFoundError) {

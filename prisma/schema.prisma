@@ -6,9 +6,15 @@ datasource db {
   provider = "postgresql"
 }
 
+enum AdminRole {
+  ADMIN
+  EDITOR
+}
+
 model Admin {
   id           String   @id @default(cuid())
   email        String   @unique
+  role         AdminRole @default(ADMIN)
   passwordHash String
   name         String
   createdAt    DateTime @default(now())
@@ -163,4 +169,19 @@ model CmsVersion {
   sourceVersionId String?
   @@index([pageId, createdAt])
   @@map("cms_versions")
+}
+
+// Auditoria administrativa: não armazena senhas, tokens ou conteúdo sensível.
+model AuditEvent {
+  id String @id @default(cuid())
+  actorId String
+  actorEmail String
+  actorName String
+  action String
+  resource String
+  resourceId String?
+  createdAt DateTime @default(now())
+  @@index([createdAt])
+  @@index([resource, resourceId])
+  @@map("audit_events")
 }

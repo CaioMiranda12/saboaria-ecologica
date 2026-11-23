@@ -1,3 +1,5 @@
+import { requireAdminRole } from "@/lib/admin-authorization";
+import { recordAudit } from "@/lib/audit";
 import { NextResponse } from "next/server";
 import { getAdminSession } from "@/lib/session";
 import { partnershipFormSchema } from "@/schemas/partnership.schema";
@@ -26,6 +28,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 
   try {
     const partnership = await updatePartnershipFromForm(id, parseResult.data);
+    await recordAudit(session, "UPDATE", "partnerships", id);
     return NextResponse.json({ partnership });
   } catch (error) {
     if (error instanceof PartnershipNotFoundError) {
@@ -42,10 +45,12 @@ export async function DELETE(_request: Request, { params }: RouteParams) {
     return NextResponse.json({ message: "Não autorizado" }, { status: 401 });
   }
 
+  if (!await requireAdminRole()) return NextResponse.json({ message: "Apenas administradores podem excluir registros" }, { status: 403 });
   const { id } = await params;
 
   try {
     await removePartnership(id);
+    await recordAudit(session, "DELETE", "partnerships", id);
     return NextResponse.json({ message: "Parceria removida" });
   } catch (error) {
     if (error instanceof PartnershipNotFoundError) {

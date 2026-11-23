@@ -1,3 +1,4 @@
+import { recordAudit } from "@/lib/audit";
 import { NextResponse } from "next/server";
 import { getAdminSession } from "@/lib/session";
 import { teamMemberFormSchema } from "@/schemas/team-member.schema";
@@ -28,6 +29,7 @@ export async function POST(request: Request) {
 
   try {
     const teamMember = await createTeamMemberFromForm(parseResult.data);
+    await recordAudit(session, "CREATE", "team-members", teamMember.id);
     return NextResponse.json({ teamMember }, { status: 201 });
   } catch (error) {
     console.error(error);

@@ -1,3 +1,4 @@
+import { recordAudit } from "@/lib/audit";
 import { NextResponse } from "next/server";
 import { getAdminSession } from "@/lib/session";
 import { partnershipFormSchema } from "@/schemas/partnership.schema";
@@ -28,6 +29,7 @@ export async function POST(request: Request) {
 
   try {
     const partnership = await createPartnershipFromForm(parseResult.data);
+    await recordAudit(session, "CREATE", "partnerships", partnership.id);
     return NextResponse.json({ partnership }, { status: 201 });
   } catch (error) {
     console.error(error);

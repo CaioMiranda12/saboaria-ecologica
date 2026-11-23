@@ -1,3 +1,5 @@
+import { requireAdminRole } from "@/lib/admin-authorization";
+import { recordAudit } from "@/lib/audit";
 import { NextResponse } from "next/server";
 import { getAdminSession } from "@/lib/session";
 import { teamMemberFormSchema } from "@/schemas/team-member.schema";
@@ -46,6 +48,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 
   try {
     const teamMember = await updateTeamMemberFromForm(id, parseResult.data);
+    await recordAudit(session, "UPDATE", "team-members", id);
     return NextResponse.json({ teamMember });
   } catch (error) {
     if (error instanceof TeamMemberNotFoundError) {
@@ -62,10 +65,12 @@ export async function DELETE(_request: Request, { params }: RouteParams) {
     return NextResponse.json({ message: "Não autorizado" }, { status: 401 });
   }
 
+  if (!await requireAdminRole()) return NextResponse.json({ message: "Apenas administradores podem excluir registros" }, { status: 403 });
   const { id } = await params;
 
   try {
     await removeTeamMember(id);
+    await recordAudit(session, "DELETE", "team-members", id);
     return NextResponse.json({ message: "Membro removido" });
   } catch (error) {
     if (error instanceof TeamMemberNotFoundError) {
