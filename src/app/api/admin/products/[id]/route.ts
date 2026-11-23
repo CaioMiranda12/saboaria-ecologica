@@ -1,5 +1,5 @@
 import { requireAdminRole } from "@/lib/admin-authorization";
-import { recordAudit } from "@/lib/audit";
+import { recordAudit, productChanges } from "@/lib/audit";
 import { NextResponse } from "next/server";
 import { getAdminSession } from "@/lib/session";
 import { productFormSchema } from "@/schemas/product.schema";
@@ -48,8 +48,9 @@ export async function PATCH(request: Request, { params }: RouteParams) {
   }
 
   try {
+    const before = await getProductOrThrow(id);
     const product = await updateProductFromForm(id, parseResult.data);
-    await recordAudit(session, "UPDATE", "products", id);
+    await recordAudit(session, "UPDATE", "products", id, productChanges(before, product));
     return NextResponse.json({ product });
   } catch (error) {
     if (error instanceof ProductNotFoundError) {
@@ -73,8 +74,9 @@ export async function DELETE(_request: Request, { params }: RouteParams) {
   const { id } = await params;
 
   try {
+    const before = await getProductOrThrow(id);
     await removeProduct(id);
-    await recordAudit(session, "DELETE", "products", id);
+    await recordAudit(session, "DELETE", "products", id, productChanges(before, null));
     return NextResponse.json({ message: "Produto removido" });
   } catch (error) {
     if (error instanceof ProductNotFoundError) {

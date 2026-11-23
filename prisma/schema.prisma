@@ -180,8 +180,11 @@ model AuditEvent {
   action String
   resource String
   resourceId String?
+  changes Json?
   createdAt DateTime @default(now())
   @@index([createdAt])
   @@index([resource, resourceId])
+  @@index([actorId, createdAt])
+  @@index([action, createdAt])
   @@map("audit_events")
 }

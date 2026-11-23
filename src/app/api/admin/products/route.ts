@@ -1,4 +1,4 @@
-import { recordAudit } from "@/lib/audit";
+import { recordAudit, productChanges } from "@/lib/audit";
 import { NextResponse } from "next/server";
 import { getAdminSession } from "@/lib/session";
 import { productFormSchema } from "@/schemas/product.schema";
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
 
   try {
     const product = await createProductFromForm(parseResult.data);
-    await recordAudit(session, "CREATE", "products", product.id);
+    await recordAudit(session, "CREATE", "products", product.id, productChanges(null, product));
     return NextResponse.json({ product }, { status: 201 });
   } catch (error) {
     if (error instanceof DuplicateProductSlugError) {
