@@ -1,3 +1,4 @@
+import { loginLimit, loginFailure, loginSuccess } from "@/lib/login-protection";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { loginSchema } from "@/schemas/auth.schema";
@@ -12,9 +13,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Dados inválidos" }, { status: 400 });
   }
 
+  // Only trust platform-provided forwarding headers behind a configured trusted proxy.
+  // A spoofed IP cannot bypass the separate per-email limiter.
+  const ip = request.headers.get("x-real-ip") ?? "unknown";
+  const email = parseResult.data.email.trim().toLowerCase();
+  if (await loginLimit(email, ip)) {
+    return NextResponse.json({ message: "Muitas tentativas. Aguarde 15 minutos e tente novamente." }, { status: 429, headers: { "Retry-After": "900" } });
+  }
   try {
     const { token, admin } = await authenticateAdmin(parseResult.data);
 
+    await loginSuccess(email);
     const cookieStore = await cookies();
     cookieStore.set(AUTH_COOKIE_NAME, token, {
       httpOnly: true,
@@ -27,6 +36,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ admin });
   } catch (error) {
     if (error instanceof InvalidCredentialsError) {
+      await loginFailure(email, ip);
       return NextResponse.json({ message: "E-mail ou senha incorretos" }, { status: 401 });
     }
 

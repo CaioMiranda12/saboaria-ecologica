@@ -13,8 +13,8 @@ export async function getAdminSession(): Promise<AdminTokenPayload | null> {
 
   try {
     const payload = await verifyAdminToken(token);
-    const admin = await prisma.admin.findUnique({ where: { id: payload.adminId }, select: { email: true } });
-    return admin && admin.email === payload.email ? payload : null;
+    const admin = await prisma.admin.findUnique({ where: { id: payload.adminId }, select: { email: true, sessionVersion: true } });
+    return admin && admin.email === payload.email && admin.sessionVersion === payload.sessionVersion ? payload : null;
   } catch {
     return null;
   }

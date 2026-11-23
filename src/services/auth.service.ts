@@ -18,7 +18,7 @@ export async function authenticateAdmin({ email, password }: LoginFormValues) {
     throw new InvalidCredentialsError();
   }
 
-  const token = await signAdminToken({ adminId: admin.id, email: admin.email });
+  const token = await signAdminToken({ adminId: admin.id, email: admin.email, sessionVersion: admin.sessionVersion });
 
   return { token, admin: { email: admin.email, name: admin.name } };
 }

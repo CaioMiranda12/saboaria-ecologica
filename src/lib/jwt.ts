@@ -8,6 +8,7 @@ const secretKey = new TextEncoder().encode(env.JWT_SECRET);
 export type AdminTokenPayload = {
   adminId: string;
   email: string;
+  sessionVersion: number;
 };
 
 export function signAdminToken(payload: AdminTokenPayload) {

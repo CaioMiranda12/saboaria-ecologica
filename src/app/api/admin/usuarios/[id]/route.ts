@@ -18,7 +18,7 @@ export async function PATCH(request:Request,{params}:Context) {
     if(total<=1) return NextResponse.json({message:"É necessário manter pelo menos um administrador."},{status:409});
   }
   const {password,...fields}=parsed.data;
-  await prisma.admin.update({where:{id},data:{...fields,...(password?{passwordHash:await bcrypt.hash(password,12)}:{})}});
+  await prisma.admin.update({where:{id},data:{...fields,...(password?{passwordHash:await bcrypt.hash(password,12),sessionVersion:{increment:1}}:{})}});
   const session=await getAdminSession(); if(session) await recordAudit(session,"UPDATE","admins",id);
   return NextResponse.json({ok:true});
 }
