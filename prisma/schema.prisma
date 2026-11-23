@@ -86,3 +86,33 @@ model SiteContent {
 
   @@map("site_content")
 }
+
+
+// Conteúdo estruturado do CMS. Uma página contém seções ordenáveis.
+model CmsPage {
+  id        String       @id @default(cuid())
+  slug      String       @unique
+  title     String
+  sections  CmsSection[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@map("cms_pages")
+}
+
+model CmsSection {
+  id        String   @id @default(cuid())
+  pageId    String
+  page      CmsPage  @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  key       String
+  title     String
+  position  Int      @default(0)
+  enabled   Boolean  @default(true)
+  content   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([pageId, key])
+  @@index([pageId, position])
+  @@map("cms_sections")
+}
