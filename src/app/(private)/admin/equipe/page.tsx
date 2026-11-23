@@ -42,19 +42,19 @@ export default function AdminTeamPage() {
         </Link>
       </div>
 
-      <div className="flex flex-wrap gap-3 mb-5"><input aria-label="Buscar integrante" placeholder="Buscar por nome ou cargo" value={search} onChange={(e) => setSearch(e.target.value)} className="border border-verde-medio/20 rounded-xl px-4 py-2.5 text-sm flex-1 min-w-48" /><select aria-label="Ordenar integrantes" value={sort} onChange={(e) => setSort(e.target.value)} className="border border-verde-medio/20 rounded-xl px-3 py-2.5 text-sm bg-white"><option value="order">Ordem de exibição</option><option value="name">Nome (A-Z)</option></select></div>
+      <div className="flex flex-wrap gap-3 mb-5"><input aria-label="Buscar integrante" placeholder="Buscar por nome ou cargo" value={search} onChange={(e) => setSearch(e.target.value)} className="admin-control px-4 py-2.5 text-sm flex-1 min-w-48" /><select aria-label="Ordenar integrantes" value={sort} onChange={(e) => setSort(e.target.value)} className="admin-control px-3 py-2.5 text-sm bg-white"><option value="order">Ordem de exibição</option><option value="name">Nome (A-Z)</option></select></div>
       {teamMembers && <p className="text-xs text-verde-muted mb-3" aria-live="polite">{visibleMembers.length} de {teamMembers.length} integrantes</p>}
-      {isLoading && <p className="text-sm text-verde-muted font-light">Carregando...</p>}
+      {isLoading && <p className="text-sm text-verde-muted font-light" role="status">Carregando equipe...</p>}
 
       {teamMembers?.length === 0 && (
-        <p className="text-sm text-verde-muted font-light">Nenhum membro cadastrado ainda.</p>
+        <div className="admin-empty" role="status">Ainda não há integrantes. Use “Novo membro” para começar.</div>
       )}
 
-      {teamMembers && teamMembers.length > 0 && visibleMembers.length === 0 && <p className="text-sm text-verde-muted">Nenhum integrante encontrado.</p>}
+      {teamMembers && teamMembers.length > 0 && visibleMembers.length === 0 && <div className="admin-empty" role="status">Nenhum integrante corresponde à busca.</div>}
       {teamMembers && teamMembers.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {visibleMembers.map((member) => (
-            <div key={member.id} className="bg-white border border-verde-medio/10 rounded-2xl p-5 flex gap-4">
+            <div key={member.id} className="admin-record-card p-5 flex gap-4">
               <div className="w-11 h-11 rounded-full bg-verde-principal flex items-center justify-center text-white text-sm font-bold shrink-0">
                 {member.imageUrl ? <img src={member.imageUrl} alt={member.name} className="w-full h-full rounded-full object-cover" /> : member.initials}
               </div>

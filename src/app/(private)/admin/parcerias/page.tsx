@@ -47,7 +47,7 @@ export default function AdminPartnershipsPage() {
 
       <form
         onSubmit={handleSubmit(handleCreate)}
-        className="flex flex-wrap items-end gap-3 mb-8 bg-white border border-verde-medio/10 rounded-2xl p-5 max-w-xl"
+        className="flex flex-wrap items-end gap-3 mb-8 admin-panel p-5 max-w-xl"
       >
         <div className="flex-1">
           <FormField label="Nome da parceria" error={errors.name?.message}>
@@ -74,15 +74,15 @@ export default function AdminPartnershipsPage() {
         </button>
       </form>
 
-      <input aria-label="Buscar parceria" placeholder="Buscar parceria pelo nome" value={search} onChange={(e) => setSearch(e.target.value)} className="border border-verde-medio/20 rounded-xl px-4 py-2.5 text-sm mb-4 w-full max-w-sm" />
+      <input aria-label="Buscar parceria" placeholder="Buscar parceria pelo nome" value={search} onChange={(e) => setSearch(e.target.value)} className="admin-control px-4 py-2.5 text-sm mb-4 w-full max-w-sm" />
       {partnerships && <p className="text-xs text-verde-muted mb-3">{visiblePartnerships.length} de {partnerships.length} parcerias</p>}
-      {isLoading && <p className="text-sm text-verde-muted font-light">Carregando...</p>}
+      {isLoading && <p className="text-sm text-verde-muted font-light" role="status">Carregando parcerias...</p>}
 
       {partnerships?.length === 0 && (
-        <p className="text-sm text-verde-muted font-light">Nenhuma parceria cadastrada ainda.</p>
+        <div className="admin-empty" role="status">Nenhuma parceria cadastrada. Preencha o formulário acima para adicionar.</div>
       )}
 
-      {partnerships && partnerships.length > 0 && visiblePartnerships.length === 0 && <p className="text-sm text-verde-muted">Nenhuma parceria encontrada.</p>}
+      {partnerships && partnerships.length > 0 && visiblePartnerships.length === 0 && <div className="admin-empty" role="status">Nenhuma parceria corresponde à busca.</div>}
       {partnerships && partnerships.length > 0 && (
         <div className="flex flex-wrap gap-2 max-w-2xl">
           {visiblePartnerships.map((partnership) => (
@@ -173,7 +173,7 @@ function PartnershipTag({ id, name, order, logoUrl }: PartnershipTagProps) {
   }
 
   return (
-    <div className="flex items-center gap-1 bg-verde-claro/50 border border-verde-medio/15 rounded-full pl-4 pr-1.5 py-1.5">
+    <div className="flex items-center gap-1 bg-gradient-to-r from-[#edf7e8] to-white border border-[#cfe4c9] rounded-full pl-4 pr-1.5 py-1.5">
       {logoUrl && <img src={logoUrl} alt={`Logo de ${name}`} className="w-8 h-8 object-contain rounded" />}
       <span className="text-xs font-medium text-verde-escuro">{name}</span>
       <button

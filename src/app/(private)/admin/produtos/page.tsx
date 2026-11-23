@@ -90,19 +90,19 @@ export default function AdminProductsPage() {
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Buscar por nome..."
-            className="w-full border border-verde-medio/20 rounded-xl pl-10 pr-4 py-2.5 text-sm text-verde-escuro placeholder:text-verde-muted/60 focus:outline-none focus:border-verde-medio transition-colors"
+            className="w-full admin-control pl-10 pr-4 py-2.5 text-sm text-verde-escuro placeholder:text-verde-muted/60 focus:outline-none focus:border-verde-medio transition-colors"
           />
         </div>
 
-        <select aria-label="Visibilidade dos produtos" value={visibility} onChange={(e) => setVisibility(e.target.value)} className="border border-verde-medio/20 rounded-xl px-3 py-2.5 text-sm bg-white">
+        <select aria-label="Visibilidade dos produtos" value={visibility} onChange={(e) => setVisibility(e.target.value)} className="admin-control px-3 py-2.5 text-sm bg-white">
           <option value="ALL">Todos os produtos</option><option value="PUBLIC">Publicados</option><option value="HIDDEN">Ocultos</option>
         </select>
-        <select aria-label="Ordenação dos produtos" value={sort} onChange={(e) => setSort(e.target.value)} className="border border-verde-medio/20 rounded-xl px-3 py-2.5 text-sm bg-white">
+        <select aria-label="Ordenação dos produtos" value={sort} onChange={(e) => setSort(e.target.value)} className="admin-control px-3 py-2.5 text-sm bg-white">
           <option value="order">Ordem de exibição</option><option value="name">Nome (A-Z)</option><option value="newest">Mais recentes</option>
         </select>
         <button
           onClick={() => setIsFilterModalOpen(true)}
-          className="relative flex items-center gap-2 border border-verde-medio/20 text-verde-escuro px-4 py-2.5 rounded-xl text-sm font-medium hover:border-verde-medio transition-colors"
+          className="relative flex items-center gap-2 admin-control text-verde-escuro px-4 py-2.5 rounded-xl text-sm font-medium hover:border-verde-medio transition-colors"
         >
           <Filter size={16} />
           Filtros
@@ -113,20 +113,20 @@ export default function AdminProductsPage() {
       </div>
 
       {products && <p className="text-xs text-verde-muted mb-3" aria-live="polite">{filteredProducts.length} de {products.length} produtos</p>}
-      {isLoading && <p className="text-sm text-verde-muted font-light">Carregando...</p>}
+      {isLoading && <p className="text-sm text-verde-muted font-light" role="status">Carregando produtos...</p>}
 
       {products && products.length > 0 && filteredProducts.length === 0 && (
-        <p className="text-sm text-verde-muted font-light">Nenhum produto encontrado para esse filtro.</p>
+        <div className="admin-empty" role="status">Nenhum produto corresponde aos filtros. Ajuste a busca para tentar novamente.</div>
       )}
 
       {products?.length === 0 && (
-        <p className="text-sm text-verde-muted font-light">Nenhum produto cadastrado ainda.</p>
+        <div className="admin-empty" role="status">Nenhum produto cadastrado. Use “Novo produto” para começar.</div>
       )}
 
       {filteredProducts.length > 0 && (
-        <div className="bg-white rounded-2xl border border-verde-medio/10 overflow-hidden">
-          <div className="overflow-x-auto"><table className="w-full min-w-[760px] text-sm">
-            <thead className="bg-verde-claro/40 text-left">
+        <div className="admin-panel overflow-hidden">
+          <div className="overflow-x-auto"><table className="admin-table min-w-[760px] text-sm">
+            <thead className="text-left">
               <tr>
                 <th className="px-5 py-3 w-20 font-medium text-verde-escuro">Imagem</th>
                 <th className="px-5 py-3 font-medium text-verde-escuro">Nome</th>
@@ -138,7 +138,7 @@ export default function AdminProductsPage() {
                 <th className="px-5 py-3" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-verde-medio/10">
+            <tbody className="">
               {filteredProducts.map((product) => (
                 <tr key={product.id}>
                   <td className="px-5 py-3">

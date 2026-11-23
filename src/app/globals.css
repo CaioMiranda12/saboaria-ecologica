@@ -44,3 +44,19 @@ button {
 @media (prefers-reduced-motion: reduce) {
   .admin-shell * { scroll-behavior: auto; }
 }
+
+/* Sprint 9.3 — componentes administrativos consistentes */
+.admin-panel { background: linear-gradient(135deg,rgba(255,255,255,.98),rgba(246,252,243,.96)); border:1px solid #d3e7ce; border-radius:1.25rem; box-shadow:0 12px 32px -28px rgba(32,85,43,.5); }
+.admin-table { width:100%; border-collapse:collapse; }
+.admin-table thead { background:linear-gradient(100deg,#e3f1df,#f3f9ef); }
+.admin-table tbody tr { border-top:1px solid #e2eee0; transition:background-color .15s ease; }
+.admin-table tbody tr:nth-child(even) { background:#f7fbf5; }
+.admin-table tbody tr:hover { background:#eaf5e6; }
+.admin-control { background:rgba(255,255,255,.96); border:1px solid #cbdcc8; border-radius:.85rem; color:#2d4f38; transition:border-color .15s,box-shadow .15s; }
+.admin-control:focus-visible { outline:2px solid #4a7c59; outline-offset:2px; box-shadow:0 0 0 4px #d8edcf; }
+.admin-record-card { background:linear-gradient(125deg,#fff,#f5fbf2); border:1px solid #d4e7d0; border-radius:1.25rem; box-shadow:0 10px 25px -25px #315d32; transition:transform .15s,border-color .15s; }
+.admin-record-card:hover { border-color:#9bc79b; transform:translateY(-1px); }
+.admin-empty { border:1px dashed #b7d6b2; background:linear-gradient(120deg,#f2f9ef,#fff); border-radius:1.25rem; padding:2rem; text-align:center; color:#5a6b5e; }
+.admin-action { border-radius:.75rem; transition:background-color .15s,transform .15s; }
+.admin-action:hover { transform:translateY(-1px); }
+@media (prefers-reduced-motion:reduce) { .admin-record-card,.admin-action { transition:none; } .admin-record-card:hover,.admin-action:hover { transform:none; } }
