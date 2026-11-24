@@ -17,9 +17,13 @@ model Admin {
   role         AdminRole @default(ADMIN)
   passwordHash String
   sessionVersion Int @default(0)
-  totpSecret String?
-  totpLastStep Int @default(-1)
-  totpRecovery String[] @default([])
+  emailFactor Boolean @default(false)
+  emailOtpHash String?
+  emailOtpUntil DateTime?
+  emailOtpSent DateTime?
+  emailOtpAttempts Int @default(0)
+  emailOtpVersion Int?
+  emailOtpPurpose String?
   name         String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

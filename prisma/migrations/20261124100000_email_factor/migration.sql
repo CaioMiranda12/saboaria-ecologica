@@ -1,0 +1,1 @@
+ALTER TABLE "admins" ADD COLUMN "emailFactor" BOOLEAN NOT NULL DEFAULT false, ADD COLUMN "emailOtpHash" TEXT, ADD COLUMN "emailOtpUntil" TIMESTAMP(3), ADD COLUMN "emailOtpSent" TIMESTAMP(3), ADD COLUMN "emailOtpAttempts" INTEGER NOT NULL DEFAULT 0, ADD COLUMN "emailOtpVersion" INTEGER, ADD COLUMN "emailOtpPurpose" TEXT;

@@ -13,11 +13,12 @@ import { loginSchema, type LoginFormValues } from "@/schemas/auth.schema";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [secondFactor, setSecondFactor] = useState(false);
+  const [secondFactor, setSecondFactor] = useState<"email" | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
@@ -27,7 +28,7 @@ export default function LoginPage() {
   const onSubmit = async (values: LoginFormValues) => {
     try {
       const response = await httpClient.post("/auth/login", values);
-      if(response.data.requires2FA){setSecondFactor(true);return;}
+      if(response.data.requires2FA){setSecondFactor("email");return;}
       router.push("/admin");
     } catch (error) {
       const message = isAxiosError(error)
@@ -75,7 +76,8 @@ export default function LoginPage() {
                 </div>
                 {errors.password && <p id="login-password-error" role="alert" className="text-xs text-red-700">{errors.password.message}</p>}
               </div>
-              {secondFactor && <label className="block space-y-2 text-sm font-semibold text-emerald-950">Código do autenticador ou de recuperação<input autoFocus autoComplete="one-time-code" required {...register("code")} className="w-full rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3" /></label>}
+              {secondFactor && <label className="block space-y-2 text-sm font-semibold text-emerald-950">Código enviado ao seu e-mail (válido por 5 minutos)<input autoFocus inputMode="numeric" maxLength={6} pattern="[0-9]{6}" autoComplete="one-time-code" required {...register("code")} className="w-full rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3" /></label>}
+              {secondFactor === "email" && <button type="button" disabled={isSubmitting} className="text-sm font-semibold text-emerald-800 underline" onClick={()=>{setValue("code", ""); void handleSubmit(onSubmit)();}}>Solicitar novo código (intervalo de 60 segundos)</button>}
               <button type="submit" disabled={isSubmitting} className="mt-2 w-full rounded-2xl bg-gradient-to-r from-emerald-800 to-green-700 px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-900/15 transition hover:from-emerald-900 hover:to-green-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 disabled:cursor-wait disabled:opacity-60">{isSubmitting ? "Entrando..." : "Entrar no painel"}</button>
             </form>
           </div>

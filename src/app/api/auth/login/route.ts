@@ -35,7 +35,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ admin });
   } catch (error) {
-    if (error instanceof SecondFactorRequired) return NextResponse.json({requires2FA:true});
+    if (error instanceof SecondFactorRequired) return NextResponse.json({requires2FA:true, method:error.method});
     if (error instanceof InvalidCredentialsError) {
       await loginFailure(email, ip);
       return NextResponse.json({ message: "Credenciais ou código de segurança incorretos" }, { status: 401 });

@@ -1,11 +1,10 @@
-import { prisma } from "@/lib/prisma";
-import { decryptSecret, matchingStep, recoveryHash } from "@/lib/totp";
+import { issueEmailCode, consumeEmailCode } from "@/lib/email-factor";
 import bcrypt from "bcrypt";
 import { findAdminByEmail } from "@/repositories/admin.repository";
 import { signAdminToken } from "@/lib/jwt";
 import type { LoginFormValues } from "@/schemas/auth.schema";
 
-export class SecondFactorRequired extends Error {}
+export class SecondFactorRequired extends Error { constructor(public method: "email") { super(); } }
 export class InvalidCredentialsError extends Error {}
 
 export async function authenticateAdmin({ email, password, code }: LoginFormValues) {
@@ -21,13 +20,9 @@ export async function authenticateAdmin({ email, password, code }: LoginFormValu
     throw new InvalidCredentialsError();
   }
 
-  if (admin.totpSecret) {
-    if (!code) throw new SecondFactorRequired();
-    const step = matchingStep(decryptSecret(admin.totpSecret, admin.id), code, admin.totpLastStep);
-    const hash = recoveryHash(code);
-    if (step === null && !admin.totpRecovery.includes(hash)) throw new InvalidCredentialsError();
-    const used = await prisma.admin.updateMany({where:{id:admin.id,sessionVersion:admin.sessionVersion,totpSecret:admin.totpSecret,totpLastStep:admin.totpLastStep,totpRecovery:{equals:admin.totpRecovery}},data:step!==null?{totpLastStep:step}:{totpRecovery:admin.totpRecovery.filter(h=>h!==hash)}});
-    if (!used.count) throw new InvalidCredentialsError();
+  if (admin.emailFactor) {
+    if (!code) { await issueEmailCode(admin, "login"); throw new SecondFactorRequired("email"); }
+    if (!await consumeEmailCode(admin, "login", code)) throw new InvalidCredentialsError();
   }
   const token = await signAdminToken({ adminId: admin.id, email: admin.email, sessionVersion: admin.sessionVersion });
 

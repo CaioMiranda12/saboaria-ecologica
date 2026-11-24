@@ -1,9 +1,27 @@
 "use client";
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-export function TwoFactorSettings({enabled}:{enabled:boolean}){
- const router=useRouter();const [password,setPassword]=useState('');const [code,setCode]=useState('');const [setup,setSetup]=useState('');const [secret,setSecret]=useState('');const [codes,setCodes]=useState<string[]>([]);const [done,setDone]=useState(false);const [busy,setBusy]=useState(false);const [message,setMessage]=useState('');
- async function submit(e:FormEvent){e.preventDefault();setBusy(true);setMessage('');try{const r=await fetch('/api/admin/minha-conta/2fa',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:enabled?'disable':setup?'enable':'setup',password,code,setup})});const d=await r.json();if(!r.ok){setMessage(d.message);return;}if(d.secret){setSecret(d.secret);setSetup(d.setup);return;}setCodes(d.codes??[]);setPassword('');setSecret('');setSetup('');setCode('');setDone(true);}catch{setMessage('Falha de conexão. Confira o estado da conta antes de tentar novamente.');}finally{setBusy(false);}}
+export function TwoFactorSettings({emailEnabled,emailAvailable}:{emailEnabled:boolean;emailAvailable:boolean}) {
+ const router=useRouter();
+ const [sent,setSent]=useState(false), [password,setPassword]=useState(''), [code,setCode]=useState(''), [busy,setBusy]=useState(false), [done,setDone]=useState(false), [message,setMessage]=useState('');
+ async function submit(e:FormEvent){
+  e.preventDefault();setBusy(true);setMessage('');
+  try {
+   const action=emailEnabled?(sent?'emailDisable':'emailDisableSetup'):(sent?'emailEnable':'emailSetup');
+   const r=await fetch('/api/admin/minha-conta/2fa',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,password,code})});
+   const d=await r.json();if(!r.ok){setMessage(d.message);return;}
+   if(d.emailSent){setSent(true);setMessage('Código enviado ao e-mail cadastrado.');return;}
+   setDone(true);setPassword('');setCode('');
+  }catch{setMessage('Falha de conexão. Confira o estado da conta antes de tentar novamente.');}finally{setBusy(false);}
+ }
  const input='w-full rounded-xl border border-emerald-200 bg-emerald-50/60 px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-500';
- return <section className="mx-auto mt-6 max-w-5xl rounded-2xl border border-emerald-200 bg-gradient-to-br from-white to-emerald-50 p-6 space-y-4"><h2 className="text-xl font-semibold text-emerald-950">Autenticação em dois fatores</h2><p className="text-sm text-emerald-800">{done?'Configuração alterada.':enabled?'Ativada — seu acesso exige um segundo fator.':'Desativada — adicione uma camada de proteção à sua conta.'}</p>{done?<><p role="status">{codes.length?'Guarde os códigos abaixo em local seguro. Eles não serão exibidos novamente.':'2FA desativado.'}</p>{codes.length>0&&<pre className="overflow-auto rounded-xl bg-emerald-100 p-4 text-xs select-all">{codes.join('\n')}</pre>}<button className="rounded-xl bg-emerald-800 px-4 py-3 text-white" onClick={()=>router.replace('/login')}>Já guardei os códigos / Entrar novamente</button></>:<form onSubmit={submit} className="space-y-4"><label className="block space-y-2">Senha atual<input className={input} type="password" autoComplete="current-password" required value={password} onChange={e=>setPassword(e.target.value)}/></label>{secret&&<div className="rounded-xl bg-emerald-100 p-4 space-y-2"><p>Adicione uma conta baseada em tempo no seu autenticador e informe esta chave manualmente:</p><code className="break-all select-all">{secret}</code><p className="text-xs">SHA-1, 6 dígitos, 30 segundos. Configuração válida por 10 minutos.</p></div>}{(enabled||setup)&&<label className="block space-y-2">{enabled?'Código do autenticador ou de recuperação':'Código de seis dígitos'}<input className={input} required autoComplete="one-time-code" value={code} onChange={e=>setCode(e.target.value)}/></label>}{message&&<p role="alert" className="text-red-700">{message}</p>}<button disabled={busy} className="rounded-xl bg-emerald-800 px-4 py-3 text-white disabled:opacity-50">{busy?'Aguarde...':enabled?'Desativar 2FA':setup?'Confirmar ativação':'Configurar 2FA'}</button></form>}</section>;
+ return <section className="mx-auto mt-6 max-w-5xl rounded-2xl border border-emerald-200 bg-gradient-to-br from-white to-emerald-50 p-6 space-y-4">
+ <h2 className="text-xl font-semibold text-emerald-950">Verificação em duas etapas por e-mail</h2>
+ <p className="text-sm text-emerald-800">{done?'Configuração alterada.':emailEnabled?'Ativada — seu login exige um código enviado ao e-mail cadastrado.':'Desativada — proteja sua conta com um código por e-mail.'}</p>
+ {done?<button className="rounded-xl bg-emerald-800 px-4 py-3 text-white" onClick={()=>router.replace('/login')}>Entrar novamente</button>:!emailAvailable?<p role="status">Envio de e-mail indisponível. Solicite a configuração do serviço ao responsável pelo sistema.</p>:<form onSubmit={submit} className="space-y-4">
+ <label className="block space-y-2">Senha atual<input className={input} type="password" autoComplete="current-password" required value={password} onChange={e=>setPassword(e.target.value)}/></label>
+ {sent&&<><label className="block space-y-2">Código recebido por e-mail<input className={input} required inputMode="numeric" pattern="[0-9]{6}" maxLength={6} autoComplete="one-time-code" value={code} onChange={e=>setCode(e.target.value)}/></label><button type="button" disabled={busy} className="text-sm underline text-emerald-800" onClick={()=>{setSent(false);setCode('');}}>Solicitar novo código</button></>}
+ {message&&<p role="status">{message}</p>}
+ <button disabled={busy} className="rounded-xl bg-emerald-800 px-4 py-3 text-white disabled:opacity-50">{busy?'Aguarde...':sent?(emailEnabled?'Confirmar desativação':'Confirmar ativação'):(emailEnabled?'Enviar código para desativar':'Enviar código para ativar')}</button>
+ </form>}</section>;
 }
