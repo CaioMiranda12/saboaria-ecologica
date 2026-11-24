@@ -2,7 +2,7 @@ import { loginLimit, loginFailure, loginSuccess } from "@/lib/login-protection";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { loginSchema } from "@/schemas/auth.schema";
-import { authenticateAdmin, InvalidCredentialsError } from "@/services/auth.service";
+import { authenticateAdmin, InvalidCredentialsError, SecondFactorRequired } from "@/services/auth.service";
 import { AUTH_COOKIE_NAME, AUTH_COOKIE_MAX_AGE_SECONDS } from "@/constants/auth";
 
 export async function POST(request: Request) {
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Muitas tentativas. Aguarde 15 minutos e tente novamente." }, { status: 429, headers: { "Retry-After": "900" } });
   }
   try {
-    const { token, admin } = await authenticateAdmin(parseResult.data);
+    const { token, admin } = await authenticateAdmin({...parseResult.data,email});
 
     await loginSuccess(email);
     const cookieStore = await cookies();
@@ -35,9 +35,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ admin });
   } catch (error) {
+    if (error instanceof SecondFactorRequired) return NextResponse.json({requires2FA:true});
     if (error instanceof InvalidCredentialsError) {
       await loginFailure(email, ip);
-      return NextResponse.json({ message: "E-mail ou senha incorretos" }, { status: 401 });
+      return NextResponse.json({ message: "Credenciais ou código de segurança incorretos" }, { status: 401 });
     }
 
     console.error(error);

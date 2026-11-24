@@ -1,0 +1,9 @@
+import { randomBytes, createCipheriv, createDecipheriv, createHmac, createHash, timingSafeEqual } from 'node:crypto';
+const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+export function newSecret() { return Array.from(randomBytes(32), b => alphabet[b & 31]).join(''); }
+function key() { const k = process.env.TOTP_ENCRYPTION_KEY ?? ''; if (!/^[a-f0-9]{64}$/i.test(k)) throw new Error('TOTP_ENCRYPTION_KEY inválida'); return Buffer.from(k,'hex'); }
+export function encryptSecret(secret:string, id:string) { const iv=randomBytes(12); const c=createCipheriv('aes-256-gcm',key(),iv); c.setAAD(Buffer.from(id)); return [iv,c.update(secret,'utf8'),c.final(),c.getAuthTag()].map(b=>b.toString('hex')).join(':'); }
+export function decryptSecret(value:string,id:string) { const [iv,body,end,tag]=value.split(':').map(s=>Buffer.from(s,'hex')); const d=createDecipheriv('aes-256-gcm',key(),iv); d.setAAD(Buffer.from(id)); d.setAuthTag(tag); return Buffer.concat([d.update(body),d.update(end),d.final()]).toString('utf8'); }
+export function matchingStep(secret:string,code:string,last:number,now=Date.now()) { if(!/^\d{6}$/.test(code)) return null; let bits=0, acc=0; const bytes:number[]=[]; for(const ch of secret){acc=(acc<<5)|alphabet.indexOf(ch);bits+=5;if(bits>=8){bits-=8;bytes.push((acc>>bits)&255);}} const step=Math.floor(now/30000); for(const s of [step,step-1,step+1]) { if(s<=last) continue; const counter=Buffer.alloc(8);counter.writeBigUInt64BE(BigInt(s));const h=createHmac('sha1',Buffer.from(bytes)).update(counter).digest();const offset=h[19]&15;const expected=((h.readUInt32BE(offset)&0x7fffffff)%1000000).toString().padStart(6,'0');if(timingSafeEqual(Buffer.from(code),Buffer.from(expected)))return s;}return null; }
+export function recoveryHash(code:string){return createHash('sha256').update(code.trim().toLowerCase()).digest('hex');}
+export function newRecoveryCodes(){return Array.from({length:10},()=>randomBytes(16).toString('hex'));}
