@@ -1,5 +1,5 @@
 import PublicImage from "@/components/PublicImage";
-import type { Produto } from "../data/produtos"
+import type { Produto } from "../data/produtos";
 
 // const corPorTipo: Record<Produto['tipo'], string> = {
 //   barra: 'from-[#7aab7a] to-[#013e72]',
@@ -10,57 +10,73 @@ import type { Produto } from "../data/produtos"
 // }
 
 type Props = {
-  produto: Produto
-  onVerDetalhes?: () => void
-}
+  produto: Produto;
+  onVerDetalhes?: () => void;
+};
 
 const CardProduto = ({ produto, onVerDetalhes }: Props) => {
   return (
-    <div
-      className="group relative bg-white rounded-2xl overflow-hidden border border-azul-principal/10 hover:-translate-y-1 hover:shadow-lg hover:border-azul-principal transition-all duration-200"
-    >
+    <div className="group relative overflow-hidden rounded-2xl border border-azul-principal/10 bg-white transition-all duration-200 hover:-translate-y-1 hover:border-azul-principal hover:shadow-lg">
       {onVerDetalhes && (
-        <button type="button" onClick={onVerDetalhes}
+        <button
+          type="button"
+          onClick={onVerDetalhes}
           aria-label={`Ver detalhes de ${produto.nomePrincipal}${produto.nomeComplemento ? ` ${produto.nomeComplemento}` : ""}`}
           aria-haspopup="dialog"
-          className="absolute inset-0 z-10 cursor-pointer rounded-2xl focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-azul-principal" />
+          className="absolute inset-0 z-10 cursor-pointer rounded-2xl focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-azul-principal"
+        />
       )}
-      <div className={`h-96 bg-linear-to-br ${produto.imagem ? 'bg-white' : "from-[#025197] to-azul-escuro"} flex items-center justify-center`}>
+      <div
+        className={`h-96 bg-linear-to-br ${produto.imagem ? "bg-white" : "from-[#025197] to-azul-escuro"} flex items-center justify-center`}
+      >
         {produto.imagem ? (
-          <PublicImage maxWidth={800}
+          <PublicImage
+            maxWidth={800}
             src={produto.imagem}
             alt={`${produto.nomePrincipal} ${produto.nomeComplemento}`}
-            className="w-full h-full object-contain"
+            className="h-full w-full object-contain"
           />
         ) : (
-          <span className="text-white/70 text-xs tracking-widest uppercase">{produto.nomePrincipal}</span>
+          <span className="text-xs tracking-widest text-white/70 uppercase">
+            {produto.nomePrincipal}
+          </span>
         )}
       </div>
       <div className="p-5">
         {produto.tipos && produto.tipos.length > 0 && (
-          <div className="flex gap-1.5 flex-wrap mb-3">
+          <div className="mb-3 flex flex-wrap gap-1.5">
             {produto.tipos.map((t) => (
-              <span key={t} className="text-[10px] font-medium uppercase tracking-wider bg-[#e8e9f0] text-verde-escuro px-2.5 py-1 rounded-full">
+              <span
+                key={t}
+                className="rounded-full bg-[#e8e9f0] px-2.5 py-1 text-[10px] font-medium tracking-wider text-verde-escuro uppercase"
+              >
                 {t}
               </span>
             ))}
           </div>
         )}
-        <h3 className="text-sm font-medium text-[#2d2f4f] mb-0.5">{produto.nomePrincipal}</h3>
+        <h3 className="mb-0.5 text-sm font-medium text-[#2d2f4f]">{produto.nomePrincipal}</h3>
         {produto.nomeComplemento && (
-          <p className="text-xs italic text-verde-muted font-light mb-2">{produto.nomeComplemento}</p>
+          <p className="mb-2 text-xs font-light text-verde-muted italic">
+            {produto.nomeComplemento}
+          </p>
         )}
-        <p className="text-xs text-verde-muted leading-relaxed font-light mb-4">{produto.descricao}</p>
-        <div className="flex justify-between items-center">
+        <p className="mb-4 text-xs leading-relaxed font-light text-verde-muted">
+          {produto.descricao}
+        </p>
+        <div className="flex items-center justify-between">
           {/* <span className="font-serif text-lg font-bold text-[#013e72]">{formatarMoeda(produto.preco)}</span> */}
           <div className="flex items-center gap-2">
             {produto.peso && (
-              <span className="text-xs font-medium bg-verde-claro text-[#2e2d4f] px-3 py-1 rounded-full">
+              <span className="rounded-full bg-verde-claro px-3 py-1 text-xs font-medium text-[#2e2d4f]">
                 {produto.peso}
               </span>
             )}
             {onVerDetalhes && (
-              <span aria-hidden="true" className="text-xs font-medium text-azul-principal bg-verde-claro px-3 py-1 rounded-full transition-colors group-hover:bg-azul-principal group-hover:text-white group-focus-within:bg-azul-principal group-focus-within:text-white">
+              <span
+                aria-hidden="true"
+                className="rounded-full bg-verde-claro px-3 py-1 text-xs font-medium text-azul-principal transition-colors group-focus-within:bg-azul-principal group-focus-within:text-white group-hover:bg-azul-principal group-hover:text-white"
+              >
                 Ver detalhes
               </span>
             )}
@@ -68,7 +84,7 @@ const CardProduto = ({ produto, onVerDetalhes }: Props) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CardProduto
+export default CardProduto;

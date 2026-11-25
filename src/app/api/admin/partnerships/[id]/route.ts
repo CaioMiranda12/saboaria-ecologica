@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 import { getAdminSession } from "@/lib/session";
 import { partnershipFormSchema } from "@/schemas/partnership.schema";
 import {
-  getPartnershipOrThrow,
   updatePartnershipFromForm,
   removePartnership,
   PartnershipNotFoundError,
@@ -45,7 +44,11 @@ export async function DELETE(_request: Request, { params }: RouteParams) {
     return NextResponse.json({ message: "Não autorizado" }, { status: 401 });
   }
 
-  if (!await requireAdminRole()) return NextResponse.json({ message: "Apenas administradores podem excluir registros" }, { status: 403 });
+  if (!(await requireAdminRole()))
+    return NextResponse.json(
+      { message: "Apenas administradores podem excluir registros" },
+      { status: 403 },
+    );
   const { id } = await params;
 
   try {

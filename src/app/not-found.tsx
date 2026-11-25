@@ -1,21 +1,21 @@
-import Link from "next/link"
+import Link from "next/link";
 
 const NotFoundPage = () => {
   return (
-    <div className="min-h-screen bg-creme flex flex-col items-center justify-center text-center px-6">
-      <span className="font-serif text-8xl font-bold text-verde-medio/20 mb-4">404</span>
-      <h1 className="font-serif text-3xl text-verde-escuro mb-3">Página não encontrada</h1>
-      <p className="text-sm text-verde-muted font-light max-w-sm leading-relaxed mb-8">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-creme px-6 text-center">
+      <span className="mb-4 font-serif text-8xl font-bold text-verde-medio/20">404</span>
+      <h1 className="mb-3 font-serif text-3xl text-verde-escuro">Página não encontrada</h1>
+      <p className="mb-8 max-w-sm text-sm leading-relaxed font-light text-verde-muted">
         A página que você tentou acessar não existe ou foi movida.
       </p>
       <Link
         href="/"
-        className="bg-verde-medio text-white px-8 py-3 rounded-full text-sm font-medium hover:bg-verde-escuro transition-colors"
+        className="rounded-full bg-verde-medio px-8 py-3 text-sm font-medium text-white transition-colors hover:bg-verde-escuro"
       >
         Voltar para o início
       </Link>
     </div>
-  )
-}
+  );
+};
 
-export default NotFoundPage
+export default NotFoundPage;

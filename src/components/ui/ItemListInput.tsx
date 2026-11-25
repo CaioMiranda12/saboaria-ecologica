@@ -77,7 +77,7 @@ export function ItemListInput({
         type="button"
         onClick={handleAdd}
         disabled={disabled || !draft.trim()}
-        className="inline-flex items-center gap-2 self-start rounded-full border border-verde-principal px-4 py-2 text-sm font-medium text-verde-principal transition-colors hover:bg-verde-principal hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-verde-principal/40 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-verde-principal"
+        className="inline-flex items-center gap-2 self-start rounded-full border border-verde-principal px-4 py-2 text-sm font-medium text-verde-principal transition-colors hover:bg-verde-principal hover:text-white focus-visible:ring-2 focus-visible:ring-verde-principal/40 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-verde-principal"
       >
         <Plus size={16} />
         {addLabel}
@@ -92,14 +92,14 @@ export function ItemListInput({
               key={`${item}-${index}`}
               className="flex items-center justify-between gap-3 rounded-xl border border-verde-principal/30 bg-verde-principal/5 px-4 py-2.5"
             >
-              <span className="min-w-0 break-words text-sm text-verde-escuro">{item}</span>
+              <span className="min-w-0 text-sm break-words text-verde-escuro">{item}</span>
               <button
                 type="button"
                 onClick={() => setPendingIndex(index)}
                 disabled={disabled}
                 aria-label={`Remover ${item}`}
                 title="Remover"
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-verde-escuro/60 transition-colors hover:bg-verde-principal/10 hover:text-verde-escuro focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-verde-principal/40 disabled:opacity-60"
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-verde-escuro/60 transition-colors hover:bg-verde-principal/10 hover:text-verde-escuro focus-visible:ring-2 focus-visible:ring-verde-principal/40 focus-visible:outline-none disabled:opacity-60"
               >
                 <X size={14} />
               </button>

@@ -1,4 +1,5 @@
 # Sprint 13 — Hotfix de build
+
 - React Hook Form: entrada z.input e saída validada nos três formulários, preservando defaults Zod.
 - Equipe: normaliza imageUrl nulo ao editar.
 - Next.js: proxy substitui middleware com a mesma lógica e matcher; turbopack.root usa diretório de execução (executar npm na raiz).

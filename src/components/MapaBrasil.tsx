@@ -77,14 +77,15 @@ export function MapaBrasil({ localizacoes }: MapaBrasilProps) {
                     setActiveId((current) => (current === local.id ? null : local.id));
                   }
                 }}
-                className="relative flex h-6 w-6 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-verde-principal/50"
+                className="relative flex h-6 w-6 items-center justify-center rounded-full focus-visible:ring-2 focus-visible:ring-verde-principal/50 focus-visible:outline-none"
               >
                 {local.sede && (
                   <span className="absolute h-6 w-6 animate-ping rounded-full bg-verde-principal/30" />
                 )}
                 <span
-                  className={`relative block rounded-full border-2 border-white bg-verde-principal shadow-md transition-transform duration-200 ${local.sede ? "h-4 w-4" : "h-3 w-3"
-                    } ${isActive ? "scale-125" : ""}`}
+                  className={`relative block rounded-full border-2 border-white bg-verde-principal shadow-md transition-transform duration-200 ${
+                    local.sede ? "h-4 w-4" : "h-3 w-3"
+                  } ${isActive ? "scale-125" : ""}`}
                 />
               </button>
 
@@ -92,21 +93,24 @@ export function MapaBrasil({ localizacoes }: MapaBrasilProps) {
                 <div
                   id={`mapa-tooltip-${local.id}`}
                   role="tooltip"
-                  className={`pointer-events-none absolute w-60 rounded-2xl border border-verde-medio/15 bg-white p-4 text-left shadow-xl ${horizontal} ${openBelow ? "top-full mt-2" : "bottom-full mb-2"
-                    }`}
+                  className={`pointer-events-none absolute w-60 rounded-2xl border border-verde-medio/15 bg-white p-4 text-left shadow-xl ${horizontal} ${
+                    openBelow ? "top-full mt-2" : "bottom-full mb-2"
+                  }`}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <p className="font-serif text-base font-bold text-verde-escuro">
                       {local.cidade}
-                      <span className="ml-1.5 text-xs font-normal text-verde-muted">{local.estado}</span>
+                      <span className="ml-1.5 text-xs font-normal text-verde-muted">
+                        {local.estado}
+                      </span>
                     </p>
                     {local.sede && (
-                      <span className="rounded-full bg-verde-claro px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-verde-principal">
+                      <span className="rounded-full bg-verde-claro px-2 py-0.5 text-[10px] font-medium tracking-wider text-verde-principal uppercase">
                         Sede
                       </span>
                     )}
                   </div>
-                  <p className="mt-1.5 text-xs font-light leading-relaxed text-verde-escuro/70">
+                  <p className="mt-1.5 text-xs leading-relaxed font-light text-verde-escuro/70">
                     {local.descricao}
                   </p>
                 </div>

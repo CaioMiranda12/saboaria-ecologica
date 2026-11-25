@@ -15,19 +15,34 @@ export function listCmsPages() {
   });
 }
 
-export async function replaceCmsSections(slug: string, title: string, sections: Array<{
-  key: string; title: string; position: number; enabled: boolean; content: Record<string, unknown>;
-}>) {
-  return prisma.$transaction(async tx => {
+export async function replaceCmsSections(
+  slug: string,
+  title: string,
+  sections: Array<{
+    key: string;
+    title: string;
+    position: number;
+    enabled: boolean;
+    content: Record<string, unknown>;
+  }>,
+) {
+  return prisma.$transaction(async (tx) => {
     const page = await tx.cmsPage.upsert({
-      where: { slug }, update: { title }, create: { slug, title },
+      where: { slug },
+      update: { title },
+      create: { slug, title },
     });
     await tx.cmsSection.deleteMany({ where: { pageId: page.id } });
     for (const section of sections) {
       await tx.cmsSection.create({
-        data: { pageId: page.id, key: section.key, title: section.title,
-          position: section.position, enabled: section.enabled,
-          content: section.content as Prisma.InputJsonObject },
+        data: {
+          pageId: page.id,
+          key: section.key,
+          title: section.title,
+          position: section.position,
+          enabled: section.enabled,
+          content: section.content as Prisma.InputJsonObject,
+        },
       });
     }
     return tx.cmsPage.findUniqueOrThrow({

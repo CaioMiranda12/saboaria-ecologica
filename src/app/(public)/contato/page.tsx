@@ -1,14 +1,14 @@
 import PublicImage from "@/components/PublicImage";
 import { pageMetadata } from "@/lib/seo";
 import { publicSection, cmsText } from "@/lib/cms-public";
-import { contatosDaMarca } from '@/data/marca'
-import { localizacoes } from '@/data/localizacoes'
-import { MapaBrasil } from '@/components/MapaBrasil'
+import { contatosDaMarca } from "@/data/marca";
+import { localizacoes } from "@/data/localizacoes";
+import { MapaBrasil } from "@/components/MapaBrasil";
 
 const canaisDeContato = [
   {
-    nome: 'WhatsApp',
-    valor: '(85) 98705-2241',
+    nome: "WhatsApp",
+    valor: "(85) 98705-2241",
     href: `https://wa.me/${contatosDaMarca.whatsapp}`,
     icone: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="#4a7c59">
@@ -18,8 +18,8 @@ const canaisDeContato = [
     ),
   },
   {
-    nome: 'Instagram',
-    valor: '@saboariaecologica',
+    nome: "Instagram",
+    valor: "@saboariaecologica",
     href: `https://instagram.com/${contatosDaMarca.instagram}`,
     icone: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4a7c59" strokeWidth="2">
@@ -30,7 +30,7 @@ const canaisDeContato = [
     ),
   },
   {
-    nome: 'E-mail',
+    nome: "E-mail",
     valor: contatosDaMarca.email,
     href: `mailto:${contatosDaMarca.email}`,
     icone: (
@@ -41,24 +41,33 @@ const canaisDeContato = [
     ),
   },
   {
-    nome: 'Linkedin',
-    valor: 'Saboaria Ecológica',
+    nome: "Linkedin",
+    valor: "Saboaria Ecológica",
     href: `https://linkedin.com/in/${contatosDaMarca.linkedin}`,
     icone: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4a7c59" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#4a7c59"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
         <rect x="2" y="9" width="4" height="12" />
         <circle cx="4" cy="4" r="2" />
       </svg>
     ),
   },
-]
+];
 
 const horarioDeAtendimento = [
-  { dia: 'Segunda a Quinta', hora: '09h às 17h' },
-  { dia: 'Sexta', hora: '09h às 18h' },
-  { dia: 'Sábado e Domingo', hora: 'Fechado' },
-]
+  { dia: "Segunda a Quinta", hora: "09h às 17h" },
+  { dia: "Sexta", hora: "09h às 18h" },
+  { dia: "Sábado e Domingo", hora: "Fechado" },
+];
 
 const Contato = async () => {
   const section = await publicSection("contato", "contatos");
@@ -67,68 +76,77 @@ const Contato = async () => {
   const instagram = cmsText(content.instagram, contatosDaMarca.instagram).replace(/^@/, "");
   const email = cmsText(content.email, contatosDaMarca.email);
   const linkedin = cmsText(content.linkedin, contatosDaMarca.linkedin);
-  const canais = canaisDeContato.map(c => c.nome === "WhatsApp" ? {...c,valor:whatsapp,href:`https://wa.me/${whatsapp}`} : c.nome === "Instagram" ? {...c,valor:`@${instagram}`,href:`https://instagram.com/${instagram}`} : c.nome === "E-mail" ? {...c,valor:email,href:`mailto:${email}`} : {...c,href:`https://linkedin.com/in/${linkedin}`});
+  const canais = canaisDeContato.map((c) =>
+    c.nome === "WhatsApp"
+      ? { ...c, valor: whatsapp, href: `https://wa.me/${whatsapp}` }
+      : c.nome === "Instagram"
+        ? { ...c, valor: `@${instagram}`, href: `https://instagram.com/${instagram}` }
+        : c.nome === "E-mail"
+          ? { ...c, valor: email, href: `mailto:${email}` }
+          : { ...c, href: `https://linkedin.com/in/${linkedin}` },
+  );
   const hours = cmsText(content.hours, "").split("\n").filter(Boolean);
   return (
     <div className="bg-creme text-[#1a2e1f]">
-
       {/* Hero */}
-      <section className="bg-verde-principal pt-24 md:pt-28 pb-16 md:pb-20 px-5 lg:px-20 relative overflow-hidden">
-        <div className="absolute -top-20 -right-20 w-72 md:w-96 h-72 md:h-96 rounded-full bg-white/4" />
-        <div className="flex justify-between items-center">
+      <section className="relative overflow-hidden bg-verde-principal px-5 pt-24 pb-16 md:pt-28 md:pb-20 lg:px-20">
+        <div className="absolute -top-20 -right-20 h-72 w-72 rounded-full bg-white/4 md:h-96 md:w-96" />
+        <div className="flex items-center justify-between">
           <div className="relative z-10 max-w-xl">
-            <span className="inline-flex items-center gap-2 bg-white/10 text-white/80 px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-5 w-fit">
+            <span className="mb-5 inline-flex w-fit items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-medium tracking-widest text-white/80 uppercase">
               Fale com a gente
             </span>
-            <h1 className="font-serif text-4xl md:text-5xl text-white leading-tight mb-4">
+            <h1 className="mb-4 font-serif text-4xl leading-tight text-white md:text-5xl">
               {cmsText(content.title, "Entre em contato")}
             </h1>
-            <p className="text-white/65 font-light leading-relaxed text-sm md:text-base">
-              {cmsText(content.description, "Tire suas dúvidas, faça seu pedido ou saiba como contribuir com a nossa causa. Estamos prontos para te atender pelos canais abaixo.")}
+            <p className="text-sm leading-relaxed font-light text-white/65 md:text-base">
+              {cmsText(
+                content.description,
+                "Tire suas dúvidas, faça seu pedido ou saiba como contribuir com a nossa causa. Estamos prontos para te atender pelos canais abaixo.",
+              )}
             </p>
           </div>
-          <PublicImage priority maxWidth={800}
+          <PublicImage
+            priority
+            maxWidth={800}
             src="/logo.png"
             alt="Saboaria Ecológica"
-            className="max-w-100 w-1/2 h-full object-contain"
+            className="h-full w-1/2 max-w-100 object-contain"
           />
           <div />
         </div>
       </section>
 
       {/* Canais rápidos */}
-      <div className="grid grid-cols-2 md:grid-cols-4 bg-white border-b border-verde-medio/10">
+      <div className="grid grid-cols-2 border-b border-verde-medio/10 bg-white md:grid-cols-4">
         {canais.map((canal, i) => (
           <a
             key={canal.nome}
             href={canal.href}
             target="_blank"
             rel="noreferrer"
-            className={`flex flex-col items-center text-center px-4 py-6 md:py-8 hover:bg-verde-claro transition-colors no-underline
-              ${i % 2 === 0 ? 'border-r border-verde-medio/10' : ''}
-              ${i < 2 ? 'border-b md:border-b-0 border-verde-medio/10' : ''}
-              md:border-r md:last:border-r-0 md:border-b-0`}
+            className={`flex flex-col items-center px-4 py-6 text-center no-underline transition-colors hover:bg-verde-claro md:py-8 ${i % 2 === 0 ? "border-r border-verde-medio/10" : ""} ${i < 2 ? "border-b border-verde-medio/10 md:border-b-0" : ""} md:border-r md:border-b-0 md:last:border-r-0`}
           >
-            <div className="w-12 h-12 rounded-full bg-verde-claro flex items-center justify-center mb-3">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-verde-claro">
               {canal.icone}
             </div>
-            <p className="text-xs font-medium text-verde-principal mb-1">{canal.nome}</p>
-            <p className="text-xs text-verde-muted font-light">{canal.valor}</p>
+            <p className="mb-1 text-xs font-medium text-verde-principal">{canal.nome}</p>
+            <p className="text-xs font-light text-verde-muted">{canal.valor}</p>
           </a>
         ))}
       </div>
 
       {/* Mapa + Info lateral */}
-      <div className="grid grid-cols-1 md:grid-cols-2 border-t border-verde-medio/10">
-        <div className="flex flex-col items-center justify-center gap-8 px-5 md:px-14 py-14 md:py-20">
-          <div className="text-center max-w-sm">
-            <span className="inline-flex items-center gap-2 bg-verde-claro text-verde-principal px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-4">
+      <div className="grid grid-cols-1 border-t border-verde-medio/10 md:grid-cols-2">
+        <div className="flex flex-col items-center justify-center gap-8 px-5 py-14 md:px-14 md:py-20">
+          <div className="max-w-sm text-center">
+            <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-verde-claro px-4 py-2 text-xs font-medium tracking-widest text-verde-principal uppercase">
               Onde estamos
             </span>
-            <h2 className="font-serif text-2xl md:text-3xl text-verde-escuro mb-2">
+            <h2 className="mb-2 font-serif text-2xl text-verde-escuro md:text-3xl">
               Presença por todo o <em className="text-verde-principal">Brasil</em>
             </h2>
-            <p className="text-sm text-verde-muted font-light leading-relaxed">
+            <p className="text-sm leading-relaxed font-light text-verde-muted">
               Passe o mouse (ou toque) sobre os pontos para conhecer cada localização.
             </p>
           </div>
@@ -137,10 +155,10 @@ const Contato = async () => {
         </div>
 
         {/* Info lateral */}
-        <div className="bg-verde-principal px-5 md:px-14 py-14 md:py-20 flex flex-col gap-6">
+        <div className="flex flex-col gap-6 bg-verde-principal px-5 py-14 md:px-14 md:py-20">
           <div>
-            <h3 className="font-serif text-2xl text-white mb-2">Canais de atendimento</h3>
-            <p className="text-white/85 text-sm font-light leading-relaxed mb-5">
+            <h3 className="mb-2 font-serif text-2xl text-white">Canais de atendimento</h3>
+            <p className="mb-5 text-sm leading-relaxed font-light text-white/85">
               Prefere um contato direto? Escolha o canal mais conveniente para você.
             </p>
             <div className="flex flex-col gap-3">
@@ -150,14 +168,14 @@ const Contato = async () => {
                   href={canal.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-3 bg-white/8 border border-white/10 rounded-xl px-4 py-3 hover:bg-white/[0.14] transition-colors no-underline"
+                  className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/8 px-4 py-3 no-underline transition-colors hover:bg-white/[0.14]"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/10">
                     <div className="[&_svg]:stroke-white/80">{canal.icone}</div>
                   </div>
                   <div>
-                    <p className="text-xs text-white/85 font-light mb-0.5">{canal.nome}</p>
-                    <p className="text-sm text-white font-medium">{canal.valor}</p>
+                    <p className="mb-0.5 text-xs font-light text-white/85">{canal.nome}</p>
+                    <p className="text-sm font-medium text-white">{canal.valor}</p>
                   </div>
                 </a>
               ))}
@@ -169,42 +187,57 @@ const Contato = async () => {
             href="https://maps.google.com/?q=Av.+Ulisses+Guimarães,+3132,+Iparana"
             target="_blank"
             rel="noreferrer"
-            className="block bg-white/6 border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 transition-colors no-underline"
+            className="block overflow-hidden rounded-2xl border border-white/10 bg-white/6 no-underline transition-colors hover:bg-white/10"
           >
-            <div className="h-32 flex flex-col items-center justify-center gap-2">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2">
+            <div className="flex h-32 flex-col items-center justify-center gap-2">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="rgba(255,255,255,0.5)"
+                strokeWidth="2"
+              >
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                 <circle cx="12" cy="10" r="3" />
               </svg>
-              <p className="text-sm text-white/80 font-medium text-center leading-snug">
-                Av. Ulisses Guimarães, 3132<br />
-                <span className="text-white/85 text-xs font-light">Iparana · Caucaia, CE</span>
+              <p className="text-center text-sm leading-snug font-medium text-white/80">
+                Av. Ulisses Guimarães, 3132
+                <br />
+                <span className="text-xs font-light text-white/85">Iparana · Caucaia, CE</span>
               </p>
-              <p className="text-xs text-white/85 font-light">Clique para abrir no mapa</p>
+              <p className="text-xs font-light text-white/85">Clique para abrir no mapa</p>
             </div>
           </a>
 
           {/* Horário */}
-          <div className="bg-white/6 rounded-2xl px-5 py-4">
-            <p className="text-xs text-white/85 font-light uppercase tracking-widest mb-3">
+          <div className="rounded-2xl bg-white/6 px-5 py-4">
+            <p className="mb-3 text-xs font-light tracking-widest text-white/85 uppercase">
               Horário de atendimento
             </p>
             <div className="flex flex-col divide-y divide-white/6">
-              {(hours.length ? hours.map(line => { const [dia, ...rest] = line.split(":"); return {dia, hora: rest.join(":").trim()}; }) : horarioDeAtendimento).map((item) => (
-                <div key={item.dia} className="flex justify-between items-center py-2.5">
-                  <span className="text-sm text-white/70 font-light">{item.dia}</span>
-                  <span className="text-sm text-white font-medium">{item.hora}</span>
+              {(hours.length
+                ? hours.map((line) => {
+                    const [dia, ...rest] = line.split(":");
+                    return { dia, hora: rest.join(":").trim() };
+                  })
+                : horarioDeAtendimento
+              ).map((item) => (
+                <div key={item.dia} className="flex items-center justify-between py-2.5">
+                  <span className="text-sm font-light text-white/70">{item.dia}</span>
+                  <span className="text-sm font-medium text-white">{item.hora}</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
       </div>
-
     </div>
-  )
+  );
+};
+
+export default Contato;
+
+export async function generateMetadata() {
+  return pageMetadata("/contato");
 }
-
-export default Contato
-
-export async function generateMetadata() { return pageMetadata("/contato"); }

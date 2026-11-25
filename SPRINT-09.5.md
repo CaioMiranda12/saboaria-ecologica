@@ -8,6 +8,7 @@
 - Sem migration. Preserve `.env` e configure Cloudinary como nas sprints anteriores.
 
 ## Testes recomendados
+
 1. Criar parceria enviando imagem local; conferir prévia e logotipo salvo.
 2. Criar/editar parceria selecionando imagem da biblioteca.
 3. Remover/trocar imagem e salvar; validar a URL.

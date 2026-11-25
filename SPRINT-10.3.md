@@ -1,6 +1,7 @@
 # Sprint 10.3 — Minha Conta
 
 ## Implementado
+
 - Página `/admin/minha-conta` acessível a ADMIN e EDITOR.
 - Navegação no menu lateral e móvel.
 - Edição do próprio nome, com validação no servidor.
@@ -10,9 +11,11 @@
 - Interface responsiva com identidade visual verde.
 
 ## Atualização
+
 Não há migration nem novas dependências. Preserve o `.env` e execute `npm install`, `npx prisma generate --config prisma7.config.ts`, `npm run build` e `npm run dev`.
 
 ## Testes
+
 1. Acesse `/admin/minha-conta` como ADMIN e EDITOR.
 2. Edite o nome e confira a persistência após atualizar a página.
 3. Teste senha atual incorreta, senha curta e confirmação divergente.
@@ -21,4 +24,5 @@ Não há migration nem novas dependências. Preserve o `.env` e execute `npm ins
 6. Confira os eventos `UPDATE_PROFILE` e `CHANGE_PASSWORD` em auditoria.
 
 ## Limitações
+
 A aplicação não oferece lista de dispositivos ou sessões individuais. O controle é por versão de sessão; alterar a senha invalida todas as sessões. A auditoria é registrada após a operação, não na mesma transação.

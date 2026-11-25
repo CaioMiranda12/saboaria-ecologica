@@ -13,7 +13,8 @@ export function useCreateTeamMember() {
 export function useUpdateTeamMember(id: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (values: TeamMemberFormValues) => httpClient.patch(`/admin/team-members/${id}`, values),
+    mutationFn: (values: TeamMemberFormValues) =>
+      httpClient.patch(`/admin/team-members/${id}`, values),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["team-members"] }),
   });
 }

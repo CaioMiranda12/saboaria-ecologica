@@ -59,13 +59,13 @@ export function ConfirmModal({
         aria-modal="true"
         aria-labelledby="confirm-modal-title"
         aria-describedby={description ? "confirm-modal-description" : undefined}
-        className="relative w-full max-w-sm max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain rounded-2xl bg-white p-6 shadow-xl"
+        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto overscroll-contain rounded-2xl bg-white p-6 shadow-xl"
       >
         <button
           type="button"
           onClick={onClose}
           aria-label="Fechar"
-          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-verde-escuro/60 transition-colors hover:bg-verde-principal/10 hover:text-verde-escuro focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-verde-principal/40"
+          className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full text-verde-escuro/60 transition-colors hover:bg-verde-principal/10 hover:text-verde-escuro focus-visible:ring-2 focus-visible:ring-verde-principal/40 focus-visible:outline-none"
         >
           <X size={18} />
         </button>
@@ -88,14 +88,14 @@ export function ConfirmModal({
             ref={cancelRef}
             type="button"
             onClick={onClose}
-            className="rounded-full border border-verde-principal/30 px-5 py-2 text-sm font-medium text-verde-escuro transition-colors hover:bg-verde-principal/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-verde-principal/40"
+            className="rounded-full border border-verde-principal/30 px-5 py-2 text-sm font-medium text-verde-escuro transition-colors hover:bg-verde-principal/10 focus-visible:ring-2 focus-visible:ring-verde-principal/40 focus-visible:outline-none"
           >
             {cancelLabel}
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="rounded-full bg-red-600 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600/40"
+            className="rounded-full bg-red-600 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 focus-visible:ring-2 focus-visible:ring-red-600/40 focus-visible:outline-none"
           >
             {confirmLabel}
           </button>

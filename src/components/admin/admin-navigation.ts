@@ -1,4 +1,14 @@
-import { LayoutDashboard, Files, Package, Users, Handshake, Images, ClipboardList, UserCog, CircleUserRound } from "lucide-react";
+import {
+  LayoutDashboard,
+  Files,
+  Package,
+  Users,
+  Handshake,
+  Images,
+  ClipboardList,
+  UserCog,
+  CircleUserRound,
+} from "lucide-react";
 
 const adminNavigation = [
   { href: "/admin", label: "Visão geral", icon: LayoutDashboard },
@@ -13,4 +23,6 @@ const adminNavigation = [
   { href: "/admin/auditoria", label: "Auditoria", icon: ClipboardList, adminOnly: true },
 ];
 
-export function navigationFor(role: "ADMIN" | "EDITOR") { return adminNavigation.filter(item => !item.adminOnly || role === "ADMIN"); }
+export function navigationFor(role: "ADMIN" | "EDITOR") {
+  return adminNavigation.filter((item) => !item.adminOnly || role === "ADMIN");
+}

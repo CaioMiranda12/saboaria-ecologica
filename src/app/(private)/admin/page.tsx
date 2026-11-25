@@ -1,36 +1,347 @@
-import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { prisma } from '@/lib/prisma';
-import { getAdminSession } from '@/lib/session';
-import { loadDashboard } from '@/lib/dashboard';
-import { navigationFor } from '@/components/admin/admin-navigation';
-import { ArrowRight, ExternalLink } from 'lucide-react';
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { getAdminSession } from "@/lib/session";
+import { loadDashboard } from "@/lib/dashboard";
+import { navigationFor } from "@/components/admin/admin-navigation";
+import { ArrowRight, ExternalLink } from "lucide-react";
 
-export const dynamic = 'force-dynamic';
-const panel = 'rounded-2xl border border-emerald-200/70 bg-white p-5 shadow-sm';
-const dateFormat = new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Fortaleza',dateStyle:'short',timeStyle:'short'});
-const actions: Record<string,string> = {CREATE:'Criação',UPDATE:'Atualização',DELETE:'Exclusão',PUBLISH:'Publicação',RESTORE:'Restauração',UPDATE_PROFILE:'Atualização de perfil',CHANGE_PASSWORD:'Alteração de senha',ENABLE_EMAIL_FACTOR:'Ativação da verificação',DISABLE_EMAIL_FACTOR:'Desativação da verificação'};
-const resources: Record<string,string> = {products:'Produtos','team-members':'Equipe',partnerships:'Parcerias',admins:'Conta',admin_sessions:'Sessões',media:'Mídia',cms:'Páginas'};
-function Distribution({title,items}:{title:string;items:{label:string;count:number}[]}) {
- const total=items.reduce((s,i)=>s+i.count,0);
- return <section className={panel}><h2 className="font-semibold text-verde-escuro">{title}</h2>{total===0?<p className="mt-4 text-sm text-verde-muted">Nenhum registro.</p>:<div className="mt-4 space-y-3">{items.map(i=><div key={i.label}><div className="flex justify-between text-sm"><span>{i.label}</span><strong>{i.count}</strong></div><div className="mt-1 h-2 rounded-full bg-emerald-50"><div className="h-2 rounded-full bg-emerald-700" style={{width:`${i.count/total*100}%`}}/></div></div>)}</div>}</section>;
+export const dynamic = "force-dynamic";
+const panel = "rounded-2xl border border-emerald-200/70 bg-white p-5 shadow-sm";
+const dateFormat = new Intl.DateTimeFormat("pt-BR", {
+  timeZone: "America/Fortaleza",
+  dateStyle: "short",
+  timeStyle: "short",
+});
+const actions: Record<string, string> = {
+  CREATE: "Criação",
+  UPDATE: "Atualização",
+  DELETE: "Exclusão",
+  PUBLISH: "Publicação",
+  RESTORE: "Restauração",
+  UPDATE_PROFILE: "Atualização de perfil",
+  CHANGE_PASSWORD: "Alteração de senha",
+  ENABLE_EMAIL_FACTOR: "Ativação da verificação",
+  DISABLE_EMAIL_FACTOR: "Desativação da verificação",
+};
+const resources: Record<string, string> = {
+  products: "Produtos",
+  "team-members": "Equipe",
+  partnerships: "Parcerias",
+  admins: "Conta",
+  admin_sessions: "Sessões",
+  media: "Mídia",
+  cms: "Páginas",
+};
+function Distribution({
+  title,
+  items,
+}: {
+  title: string;
+  items: { label: string; count: number }[];
+}) {
+  const total = items.reduce((s, i) => s + i.count, 0);
+  return (
+    <section className={panel}>
+      <h2 className="font-semibold text-verde-escuro">{title}</h2>
+      {total === 0 ? (
+        <p className="mt-4 text-sm text-verde-muted">Nenhum registro.</p>
+      ) : (
+        <div className="mt-4 space-y-3">
+          {items.map((i) => (
+            <div key={i.label}>
+              <div className="flex justify-between text-sm">
+                <span>{i.label}</span>
+                <strong>{i.count}</strong>
+              </div>
+              <div className="mt-1 h-2 rounded-full bg-emerald-50">
+                <div
+                  className="h-2 rounded-full bg-emerald-700"
+                  style={{ width: `${(i.count / total) * 100}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
 }
-export default async function AdminDashboardPage({searchParams}:{searchParams:Promise<{periodo?:string}>}) {
- const session=await getAdminSession(); if(!session)redirect('/login');
- const actor=await prisma.admin.findUnique({where:{id:session.adminId},select:{id:true,role:true,name:true}});if(!actor)redirect('/login');
- const requested=Number((await searchParams).periodo);const days=[7,15,30,90].includes(requested)?requested:7;
- const d=await loadDashboard(actor,days);
- const current=d.statuses.filter(p=>p.status==='current').length, pending=d.statuses.filter(p=>p.status==='pending').length, never=d.statuses.filter(p=>p.status==='never').length;
- const cards=[{label:'Produtos',count:d.products,detail:`${d.active} publicados`,href:'/admin/produtos'},{label:'Páginas',count:d.statuses.length,detail:`${pending} com alterações pendentes`,href:'/admin/paginas'},{label:'Biblioteca de mídia',count:d.media,detail:'Arquivos cadastrados',href:'/admin/midia'},{label:'Equipe',count:d.team,detail:'Integrantes',href:'/admin/equipe'},{label:'Parcerias',count:d.partners,detail:'Parceiros cadastrados',href:'/admin/parcerias'},...(d.users===null?[]:[{label:'Usuários',count:d.users,detail:`${d.admins} administradores · ${d.users-d.admins} editores`,href:'/admin/usuarios'},{label:'Segurança',count:d.protectedUsers,detail:`de ${d.users} contas com verificação ativa`,href:'/admin/usuarios'}])];
- const issues=[{label:'Produtos sem imagem',count:d.missingImages,href:'/admin/produtos'},{label:'Produtos com descrição incompleta',count:d.missingDescriptions,href:'/admin/produtos'},{label:'Imagens sem texto alternativo',count:d.missingAlt,href:'/admin/midia'},{label:'Parceiros sem logotipo',count:d.missingLogos,href:'/admin/parcerias'},...(actor.role==='ADMIN'?[{label:'Administradores sem verificação adicional',count:d.unprotectedAdmins,href:'/admin/usuarios'}]:[])].filter(i=>i.count>0);
- const max=Math.max(1,...d.activity.map(a=>a.count));
- return <div className="mx-auto max-w-7xl space-y-6 text-verde-escuro">
- <section className="admin-hero rounded-3xl p-6 sm:p-9 text-white"><p className="text-sm text-white/80">Visão geral · {actor.role==='ADMIN'?'Administrador':'Editor'}</p><h1 className="mt-2 font-serif text-3xl font-semibold">Olá, {actor.name}!</h1><p className="mt-2 text-white/90">Acompanhe os conteúdos e as atividades da Saboaria.</p><Link href="/" target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex gap-2 rounded-xl bg-white px-4 py-2 text-sm font-semibold text-verde-escuro"><ExternalLink size={16}/> Visualizar site</Link></section>
- <section aria-label="Indicadores atuais" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">{cards.map(c=><Link key={c.label} href={c.href} className={`${panel} hover:border-emerald-500 focus-visible:outline-2`}><div className="flex justify-between text-sm font-medium">{c.label}<ArrowRight size={16}/></div><p className="mt-2 text-3xl font-semibold tabular-nums">{c.count}</p><p className="mt-1 text-sm text-verde-muted">{c.detail}</p></Link>)}</section>
- <section className={panel}><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-semibold">{actor.role==='ADMIN'?'Atividades administrativas':'Minhas atividades'}</h2><p className="text-sm text-verde-muted">Registros de auditoria por dia · horário de Fortaleza</p></div><nav aria-label="Período" className="flex flex-wrap gap-1">{[7,15,30,90].map(n=><Link key={n} href={`/admin?periodo=${n}`} aria-current={days===n?'page':undefined} className={`rounded-lg px-3 py-2 text-sm ${days===n?'bg-emerald-800 text-white':'bg-emerald-50'}`}>{n} dias</Link>)}</nav></div><p className="mt-4 text-sm">{d.activity.reduce((s,a)=>s+a.count,0)} atividades no período</p><div role="region" aria-label="Gráfico de atividades por dia" tabIndex={0} className="mt-3 max-w-full overflow-x-auto overscroll-x-contain"><div className="flex h-44 items-end gap-1 border-b border-emerald-100" style={{minWidth:days*16}}>{d.activity.map(a=><div key={a.day} className="flex h-full flex-1 flex-col justify-end" title={`${a.day}: ${a.count}`}><div className="rounded-t bg-emerald-700" style={{height:`${a.count/max*100}%`}}/></div>)}</div><div className="flex justify-between text-xs text-verde-muted"><span>{d.activity[0].day.split('-').reverse().join('/')}</span><span>{d.activity.at(-1)?.day.split('-').reverse().join('/')}</span></div></div><details className="mt-3 text-sm"><summary className="cursor-pointer">Consultar valores por dia</summary><ul className="mt-2 max-h-48 overflow-auto">{d.activity.map(a=><li key={a.day}>{a.day.split('-').reverse().join('/')}: {a.count}</li>)}</ul></details></section>
- <div className="grid gap-4 md:grid-cols-2"><Distribution title="Situação dos produtos" items={[{label:'Publicados',count:d.active},{label:'Não publicados',count:d.products-d.active}]}/><Distribution title="Situação das páginas" items={[{label:'Publicadas e atualizadas',count:current},{label:'Alterações pendentes',count:pending},{label:'Nunca publicadas',count:never}]}/></div>
- <section className={panel}><h2 className="font-semibold">Atenção necessária</h2>{issues.length===0&&pending+never===0?<p className="mt-3 text-sm text-verde-muted">Nenhuma pendência detectada.</p>:<ul className="mt-3 divide-y divide-emerald-100">{d.statuses.filter(p=>p.status!=='current').map(p=><li key={p.slug}><Link className="flex justify-between gap-3 py-3 text-sm hover:underline" href={`/admin/paginas/${p.slug}`}>{p.title} — {p.status==='never'?'Nunca publicada':'Alterações pendentes'}<ArrowRight size={16}/></Link></li>)}{issues.map(i=><li key={i.label}><Link href={i.href} className="flex justify-between gap-3 py-3 text-sm hover:underline">{i.count} · {i.label}<ArrowRight size={16}/></Link></li>)}</ul>}</section>
- <section className={panel}><h2 className="font-semibold">Atividades recentes</h2>{d.recent.length===0?<p className="mt-3 text-sm text-verde-muted">Nenhuma atividade no período.</p>:<ul className="mt-3 divide-y divide-emerald-100">{d.recent.map(e=><li key={e.id} className="py-3"><p className="text-sm font-medium">{actions[e.action]??e.action} · {resources[e.resource]??e.resource}</p><p className="text-xs text-verde-muted">{e.actorName} · {dateFormat.format(e.createdAt)}</p></li>)}</ul>}{actor.role==='ADMIN'&&<Link href="/admin/auditoria" className="mt-3 inline-block text-sm font-semibold underline">Ver auditoria completa</Link>}</section>
- <section><h2 className="mb-3 font-semibold">Atalhos rápidos</h2><div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">{[{href:'/admin/produtos/novo',label:'Novo produto'},{href:'/admin/paginas/inicio',label:'Editar Home'},...navigationFor(actor.role).filter(i=>i.href!=='/admin')].map(i=><Link key={i.href} href={i.href} className={`${panel} flex items-center justify-between text-sm font-semibold hover:border-emerald-500`}>{i.label}<ArrowRight size={16}/></Link>)}</div></section>
- </div>;
+export default async function AdminDashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ periodo?: string }>;
+}) {
+  const session = await getAdminSession();
+  if (!session) redirect("/login");
+  const actor = await prisma.admin.findUnique({
+    where: { id: session.adminId },
+    select: { id: true, role: true, name: true },
+  });
+  if (!actor) redirect("/login");
+  const requested = Number((await searchParams).periodo);
+  const days = [7, 15, 30, 90].includes(requested) ? requested : 7;
+  const d = await loadDashboard(actor, days);
+  const current = d.statuses.filter((p) => p.status === "current").length,
+    pending = d.statuses.filter((p) => p.status === "pending").length,
+    never = d.statuses.filter((p) => p.status === "never").length;
+  const cards = [
+    {
+      label: "Produtos",
+      count: d.products,
+      detail: `${d.active} publicados`,
+      href: "/admin/produtos",
+    },
+    {
+      label: "Páginas",
+      count: d.statuses.length,
+      detail: `${pending} com alterações pendentes`,
+      href: "/admin/paginas",
+    },
+    {
+      label: "Biblioteca de mídia",
+      count: d.media,
+      detail: "Arquivos cadastrados",
+      href: "/admin/midia",
+    },
+    { label: "Equipe", count: d.team, detail: "Integrantes", href: "/admin/equipe" },
+    {
+      label: "Parcerias",
+      count: d.partners,
+      detail: "Parceiros cadastrados",
+      href: "/admin/parcerias",
+    },
+    ...(d.users === null
+      ? []
+      : [
+          {
+            label: "Usuários",
+            count: d.users,
+            detail: `${d.admins} administradores · ${d.users - d.admins} editores`,
+            href: "/admin/usuarios",
+          },
+          {
+            label: "Segurança",
+            count: d.protectedUsers,
+            detail: `de ${d.users} contas com verificação ativa`,
+            href: "/admin/usuarios",
+          },
+        ]),
+  ];
+  const issues = [
+    { label: "Produtos sem imagem", count: d.missingImages, href: "/admin/produtos" },
+    {
+      label: "Produtos com descrição incompleta",
+      count: d.missingDescriptions,
+      href: "/admin/produtos",
+    },
+    { label: "Imagens sem texto alternativo", count: d.missingAlt, href: "/admin/midia" },
+    { label: "Parceiros sem logotipo", count: d.missingLogos, href: "/admin/parcerias" },
+    ...(actor.role === "ADMIN"
+      ? [
+          {
+            label: "Administradores sem verificação adicional",
+            count: d.unprotectedAdmins,
+            href: "/admin/usuarios",
+          },
+        ]
+      : []),
+  ].filter((i) => i.count > 0);
+  const max = Math.max(1, ...d.activity.map((a) => a.count));
+  return (
+    <div className="mx-auto max-w-7xl space-y-6 text-verde-escuro">
+      <section className="admin-hero rounded-3xl p-6 text-white sm:p-9">
+        <p className="text-sm text-white/80">
+          Visão geral · {actor.role === "ADMIN" ? "Administrador" : "Editor"}
+        </p>
+        <h1 className="mt-2 font-serif text-3xl font-semibold">Olá, {actor.name}!</h1>
+        <p className="mt-2 text-white/90">Acompanhe os conteúdos e as atividades da Saboaria.</p>
+        <Link
+          href="/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 inline-flex gap-2 rounded-xl bg-white px-4 py-2 text-sm font-semibold text-verde-escuro"
+        >
+          <ExternalLink size={16} /> Visualizar site
+        </Link>
+      </section>
+      <section aria-label="Indicadores atuais" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        {cards.map((c) => (
+          <Link
+            key={c.label}
+            href={c.href}
+            className={`${panel} hover:border-emerald-500 focus-visible:outline-2`}
+          >
+            <div className="flex justify-between text-sm font-medium">
+              {c.label}
+              <ArrowRight size={16} />
+            </div>
+            <p className="mt-2 text-3xl font-semibold tabular-nums">{c.count}</p>
+            <p className="mt-1 text-sm text-verde-muted">{c.detail}</p>
+          </Link>
+        ))}
+      </section>
+      <section className={panel}>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="font-semibold">
+              {actor.role === "ADMIN" ? "Atividades administrativas" : "Minhas atividades"}
+            </h2>
+            <p className="text-sm text-verde-muted">
+              Registros de auditoria por dia · horário de Fortaleza
+            </p>
+          </div>
+          <nav aria-label="Período" className="flex flex-wrap gap-1">
+            {[7, 15, 30, 90].map((n) => (
+              <Link
+                key={n}
+                href={`/admin?periodo=${n}`}
+                aria-current={days === n ? "page" : undefined}
+                className={`rounded-lg px-3 py-2 text-sm ${days === n ? "bg-emerald-800 text-white" : "bg-emerald-50"}`}
+              >
+                {n} dias
+              </Link>
+            ))}
+          </nav>
+        </div>
+        <p className="mt-4 text-sm">
+          {d.activity.reduce((s, a) => s + a.count, 0)} atividades no período
+        </p>
+        <div
+          role="region"
+          aria-label="Gráfico de atividades por dia"
+          tabIndex={0}
+          className="mt-3 max-w-full overflow-x-auto overscroll-x-contain"
+        >
+          <div
+            className="flex h-44 items-end gap-1 border-b border-emerald-100"
+            style={{ minWidth: days * 16 }}
+          >
+            {d.activity.map((a) => (
+              <div
+                key={a.day}
+                className="flex h-full flex-1 flex-col justify-end"
+                title={`${a.day}: ${a.count}`}
+              >
+                <div
+                  className="rounded-t bg-emerald-700"
+                  style={{ height: `${(a.count / max) * 100}%` }}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-between text-xs text-verde-muted">
+            <span>{d.activity[0].day.split("-").reverse().join("/")}</span>
+            <span>{d.activity.at(-1)?.day.split("-").reverse().join("/")}</span>
+          </div>
+        </div>
+        <details className="mt-3 text-sm">
+          <summary className="cursor-pointer">Consultar valores por dia</summary>
+          <ul className="mt-2 max-h-48 overflow-auto">
+            {d.activity.map((a) => (
+              <li key={a.day}>
+                {a.day.split("-").reverse().join("/")}: {a.count}
+              </li>
+            ))}
+          </ul>
+        </details>
+      </section>
+      <div className="grid gap-4 md:grid-cols-2">
+        <Distribution
+          title="Situação dos produtos"
+          items={[
+            { label: "Publicados", count: d.active },
+            { label: "Não publicados", count: d.products - d.active },
+          ]}
+        />
+        <Distribution
+          title="Situação das páginas"
+          items={[
+            { label: "Publicadas e atualizadas", count: current },
+            { label: "Alterações pendentes", count: pending },
+            { label: "Nunca publicadas", count: never },
+          ]}
+        />
+      </div>
+      <section className={panel}>
+        <h2 className="font-semibold">Atenção necessária</h2>
+        {issues.length === 0 && pending + never === 0 ? (
+          <p className="mt-3 text-sm text-verde-muted">Nenhuma pendência detectada.</p>
+        ) : (
+          <ul className="mt-3 divide-y divide-emerald-100">
+            {d.statuses
+              .filter((p) => p.status !== "current")
+              .map((p) => (
+                <li key={p.slug}>
+                  <Link
+                    className="flex justify-between gap-3 py-3 text-sm hover:underline"
+                    href={`/admin/paginas/${p.slug}`}
+                  >
+                    {p.title} — {p.status === "never" ? "Nunca publicada" : "Alterações pendentes"}
+                    <ArrowRight size={16} />
+                  </Link>
+                </li>
+              ))}
+            {issues.map((i) => (
+              <li key={i.label}>
+                <Link
+                  href={i.href}
+                  className="flex justify-between gap-3 py-3 text-sm hover:underline"
+                >
+                  {i.count} · {i.label}
+                  <ArrowRight size={16} />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+      <section className={panel}>
+        <h2 className="font-semibold">Atividades recentes</h2>
+        {d.recent.length === 0 ? (
+          <p className="mt-3 text-sm text-verde-muted">Nenhuma atividade no período.</p>
+        ) : (
+          <ul className="mt-3 divide-y divide-emerald-100">
+            {d.recent.map((e) => (
+              <li key={e.id} className="py-3">
+                <p className="text-sm font-medium">
+                  {actions[e.action] ?? e.action} · {resources[e.resource] ?? e.resource}
+                </p>
+                <p className="text-xs text-verde-muted">
+                  {e.actorName} · {dateFormat.format(e.createdAt)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+        {actor.role === "ADMIN" && (
+          <Link
+            href="/admin/auditoria"
+            className="mt-3 inline-block text-sm font-semibold underline"
+          >
+            Ver auditoria completa
+          </Link>
+        )}
+      </section>
+      <section>
+        <h2 className="mb-3 font-semibold">Atalhos rápidos</h2>
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {[
+            { href: "/admin/produtos/novo", label: "Novo produto" },
+            { href: "/admin/paginas/inicio", label: "Editar Home" },
+            ...navigationFor(actor.role).filter((i) => i.href !== "/admin"),
+          ].map((i) => (
+            <Link
+              key={i.href}
+              href={i.href}
+              className={`${panel} flex items-center justify-between text-sm font-semibold hover:border-emerald-500`}
+            >
+              {i.label}
+              <ArrowRight size={16} />
+            </Link>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
 }

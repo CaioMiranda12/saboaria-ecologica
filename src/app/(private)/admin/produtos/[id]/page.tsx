@@ -29,16 +29,16 @@ export default function EditProductPage({ params }: EditProductPageProps) {
   };
 
   if (isLoading) {
-    return <p className="text-sm text-verde-muted font-light">Carregando...</p>;
+    return <p className="text-sm font-light text-verde-muted">Carregando...</p>;
   }
 
   if (!product) {
-    return <p className="text-sm text-verde-muted font-light">Produto não encontrado.</p>;
+    return <p className="text-sm font-light text-verde-muted">Produto não encontrado.</p>;
   }
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="font-serif text-2xl text-verde-escuro mb-6">Editar produto</h1>
+      <h1 className="mb-6 font-serif text-2xl text-verde-escuro">Editar produto</h1>
       <ProductForm
         defaultValues={{
           ...product,

@@ -15,10 +15,12 @@ type TeamMemberFormProps = {
   submitLabel: string;
 };
 
-const inputClass =
-  "border border-verde-medio/20 rounded-xl px-4 py-2.5 text-sm text-verde-escuro focus:outline-none focus:border-verde-medio transition-colors w-full";
-
-export function TeamMemberForm({ defaultValues, onSubmit, isSubmitting, submitLabel }: TeamMemberFormProps) {
+export function TeamMemberForm({
+  defaultValues,
+  onSubmit,
+  isSubmitting,
+  submitLabel,
+}: TeamMemberFormProps) {
   const {
     register,
     control,
@@ -37,13 +39,18 @@ export function TeamMemberForm({ defaultValues, onSubmit, isSubmitting, submitLa
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 max-w-xl">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex max-w-xl flex-col gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <FormField label="Nome" error={errors.name?.message}>
           <input {...register("name")} className={formInputClass} />
         </FormField>
         <FormField label="Iniciais" error={errors.initials?.message}>
-          <input {...register("initials")} maxLength={3} className={formInputClass} placeholder="LN" />
+          <input
+            {...register("initials")}
+            maxLength={3}
+            className={formInputClass}
+            placeholder="LN"
+          />
         </FormField>
       </div>
 
@@ -56,7 +63,18 @@ export function TeamMemberForm({ defaultValues, onSubmit, isSubmitting, submitLa
       </FormField>
 
       <FormField label="Foto do integrante (opcional)">
-        <Controller name="imageUrl" control={control} render={({ field }) => <ImageUpload value={field.value ?? ""} onChange={field.onChange} disabled={isSubmitting} error={errors.imageUrl?.message} />} />
+        <Controller
+          name="imageUrl"
+          control={control}
+          render={({ field }) => (
+            <ImageUpload
+              value={field.value ?? ""}
+              onChange={field.onChange}
+              disabled={isSubmitting}
+              error={errors.imageUrl?.message}
+            />
+          )}
+        />
       </FormField>
       <FormField label="Ordem de exibição" error={errors.order?.message}>
         <input type="number" {...register("order")} className={formInputClass} />
@@ -65,7 +83,7 @@ export function TeamMemberForm({ defaultValues, onSubmit, isSubmitting, submitLa
       <button
         type="submit"
         disabled={isSubmitting}
-        className="self-start bg-verde-principal text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-verde-escuro transition-colors disabled:opacity-60"
+        className="self-start rounded-full bg-verde-principal px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-verde-escuro disabled:opacity-60"
       >
         {isSubmitting ? "Salvando..." : submitLabel}
       </button>

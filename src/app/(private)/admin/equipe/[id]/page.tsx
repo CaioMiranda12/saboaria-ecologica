@@ -29,16 +29,16 @@ export default function EditTeamMemberPage({ params }: EditTeamMemberPageProps) 
   };
 
   if (isLoading) {
-    return <p className="text-sm text-verde-muted font-light">Carregando...</p>;
+    return <p className="text-sm font-light text-verde-muted">Carregando...</p>;
   }
 
   if (!teamMember) {
-    return <p className="text-sm text-verde-muted font-light">Membro não encontrado.</p>;
+    return <p className="text-sm font-light text-verde-muted">Membro não encontrado.</p>;
   }
 
   return (
     <div>
-      <h1 className="font-serif text-2xl text-verde-escuro mb-6">Editar membro</h1>
+      <h1 className="mb-6 font-serif text-2xl text-verde-escuro">Editar membro</h1>
       <TeamMemberForm
         defaultValues={{ ...teamMember, imageUrl: teamMember.imageUrl ?? undefined }}
         onSubmit={handleSubmit}

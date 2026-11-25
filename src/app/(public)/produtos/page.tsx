@@ -14,4 +14,6 @@ export default async function ProdutosPage() {
   return <ProdutosCatalogo produtos={products.map(toProduto)} />;
 }
 
-export async function generateMetadata() { return pageMetadata("/produtos"); }
+export async function generateMetadata() {
+  return pageMetadata("/produtos");
+}

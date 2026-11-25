@@ -9,6 +9,7 @@ Base: Sprint 10.6. Sem alteração de schema, migration, dependências ou variá
 - Pendências de páginas apontam para edição; demais apontam para módulo correspondente. Comparação de conteúdo normaliza chaves JSON.
 
 ## Validação local
+
 Preservar .env. Executar npm install, npx prisma generate --config prisma7.config.ts, npm run build, npm run dev. Não há migration nova.
 Testar ADMIN e EDITOR, desktop e mobile, acesso direto a /admin/usuarios e /admin/auditoria e APIs correspondentes (403 para editor), contagens, publicação, pendências, filtros e dias sem eventos. Verificar que atividades de outro usuário não aparecem ao editor. Testar banco vazio e falha de consulta.
 

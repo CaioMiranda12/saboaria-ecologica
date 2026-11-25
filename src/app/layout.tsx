@@ -9,11 +9,7 @@ export const metadata: Metadata = {
   description: "Limpeza que cuida do planeta.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
       <body>

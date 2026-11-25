@@ -16,14 +16,22 @@ export async function loginFailure(email: string, ip: string) {
   for (const key of keys) {
     const previous = await prisma.loginAttempt.findUnique({ where: { key } });
     if (previous && Date.now() - previous.updatedAt.getTime() > WINDOW_MS) {
-      await prisma.loginAttempt.update({ where: { key }, data: { failures: 1, blockedUntil: null } });
+      await prisma.loginAttempt.update({
+        where: { key },
+        data: { failures: 1, blockedUntil: null },
+      });
       continue;
     }
     const entry = await prisma.loginAttempt.upsert({
-      where: { key }, create: { key, failures: 1 }, update: { failures: { increment: 1 } },
+      where: { key },
+      create: { key, failures: 1 },
+      update: { failures: { increment: 1 } },
     });
     if (entry.failures >= LIMIT) {
-      await prisma.loginAttempt.update({ where: { key }, data: { blockedUntil: new Date(Date.now() + WINDOW_MS) } });
+      await prisma.loginAttempt.update({
+        where: { key },
+        data: { blockedUntil: new Date(Date.now() + WINDOW_MS) },
+      });
     }
   }
 }

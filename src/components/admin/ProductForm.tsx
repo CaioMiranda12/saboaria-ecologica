@@ -23,10 +23,18 @@ type ProductFormProps = {
 };
 
 function splitCommaList(value: string) {
-  return value.split(",").map((item) => item.trim()).filter(Boolean);
+  return value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
 }
 
-export function ProductForm({ defaultValues, onSubmit, isSubmitting, submitLabel }: ProductFormProps) {
+export function ProductForm({
+  defaultValues,
+  onSubmit,
+  isSubmitting,
+  submitLabel,
+}: ProductFormProps) {
   const {
     register,
     control,
@@ -67,8 +75,8 @@ export function ProductForm({ defaultValues, onSubmit, isSubmitting, submitLabel
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-6 max-w-2xl">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="flex max-w-2xl flex-col gap-6">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <FormField label="Nome principal" error={errors.mainName?.message}>
           <input {...register("mainName")} className={formInputClass} />
         </FormField>
@@ -85,7 +93,7 @@ export function ProductForm({ defaultValues, onSubmit, isSubmitting, submitLabel
         <textarea {...register("fullDescription")} rows={4} className={formInputClass} />
       </FormField>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <FormField label="Peso" error={errors.weight?.message}>
           <input {...register("weight")} className={formInputClass} placeholder="250g" />
         </FormField>
@@ -138,14 +146,26 @@ export function ProductForm({ defaultValues, onSubmit, isSubmitting, submitLabel
       </FormField>
 
       <FormField label="Variantes / fragrâncias (separadas por vírgula)">
-        <input {...register("variantsText")} className={formInputClass} placeholder="Tradicional, Leite de coco" />
+        <input
+          {...register("variantsText")}
+          className={formInputClass}
+          placeholder="Tradicional, Leite de coco"
+        />
       </FormField>
 
-      <div className="rounded-2xl border border-verde-medio/20 bg-verde-claro/30 p-4 space-y-3">
-        <p className="font-semibold text-sm text-verde-escuro">Exibição no site</p>
+      <div className="space-y-3 rounded-2xl border border-verde-medio/20 bg-verde-claro/30 p-4">
+        <p className="text-sm font-semibold text-verde-escuro">Exibição no site</p>
         <Checkbox label="Produto visível no catálogo público" {...register("isPublished")} />
-        <FormField label="Ordem de exibição (menor número primeiro)" error={errors.displayOrder?.message}>
-          <input type="number" min="0" {...register("displayOrder", { valueAsNumber: true })} className={formInputClass} />
+        <FormField
+          label="Ordem de exibição (menor número primeiro)"
+          error={errors.displayOrder?.message}
+        >
+          <input
+            type="number"
+            min="0"
+            {...register("displayOrder", { valueAsNumber: true })}
+            className={formInputClass}
+          />
         </FormField>
       </div>
       <div className="flex flex-wrap gap-6">
@@ -157,7 +177,7 @@ export function ProductForm({ defaultValues, onSubmit, isSubmitting, submitLabel
       <button
         type="submit"
         disabled={isSubmitting}
-        className="self-start bg-verde-principal text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-verde-escuro transition-colors disabled:opacity-60"
+        className="self-start rounded-full bg-verde-principal px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-verde-escuro disabled:opacity-60"
       >
         {isSubmitting ? "Salvando..." : submitLabel}
       </button>
@@ -165,7 +185,10 @@ export function ProductForm({ defaultValues, onSubmit, isSubmitting, submitLabel
   );
 }
 
-function Checkbox({ label, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { label: string }) {
+function Checkbox({
+  label,
+  ...props
+}: React.InputHTMLAttributes<HTMLInputElement> & { label: string }) {
   return (
     <label className="flex items-center gap-2 text-sm text-verde-escuro">
       <input type="checkbox" {...props} className="accent-verde-principal" />

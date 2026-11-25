@@ -30,7 +30,10 @@ export async function POST(request: Request) {
 
   try {
     const last = await prisma.partnership.aggregate({ _max: { order: true } });
-    const partnership = await createPartnershipFromForm({ ...parseResult.data, order: (last._max.order ?? -1) + 1 });
+    const partnership = await createPartnershipFromForm({
+      ...parseResult.data,
+      order: (last._max.order ?? -1) + 1,
+    });
     await recordAudit(session, "CREATE", "partnerships", partnership.id);
     return NextResponse.json({ partnership }, { status: 201 });
   } catch (error) {

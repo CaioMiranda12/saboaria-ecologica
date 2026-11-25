@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+build/
+coverage/
+src/generated/
+next-env.d.ts
+*.tsbuildinfo
+package-lock.json
+prisma/migrations/
+public/
+.env*

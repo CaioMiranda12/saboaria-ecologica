@@ -1,6 +1,7 @@
 # Sprint 03 — Editor da página inicial
 
 ## Entregas
+
 - `/admin/paginas/inicio`: edição guiada do banner principal e da seção Quem somos.
 - Campos de texto, botões, imagens por URL, visibilidade, pré-visualização local, aviso de alterações não salvas e confirmação de salvamento.
 - `/` lê essas duas seções diretamente do Neon por meio do CMS da Sprint 02, mantendo conteúdo padrão se a página ainda não tiver sido inicializada.
@@ -8,6 +9,7 @@
 - Validação adicional dos campos de conteúdo da página inicial na API administrativa.
 
 ## Instalação
+
 1. Preserve seu `.env`/`.env.local` local (não está incluído no ZIP).
 2. `npm install`
 3. `npx prisma migrate deploy --config prisma7.config.ts`
@@ -17,6 +19,7 @@
 7. Abra `/admin/paginas/inicio`.
 
 ## Observações
+
 - Não há migration nova nesta sprint. O deploy acima apenas garante que as migrations anteriores estejam aplicadas.
 - Salvar publica imediatamente. Rascunhos e publicação separada estão previstos para a Sprint 07.
 - Pré-visualização é uma representação da seção dentro do editor, não uma reprodução exata da página.
@@ -25,4 +28,5 @@
 - Não foi possível executar o build completo neste ambiente por falta de dependências instaladas. Execute `npm run build` localmente antes de publicar.
 
 ## Commit
+
 `feat(home): sprint 03 - editor da pagina inicial`

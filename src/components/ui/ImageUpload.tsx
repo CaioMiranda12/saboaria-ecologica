@@ -1,8 +1,9 @@
 "use client";
+import PublicImage from "@/components/PublicImage";
 
 import { useRef, useState, type DragEvent } from "react";
 import { isAxiosError } from "axios";
-import { FileImage, Loader2, UploadCloud, X, Images } from "lucide-react";
+import { Loader2, UploadCloud, X, Images } from "lucide-react";
 import { httpClient } from "@/lib/http";
 import { MediaPicker } from "@/components/admin/MediaPicker";
 
@@ -21,7 +22,9 @@ type ImageUploadProps = {
 
 function formatSize(bytes: number) {
   if (bytes < 1024) return `${bytes} B`;
-  return bytes >= 1024 * 1024 ? `${(bytes / (1024 * 1024)).toFixed(1).replace(".", ",")} MB` : `${(bytes / 1024).toFixed(1).replace(".", ",")} KB`;
+  return bytes >= 1024 * 1024
+    ? `${(bytes / (1024 * 1024)).toFixed(1).replace(".", ",")} MB`
+    : `${(bytes / 1024).toFixed(1).replace(".", ",")} KB`;
 }
 
 /** Descobre o nome quando já existe um valor salvo (ex.: edição de produto). */
@@ -112,7 +115,11 @@ export function ImageUpload({ value, onChange, error, disabled }: ImageUploadPro
         <div className="flex items-center justify-between gap-4 rounded-xl border border-emerald-200 bg-white/80 px-4 py-3 shadow-sm">
           <div className="flex min-w-0 items-center gap-3">
             <span className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-emerald-100 bg-emerald-50 text-verde-principal">
-              <img src={value} alt="Prévia da imagem selecionada" className="h-full w-full object-cover" />
+              <PublicImage
+                src={value}
+                alt="Prévia da imagem selecionada"
+                className="h-full w-full object-cover"
+              />
             </span>
             <div className="min-w-0">
               <p className="truncate text-sm font-medium text-verde-escuro">{currentMeta.name}</p>
@@ -128,7 +135,7 @@ export function ImageUpload({ value, onChange, error, disabled }: ImageUploadPro
             disabled={disabled}
             aria-label="Remover imagem"
             title="Remover imagem"
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-verde-escuro/60 transition-colors hover:bg-verde-principal/10 hover:text-verde-escuro focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-verde-principal/40 disabled:opacity-60"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-verde-escuro/60 transition-colors hover:bg-verde-principal/10 hover:text-verde-escuro focus-visible:ring-2 focus-visible:ring-verde-principal/40 focus-visible:outline-none disabled:opacity-60"
           >
             <X size={16} />
           </button>
@@ -144,12 +151,13 @@ export function ImageUpload({ value, onChange, error, disabled }: ImageUploadPro
           }}
           onDragLeave={() => setIsDragging(false)}
           onDrop={handleDrop}
-          className={`flex w-full flex-col items-center justify-center gap-1 rounded-2xl border-2 border-dashed bg-white/65 px-4 py-10 shadow-inner text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-verde-principal/40 disabled:cursor-not-allowed disabled:opacity-60 ${isDragging
+          className={`flex w-full flex-col items-center justify-center gap-1 rounded-2xl border-2 border-dashed bg-white/65 px-4 py-10 text-center shadow-inner transition-colors focus-visible:ring-2 focus-visible:ring-verde-principal/40 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
+            isDragging
               ? "border-verde-principal bg-verde-principal/10"
               : message
                 ? "border-red-400 bg-red-50/50"
                 : "border-verde-principal/30 hover:border-verde-principal hover:bg-verde-principal/5"
-            }`}
+          }`}
         >
           {isUploading ? (
             <>
@@ -166,8 +174,24 @@ export function ImageUpload({ value, onChange, error, disabled }: ImageUploadPro
         </button>
       )}
 
-      <button type="button" disabled={isBlocked} onClick={() => setPickerOpen(true)} className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-100/70 px-4 py-3 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-200/70 focus-visible:outline-2 focus-visible:outline-emerald-600 disabled:opacity-50"><Images size={18}/> Escolher da biblioteca</button>
-      {pickerOpen && <MediaPicker onClose={() => setPickerOpen(false)} onSelect={asset => { onChange(asset.url); setMeta({ name: asset.filename, size: asset.bytes }); setPickerOpen(false); }}/>}
+      <button
+        type="button"
+        disabled={isBlocked}
+        onClick={() => setPickerOpen(true)}
+        className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-100/70 px-4 py-3 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-200/70 focus-visible:outline-2 focus-visible:outline-emerald-600 disabled:opacity-50"
+      >
+        <Images size={18} /> Escolher da biblioteca
+      </button>
+      {pickerOpen && (
+        <MediaPicker
+          onClose={() => setPickerOpen(false)}
+          onSelect={(asset) => {
+            onChange(asset.url);
+            setMeta({ name: asset.filename, size: asset.bytes });
+            setPickerOpen(false);
+          }}
+        />
+      )}
       {message && <p className="text-xs text-red-600">{message}</p>}
     </div>
   );

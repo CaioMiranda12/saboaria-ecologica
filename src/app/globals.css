@@ -25,64 +25,200 @@ button {
 }
 /* Identidade visual do painel administrativo — Sprint 9.1 */
 .admin-shell {
-  background: radial-gradient(ellipse at 85% 0%, rgba(210,235,203,.65), transparent 42%),
-              linear-gradient(145deg, #f7fbf4 0%, #eef6e9 52%, #f9fbf6 100%);
+  background:
+    radial-gradient(ellipse at 85% 0%, rgba(210, 235, 203, 0.65), transparent 42%),
+    linear-gradient(145deg, #f7fbf4 0%, #eef6e9 52%, #f9fbf6 100%);
 }
 .admin-sidebar {
   background: linear-gradient(165deg, #315d32 0%, #254b35 53%, #183c30 100%);
-  box-shadow: 6px 0 30px -20px rgba(20,65,37,.65);
+  box-shadow: 6px 0 30px -20px rgba(20, 65, 37, 0.65);
 }
 .admin-hero {
   background: linear-gradient(115deg, #315e35 0%, #3f783f 55%, #658e4c 100%);
-  box-shadow: 0 18px 38px -26px rgba(29,78,39,.65);
+  box-shadow: 0 18px 38px -26px rgba(29, 78, 39, 0.65);
 }
 .admin-page-heading {
   background: linear-gradient(110deg, #e5f3e0 0%, #f4faf0 65%, #ffffff 100%);
   border: 1px solid #cfe5ca;
-  box-shadow: 0 12px 34px -27px rgba(38,93,43,.45);
+  box-shadow: 0 12px 34px -27px rgba(38, 93, 43, 0.45);
 }
 @media (prefers-reduced-motion: reduce) {
-  .admin-shell * { scroll-behavior: auto; }
+  .admin-shell * {
+    scroll-behavior: auto;
+  }
 }
 
 /* Sprint 9.3 — componentes administrativos consistentes */
-.admin-panel { background: linear-gradient(135deg,rgba(255,255,255,.98),rgba(246,252,243,.96)); border:1px solid #d3e7ce; border-radius:1.25rem; box-shadow:0 12px 32px -28px rgba(32,85,43,.5); }
-.admin-table { width:100%; border-collapse:collapse; }
-.admin-table thead { background:linear-gradient(100deg,#e3f1df,#f3f9ef); }
-.admin-table tbody tr { border-top:1px solid #e2eee0; transition:background-color .15s ease; }
-.admin-table tbody tr:nth-child(even) { background:#f7fbf5; }
-.admin-table tbody tr:hover { background:#eaf5e6; }
-.admin-control { background:rgba(255,255,255,.96); border:1px solid #cbdcc8; border-radius:.85rem; color:#2d4f38; transition:border-color .15s,box-shadow .15s; }
-.admin-control:focus-visible { outline:2px solid #4a7c59; outline-offset:2px; box-shadow:0 0 0 4px #d8edcf; }
-.admin-record-card { background:linear-gradient(125deg,#fff,#f5fbf2); border:1px solid #d4e7d0; border-radius:1.25rem; box-shadow:0 10px 25px -25px #315d32; transition:transform .15s,border-color .15s; }
-.admin-record-card:hover { border-color:#9bc79b; transform:translateY(-1px); }
-.admin-empty { border:1px dashed #b7d6b2; background:linear-gradient(120deg,#f2f9ef,#fff); border-radius:1.25rem; padding:2rem; text-align:center; color:#5a6b5e; }
-.admin-action { border-radius:.75rem; transition:background-color .15s,transform .15s; }
-.admin-action:hover { transform:translateY(-1px); }
-@media (prefers-reduced-motion:reduce) { .admin-record-card,.admin-action { transition:none; } .admin-record-card:hover,.admin-action:hover { transform:none; } }
+.admin-panel {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(246, 252, 243, 0.96));
+  border: 1px solid #d3e7ce;
+  border-radius: 1.25rem;
+  box-shadow: 0 12px 32px -28px rgba(32, 85, 43, 0.5);
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.admin-table thead {
+  background: linear-gradient(100deg, #e3f1df, #f3f9ef);
+}
+.admin-table tbody tr {
+  border-top: 1px solid #e2eee0;
+  transition: background-color 0.15s ease;
+}
+.admin-table tbody tr:nth-child(even) {
+  background: #f7fbf5;
+}
+.admin-table tbody tr:hover {
+  background: #eaf5e6;
+}
+.admin-control {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid #cbdcc8;
+  border-radius: 0.85rem;
+  color: #2d4f38;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+.admin-control:focus-visible {
+  outline: 2px solid #4a7c59;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px #d8edcf;
+}
+.admin-record-card {
+  background: linear-gradient(125deg, #fff, #f5fbf2);
+  border: 1px solid #d4e7d0;
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 25px -25px #315d32;
+  transition:
+    transform 0.15s,
+    border-color 0.15s;
+}
+.admin-record-card:hover {
+  border-color: #9bc79b;
+  transform: translateY(-1px);
+}
+.admin-empty {
+  border: 1px dashed #b7d6b2;
+  background: linear-gradient(120deg, #f2f9ef, #fff);
+  border-radius: 1.25rem;
+  padding: 2rem;
+  text-align: center;
+  color: #5a6b5e;
+}
+.admin-action {
+  border-radius: 0.75rem;
+  transition:
+    background-color 0.15s,
+    transform 0.15s;
+}
+.admin-action:hover {
+  transform: translateY(-1px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-record-card,
+  .admin-action {
+    transition: none;
+  }
+  .admin-record-card:hover,
+  .admin-action:hover {
+    transform: none;
+  }
+}
 
 /* Sprint 9.4 — campos acessíveis e consistentes no painel */
 .admin-shell input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
-.admin-shell textarea, .admin-shell select { background-color:#fcfefb; border:1px solid #c8dfc4; border-radius:.85rem; color:#244c35; box-shadow:0 1px 2px rgba(35,85,43,.035); transition:border-color .15s,box-shadow .15s,background-color .15s; }
+.admin-shell textarea,
+.admin-shell select {
+  background-color: #fcfefb;
+  border: 1px solid #c8dfc4;
+  border-radius: 0.85rem;
+  color: #244c35;
+  box-shadow: 0 1px 2px rgba(35, 85, 43, 0.035);
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s,
+    background-color 0.15s;
+}
 .admin-shell input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus-visible,
-.admin-shell textarea:focus-visible,.admin-shell select:focus-visible { outline:2px solid #5a9367; outline-offset:1px; border-color:#5a9367; box-shadow:0 0 0 4px #e0f0dc; background-color:white; }
-.admin-shell input::placeholder,.admin-shell textarea::placeholder { color:#7b9781; }
-.admin-shell input:disabled,.admin-shell textarea:disabled,.admin-shell select:disabled { opacity:.6; cursor:not-allowed; background:#eef4eb; }
+.admin-shell textarea:focus-visible,
+.admin-shell select:focus-visible {
+  outline: 2px solid #5a9367;
+  outline-offset: 1px;
+  border-color: #5a9367;
+  box-shadow: 0 0 0 4px #e0f0dc;
+  background-color: white;
+}
+.admin-shell input::placeholder,
+.admin-shell textarea::placeholder {
+  color: #7b9781;
+}
+.admin-shell input:disabled,
+.admin-shell textarea:disabled,
+.admin-shell select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #eef4eb;
+}
 
 /* Sprint 13: keyboard focus and reduced motion */
-.skip-link { position: fixed; top: .5rem; left: .5rem; z-index: 100; padding: .75rem 1rem; background: #fff; color: #183c30; border: 2px solid #183c30; border-radius: .5rem; transform: translateY(-150%); }
-.skip-link:focus { transform: none; }
-:where(a, button, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid #155b92; outline-offset: 3px; box-shadow: 0 0 0 2px white; }
-#conteudo-principal { scroll-margin-top: 5rem; }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  color: #183c30;
+  border: 2px solid #183c30;
+  border-radius: 0.5rem;
+  transform: translateY(-150%);
+}
+.skip-link:focus {
+  transform: none;
+}
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid #155b92;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 2px white;
+}
+#conteudo-principal {
+  scroll-margin-top: 5rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 
 /* Sprint 13.1 — contenção de conteúdo e controles em telas estreitas */
-.admin-shell :where(main, section, article, fieldset, form) { min-width: 0; }
-.admin-shell :where(input, select, textarea) { max-width: 100%; }
-.admin-shell :where(h1,h2,h3,p,dd) { overflow-wrap: anywhere; }
-#conteudo-principal :where(h1,h2,h3,p,dd) { overflow-wrap: anywhere; }
+.admin-shell :where(main, section, article, fieldset, form) {
+  min-width: 0;
+}
+.admin-shell :where(input, select, textarea) {
+  max-width: 100%;
+}
+.admin-shell :where(h1, h2, h3, p, dd) {
+  overflow-wrap: anywhere;
+}
+#conteudo-principal :where(h1, h2, h3, p, dd) {
+  overflow-wrap: anywhere;
+}
 @media (max-width: 639px) {
-  .admin-shell :where(input:not([type=checkbox]):not([type=radio]):not([type=file]), select, textarea) { font-size: 16px; }
-  .admin-shell :where(.admin-panel,.admin-page-heading,.admin-hero) { min-width: 0; }
-  .admin-shell :where(button, a.admin-action) { min-height: 40px; }
+  .admin-shell
+    :where(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), select, textarea) {
+    font-size: 16px;
+  }
+  .admin-shell :where(.admin-panel, .admin-page-heading, .admin-hero) {
+    min-width: 0;
+  }
+  .admin-shell :where(button, a.admin-action) {
+    min-height: 40px;
+  }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { productTypeValues } from "@/schemas/product.schema";
 import { PRODUCT_TYPE_LABELS } from "@/constants/product";
 import { FormField, formInputClass } from "@/components/ui/FormField";
@@ -32,17 +32,24 @@ export function ProductFilterModal({
   onApply,
   onClose,
 }: ProductFilterModalProps) {
+  if (!isOpen) return null;
+  return (
+    <ProductFilterContent
+      appliedFilters={appliedFilters}
+      weightOptions={weightOptions}
+      onApply={onApply}
+      onClose={onClose}
+    />
+  );
+}
+
+function ProductFilterContent({
+  appliedFilters,
+  weightOptions,
+  onApply,
+  onClose,
+}: Omit<ProductFilterModalProps, "isOpen">) {
   const [draftFilters, setDraftFilters] = useState(appliedFilters);
-
-  useEffect(() => {
-    if (isOpen) {
-      setDraftFilters(appliedFilters);
-    }
-  }, [isOpen, appliedFilters]);
-
-  if (!isOpen) {
-    return null;
-  }
 
   const handleApply = () => {
     onApply(draftFilters);
@@ -56,20 +63,27 @@ export function ProductFilterModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-verde-escuro/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-verde-escuro/40 p-3 backdrop-blur-sm sm:p-5"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-labelledby="product-filter-title"
     >
-      <div className="bg-white rounded-2xl p-4 sm:p-6 max-w-sm w-full max-h-[calc(100dvh-1.5rem)] overflow-y-auto overscroll-contain" onClick={(event) => event.stopPropagation()}>
-        <h2 id="product-filter-title" className="font-serif text-lg text-verde-escuro mb-5">Filtrar produtos</h2>
+      <div
+        className="max-h-[calc(100dvh-1.5rem)] w-full max-w-sm overflow-y-auto overscroll-contain rounded-2xl bg-white p-4 sm:p-6"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <h2 id="product-filter-title" className="mb-5 font-serif text-lg text-verde-escuro">
+          Filtrar produtos
+        </h2>
 
-        <div className="flex flex-col gap-4 mb-6">
+        <div className="mb-6 flex flex-col gap-4">
           <FormField label="Tipo">
             <select
               value={draftFilters.type}
-              onChange={(event) => setDraftFilters((prev) => ({ ...prev, type: event.target.value }))}
+              onChange={(event) =>
+                setDraftFilters((prev) => ({ ...prev, type: event.target.value }))
+              }
               className={formInputClass}
             >
               <option value="ALL">Todos</option>
@@ -84,7 +98,9 @@ export function ProductFilterModal({
           <FormField label="Peso">
             <select
               value={draftFilters.weight}
-              onChange={(event) => setDraftFilters((prev) => ({ ...prev, weight: event.target.value }))}
+              onChange={(event) =>
+                setDraftFilters((prev) => ({ ...prev, weight: event.target.value }))
+              }
               className={formInputClass}
             >
               <option value="ALL">Todos</option>
@@ -117,13 +133,13 @@ export function ProductFilterModal({
         <div className="flex flex-wrap justify-end gap-3">
           <button
             onClick={handleClear}
-            className="px-4 py-2 rounded-full text-sm font-medium text-verde-muted hover:bg-verde-claro transition-colors"
+            className="rounded-full px-4 py-2 text-sm font-medium text-verde-muted transition-colors hover:bg-verde-claro"
           >
             Limpar filtros
           </button>
           <button
             onClick={handleApply}
-            className="px-4 py-2 rounded-full text-sm font-medium bg-verde-principal text-white hover:bg-verde-escuro transition-colors"
+            className="rounded-full bg-verde-principal px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-verde-escuro"
           >
             Aplicar
           </button>

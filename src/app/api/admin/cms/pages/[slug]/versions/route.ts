@@ -1,10 +1,12 @@
-import { NextResponse } from 'next/server';
-import { getAdminSession } from '@/lib/session';
-import { isCmsPageSlug } from '@/constants/cms-pages';
-import { listCmsVersions } from '@/services/cms-publication.service';
+import { NextResponse } from "next/server";
+import { getAdminSession } from "@/lib/session";
+import { isCmsPageSlug } from "@/constants/cms-pages";
+import { listCmsVersions } from "@/services/cms-publication.service";
 export async function GET(_req: Request, { params }: { params: Promise<{ slug: string }> }) {
-  if (!await getAdminSession()) return NextResponse.json({ message: 'Não autorizado' }, { status: 401 });
+  if (!(await getAdminSession()))
+    return NextResponse.json({ message: "Não autorizado" }, { status: 401 });
   const { slug } = await params;
-  if (!isCmsPageSlug(slug)) return NextResponse.json({ message: 'Página inválida' }, { status: 404 });
+  if (!isCmsPageSlug(slug))
+    return NextResponse.json({ message: "Página inválida" }, { status: 404 });
   return NextResponse.json({ versions: await listCmsVersions(slug) });
 }

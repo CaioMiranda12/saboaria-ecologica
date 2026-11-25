@@ -6,7 +6,8 @@ import { recordAudit } from "@/lib/audit";
 
 type Context = { params: Promise<{ id: string }> };
 export async function POST(_request: Request, { params }: Context) {
-  if (!await requireAdminRole()) return NextResponse.json({ message: "Acesso restrito" }, { status: 403 });
+  if (!(await requireAdminRole()))
+    return NextResponse.json({ message: "Acesso restrito" }, { status: 403 });
   const { id } = await params;
   const admin = await prisma.admin.findUnique({ where: { id }, select: { id: true } });
   if (!admin) return NextResponse.json({ message: "Usuário não encontrado" }, { status: 404 });

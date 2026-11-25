@@ -1,4 +1,5 @@
 # Sprint 10.4 — 2FA opcional
+
 Configuração manual TOTP (sem QR Code nesta entrega), SHA-1, 6 dígitos, 30 segundos. Dez códigos de recuperação de uso único. A senha continua necessária. Ativação/desativação revogam sessões. Preserve a chave de criptografia em backup seguro. Não há recuperação administrativa do 2FA nesta versão: perda do autenticador e dos códigos exige intervenção operacional no banco. Redefinir senha não desativa 2FA.
 
 Gere TOTP_ENCRYPTION_KEY com `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` e configure no .env. Não compartilhe a chave. Faça backup do Neon, npm install, npx prisma migrate deploy --config prisma7.config.ts, npx prisma generate --config prisma7.config.ts, npm run build, npm run dev.

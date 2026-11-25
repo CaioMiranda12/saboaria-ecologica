@@ -22,8 +22,12 @@ export default function NewProductPage() {
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="font-serif text-2xl text-verde-escuro mb-6">Novo produto</h1>
-      <ProductForm onSubmit={handleSubmit} isSubmitting={createProduct.isPending} submitLabel="Criar produto" />
+      <h1 className="mb-6 font-serif text-2xl text-verde-escuro">Novo produto</h1>
+      <ProductForm
+        onSubmit={handleSubmit}
+        isSubmitting={createProduct.isPending}
+        submitLabel="Criar produto"
+      />
     </div>
   );
 }

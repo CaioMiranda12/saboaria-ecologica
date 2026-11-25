@@ -2,7 +2,11 @@ import { recordAudit, productChanges } from "@/lib/audit";
 import { NextResponse } from "next/server";
 import { getAdminSession } from "@/lib/session";
 import { productFormSchema } from "@/schemas/product.schema";
-import { createProductFromForm, listProducts, DuplicateProductSlugError } from "@/services/product.service";
+import {
+  createProductFromForm,
+  listProducts,
+  DuplicateProductSlugError,
+} from "@/services/product.service";
 
 export async function GET() {
   const session = await getAdminSession();

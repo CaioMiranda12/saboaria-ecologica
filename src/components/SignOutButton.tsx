@@ -6,8 +6,17 @@ type SignOutButtonProps = { className?: string; icon?: ReactNode; collapsed?: bo
 export function SignOutButton({ className, icon, collapsed = false }: SignOutButtonProps) {
   return (
     <form action={signOutAction} className="w-full">
-      <button type="submit" title="Sair da conta" aria-label="Sair da conta" className={className ?? "text-xs font-medium text-verde-muted hover:text-verde-escuro transition-colors"}>
-        {icon}{collapsed ? <span className="sr-only">Sair da conta</span> : <span>Sair da conta</span>}
+      <button
+        type="submit"
+        title="Sair da conta"
+        aria-label="Sair da conta"
+        className={
+          className ??
+          "text-xs font-medium text-verde-muted transition-colors hover:text-verde-escuro"
+        }
+      >
+        {icon}
+        {collapsed ? <span className="sr-only">Sair da conta</span> : <span>Sair da conta</span>}
       </button>
     </form>
   );

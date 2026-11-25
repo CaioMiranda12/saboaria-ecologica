@@ -6,5 +6,6 @@
 - Sem migration, dependências ou variáveis novas. Originais mantidos para compatibilidade. Não é auditoria WCAG completa; contraste, CLS, LCP e INP precisam ser medidos no navegador. Componentes complexos de formulário ainda exigem revisão individual.
 
 ## Validar
+
 npm install; npx prisma generate --config prisma7.config.ts; npm run build; npm run dev.
 Testar imagens locais e Cloudinary, publicação CMS, teclado Tab/Shift+Tab/Escape, filtros, diálogo, menu móvel e formulários. Usar Lighthouse em build de produção e comparar com Sprint 12.1 nas mesmas condições. Análise sintática TypeScript realizada; build e integração não executados neste ambiente.

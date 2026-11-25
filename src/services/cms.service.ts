@@ -4,7 +4,9 @@ import type { z } from "zod";
 import type { cmsPageUpdateSchema } from "@/schemas/cms.schema";
 
 export { listCmsPages };
-export function getCmsPage(slug: CmsPageSlug) { return findCmsPage(slug); }
+export function getCmsPage(slug: CmsPageSlug) {
+  return findCmsPage(slug);
+}
 export function saveCmsPage(slug: CmsPageSlug, values: z.infer<typeof cmsPageUpdateSchema>) {
   return replaceCmsSections(slug, CMS_PAGES[slug], values.sections);
 }

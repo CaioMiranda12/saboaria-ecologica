@@ -22,8 +22,12 @@ export default function NewTeamMemberPage() {
 
   return (
     <div>
-      <h1 className="font-serif text-2xl text-verde-escuro mb-6">Novo membro</h1>
-      <TeamMemberForm onSubmit={handleSubmit} isSubmitting={createTeamMember.isPending} submitLabel="Criar membro" />
+      <h1 className="mb-6 font-serif text-2xl text-verde-escuro">Novo membro</h1>
+      <TeamMemberForm
+        onSubmit={handleSubmit}
+        isSubmitting={createTeamMember.isPending}
+        submitLabel="Criar membro"
+      />
     </div>
   );
 }
