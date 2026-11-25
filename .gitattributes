@@ -1,0 +1,18 @@
+# Padronização de quebras de linha
+* text=auto eol=lf
+
+# Arquivos de execução do Windows
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Arquivos binários
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
