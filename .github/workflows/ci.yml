@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Qualidade e testes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # Valores fictícios: nenhuma credencial real é necessária.
+      DATABASE_URL: "postgresql://ci:ci@127.0.0.1:5432/ci"
+      JWT_SECRET: "ci-placeholder-not-a-real-secret-1234567890"
+      ADMIN_SEED_EMAIL: "ci@example.com"
+      ADMIN_SEED_PASSWORD: "ci-placeholder-password"
+      APP_URL: "http://localhost:3000"
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22.20.0"
+          cache: npm
+
+      - name: Instalar dependências
+        run: npx --yes npm@11 ci
+
+      - name: Gerar Prisma Client
+        run: npm run db:generate
+
+      - name: Verificar formatação
+        run: npm run format:check
+
+      - name: Executar ESLint
+        run: npm run lint
+
+      - name: Verificar tipos
+        run: npm run typecheck
+
+      - name: Executar Vitest
+        run: npm run test
+
+      - name: Auditar dependências
+        run: npx --yes npm@11 audit --audit-level=high
