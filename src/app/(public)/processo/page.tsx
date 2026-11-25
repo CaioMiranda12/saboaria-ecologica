@@ -23,7 +23,7 @@ const Processo = async () => {
     <div className="bg-creme text-[#1a2e1f]">
 
       {/* Hero */}
-      <section className="bg-verde-principal pt-24 md:pt-28 pb-16 md:pb-20 px-5 md:px-20 relative overflow-hidden">
+      <section className="bg-verde-principal pt-24 md:pt-28 pb-16 md:pb-20 px-5 lg:px-20 relative overflow-hidden">
         <div className="absolute -top-15 -right-15 w-72 md:w-96 h-72 md:h-96 rounded-full bg-white/4" />
         <div className="flex justify-between items-center">
           <div className="relative z-10 max-w-2xl">
@@ -62,9 +62,9 @@ const Processo = async () => {
         ))}
       </div>
 
-      {Array.isArray(content.steps) && content.steps.length > 0 && <div className="bg-white px-5 md:px-20 py-8"><h2 className="font-serif text-2xl text-verde-principal mb-4">Resumo das etapas</h2><ol className="grid gap-3 md:grid-cols-4">{content.steps.filter((step): step is string => typeof step === "string").map((step,i) => <li key={i} className="rounded-xl bg-verde-claro p-4 text-sm text-verde-principal"><strong>{i+1}.</strong> {step}</li>)}</ol></div>}
+      {Array.isArray(content.steps) && content.steps.length > 0 && <div className="bg-white px-5 lg:px-20 py-8"><h2 className="font-serif text-2xl text-verde-principal mb-4">Resumo das etapas</h2><ol className="grid gap-3 md:grid-cols-4">{content.steps.filter((step): step is string => typeof step === "string").map((step,i) => <li key={i} className="rounded-xl bg-verde-claro p-4 text-sm text-verde-principal"><strong>{i+1}.</strong> {step}</li>)}</ol></div>}
       {/* Timeline de etapas */}
-      <section className="px-5 md:px-20 py-16 md:py-20 bg-creme">
+      <section className="px-5 lg:px-20 py-16 md:py-20 bg-creme">
         <p className="text-xs font-medium tracking-widest uppercase text-verde-principal mb-2">Passo a passo</p>
         <h2 className="font-serif text-3xl md:text-4xl text-verde-principal mb-10 md:mb-12 leading-tight">
           As etapas do nosso <em className="text-verde-medio">processo natural</em>
@@ -81,7 +81,7 @@ const Processo = async () => {
       </section>
 
       {/* Princípios */}
-      <section className="px-5 md:px-20 py-16 md:py-20 bg-white border-t border-verde-principal/10">
+      <section className="px-5 lg:px-20 py-16 md:py-20 bg-white border-t border-verde-principal/10">
         <p className="text-xs font-medium tracking-widest uppercase text-verde-principal mb-2">Nossos princípios</p>
         <h2 className="font-serif text-3xl md:text-4xl text-verde-principal mb-10 leading-tight">
           O que guia cada <em className="text-verde-medio">decisão de produção</em>
@@ -103,7 +103,7 @@ const Processo = async () => {
       </section>
 
       {/* Ingredientes */}
-      <section className="px-5 md:px-20 py-16 md:py-20 bg-creme border-t border-verde-principal/10">
+      <section className="px-5 lg:px-20 py-16 md:py-20 bg-creme border-t border-verde-principal/10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
           <div>
             <p className="text-xs font-medium tracking-widest uppercase text-verde-principal mb-2">Ingredientes</p>
@@ -148,7 +148,7 @@ const Processo = async () => {
       </section>
 
       {/* CTA */}
-      <section className="px-5 md:px-20 py-16 md:py-20 bg-verde-principal flex flex-col items-center text-center">
+      <section className="px-5 lg:px-20 py-16 md:py-20 bg-verde-principal flex flex-col items-center text-center">
         <h2 className="font-serif text-3xl md:text-4xl text-white mb-3">
           Conheça os <em className="text-white/85">produtos</em>
         </h2>

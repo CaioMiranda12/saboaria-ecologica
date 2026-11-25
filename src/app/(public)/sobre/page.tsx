@@ -153,7 +153,7 @@ const Sobre = async () => {
     <div className="bg-creme text-[#1a2e1f]">
 
       {/* Hero */}
-      <section className="bg-verde-principal pt-28 pb-16 md:pb-20 px-6 md:px-20 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-center relative overflow-hidden">
+      <section className="bg-verde-principal pt-28 pb-16 md:pb-20 px-6 lg:px-20 grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-20 items-center relative overflow-hidden">
         <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-white/4" />
         <div className="relative z-10">
           <span className="inline-flex items-center gap-2 bg-white/10 text-white/80 px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-6 w-fit">
@@ -200,7 +200,7 @@ const Sobre = async () => {
 
       {/* História + Números */}
       <section className="grid grid-cols-1 md:grid-cols-2 border-t border-verde-principal/10">
-        <div className="px-6 md:px-20 py-16 md:py-20 bg-creme flex flex-col gap-5">
+        <div className="px-6 lg:px-20 py-16 md:py-20 bg-creme flex flex-col gap-5">
           <p className="text-xs font-medium tracking-widest uppercase text-verde-principal">Nossa trajetória</p>
           <h2 className="font-serif text-3xl md:text-4xl text-verde-principal leading-tight">
             Transformar resíduos em <em className="text-verde-principal">soluções reais</em>
@@ -241,7 +241,7 @@ const Sobre = async () => {
       </section>
 
       {/* Evolução anual */}
-      <section className="px-6 md:px-20 py-16 md:py-20 bg-white border-t border-verde-principal/10">
+      <section className="px-6 lg:px-20 py-16 md:py-20 bg-white border-t border-verde-principal/10">
         <p className="text-xs font-medium tracking-widest uppercase text-verde-principal mb-3">Crescimento ano a ano</p>
         <h2 className="font-serif text-3xl md:text-4xl text-verde-principal mb-4">
           Evolução do <em className="text-verde-principal">impacto socioambiental</em>
@@ -296,8 +296,8 @@ const Sobre = async () => {
       </section>
 
       {/* Contribuições */}
-      <section className="px-6 md:px-20 py-16 md:py-20 bg-creme border-t border-verde-principal/10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-start">
+      <section className="px-6 lg:px-20 py-16 md:py-20 bg-creme border-t border-verde-principal/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-start">
           <div>
             <p className="text-xs font-medium tracking-widest uppercase text-verde-principal mb-3">Nosso impacto</p>
             <h2 className="font-serif text-3xl md:text-4xl text-verde-principal mb-4">
@@ -334,7 +334,7 @@ const Sobre = async () => {
       </section>
 
       {/* ODS */}
-      <section className="px-6 md:px-20 py-16 md:py-20 bg-verde-principal border-t border-white/10">
+      <section className="px-6 lg:px-20 py-16 md:py-20 bg-verde-principal border-t border-white/10">
         <p className="text-xs font-medium tracking-widest uppercase text-white/85 mb-3">Alinhamento global</p>
         <h2 className="font-serif text-3xl md:text-4xl text-white mb-4">
           Objetivos de <em className="text-white/85">Desenvolvimento Sustentável</em>
@@ -354,8 +354,8 @@ const Sobre = async () => {
       </section>
 
       {/* Reconhecimentos + Parcerias */}
-      <section className="px-6 md:px-20 py-16 md:py-20 bg-white border-t border-verde-principal/10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
+      <section className="px-6 lg:px-20 py-16 md:py-20 bg-white border-t border-verde-principal/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
           <div>
             <p className="text-xs font-medium tracking-widest uppercase text-verde-principal mb-3">Conquistas</p>
             <h2 className="font-serif text-3xl md:text-4xl text-verde-principal mb-4">
@@ -401,7 +401,7 @@ const Sobre = async () => {
       </section>
 
       {/* CTA */}
-      <section className="px-6 md:px-20 py-16 md:py-20 bg-verde-principal flex flex-col items-center text-center">
+      <section className="px-6 lg:px-20 py-16 md:py-20 bg-verde-principal flex flex-col items-center text-center">
         <h2 className="font-serif text-3xl md:text-4xl text-white mb-3">
           Conheça nossos <em className="text-white/85">produtos</em>
         </h2>

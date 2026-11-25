@@ -37,8 +37,8 @@ export function ConfirmDialog({ isOpen, title, description, confirmLabel = 'Remo
     return () => { document.body.style.overflow = originalOverflow; document.removeEventListener('keydown', onKeyDown); previous?.focus(); };
   }, [isOpen, isConfirming, onCancel]);
   if (!isOpen || typeof document === "undefined") return null;
-  return createPortal(<div className="fixed inset-0 z-[200] flex items-center justify-center bg-verde-escuro/50 p-5 backdrop-blur-sm" onMouseDown={event => { if (event.target === event.currentTarget && !isConfirming) onCancel(); }} role="presentation">
-    <div role="alertdialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descriptionId} className="w-full max-w-md rounded-2xl bg-gradient-to-br from-white to-[#f3faef] border border-[#cce3c7] p-6 shadow-2xl">
+  return createPortal(<div className="fixed inset-0 z-[200] flex items-center justify-center bg-verde-escuro/50 p-3 sm:p-5 backdrop-blur-sm" onMouseDown={event => { if (event.target === event.currentTarget && !isConfirming) onCancel(); }} role="presentation">
+    <div role="alertdialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descriptionId} className="w-full max-w-md max-h-[calc(100dvh-1.5rem)] overflow-y-auto overscroll-contain rounded-2xl bg-gradient-to-br from-white to-[#f3faef] border border-[#cce3c7] p-4 sm:p-6 shadow-2xl">
       <h2 id={titleId} className="mb-2 font-serif text-xl text-verde-escuro">{title}</h2>
       <p id={descriptionId} className="mb-6 text-sm leading-relaxed text-verde-muted">{description}</p>
       <div className="flex flex-wrap justify-end gap-3">

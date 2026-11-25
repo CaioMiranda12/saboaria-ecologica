@@ -129,7 +129,7 @@ export default function AdminProductsPage() {
 
       {filteredProducts.length > 0 && (
         <div className="admin-panel overflow-hidden">
-          <div className="overflow-x-auto"><table className="admin-table min-w-[760px] text-sm">
+          <p className="mb-2 text-xs text-verde-muted lg:hidden">Deslize a tabela para consultar todas as colunas.</p><div role="region" aria-label="Tabela de produtos" tabIndex={0} className="max-w-full overflow-x-auto overscroll-x-contain"><table className="admin-table min-w-[760px] text-sm">
             <thead className="text-left">
               <tr>
                 <th className="px-5 py-3 w-20 font-medium text-verde-escuro">Imagem</th>

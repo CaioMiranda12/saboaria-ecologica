@@ -21,13 +21,13 @@ const Header = () => {
   const toggleRef = useRef<HTMLButtonElement>(null)
   return (
     <nav aria-label="Navegação principal" onKeyDown={e => { if (e.key === "Escape" && menuAberto) { setMenuAberto(false); toggleRef.current?.focus() } }} className="fixed top-0 left-0 right-0 z-50 bg-creme/90 backdrop-blur-sm border-b border-verde-medio/10">
-      <div className="flex items-center justify-between px-6 md:px-10 py-4">
-        <Link href="/" className="font-serif text-lg font-bold text-verde-principal tracking-wide">
+      <div className="flex items-center justify-between gap-3 px-4 sm:px-6 xl:px-10 py-4">
+        <Link href="/" className="font-serif text-lg font-bold text-verde-principal tracking-wide min-w-0">
           SABOARIA <em className="font-normal not-italic text-verde-medio">ecológica</em>
         </Link>
 
         {/* Desktop */}
-        <div className="hidden md:flex gap-8">
+        <div className="hidden lg:flex gap-4 xl:gap-8">
           {links.map(([path, label]) => (
             <Link key={path} href={path} aria-current={pathname === path ? "page" : undefined} className="text-xs font-medium text-verde-muted uppercase tracking-widest hover:text-verde-medio transition-colors">
               {label}
@@ -35,14 +35,14 @@ const Header = () => {
           ))}
         </div>
 
-        <Link href="/contato" className="hidden md:block bg-verde-principal text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-verde-escuro transition-colors">
+        <Link href="/contato" className="hidden lg:block bg-verde-principal text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-verde-escuro transition-colors">
           Fale conosco
         </Link>
 
         {/* Mobile toggle */}
         <button
           onClick={() => setMenuAberto((prev) => !prev)}
-          className="md:hidden text-verde-principal p-1"
+          className="lg:hidden shrink-0 text-verde-principal p-2.5"
           ref={toggleRef}
           type="button"
           aria-expanded={menuAberto}
@@ -55,7 +55,7 @@ const Header = () => {
 
       {/* Mobile menu */}
       {(
-        <div id="menu-mobile" hidden={!menuAberto} className={`${menuAberto ? "flex" : "hidden"} md:hidden flex-col px-6 pb-6 gap-4 border-t border-verde-medio/10 bg-creme`}>
+        <div id="menu-mobile" hidden={!menuAberto} className={`${menuAberto ? "flex" : "hidden"} lg:hidden max-h-[calc(100dvh-72px)] overflow-y-auto overscroll-contain flex-col px-4 sm:px-6 pb-6 gap-3 border-t border-verde-medio/10 bg-creme`}>
           {links.map(([path, label]) => (
             <Link
               key={path}

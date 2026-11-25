@@ -73,7 +73,7 @@ const Contato = async () => {
     <div className="bg-creme text-[#1a2e1f]">
 
       {/* Hero */}
-      <section className="bg-verde-principal pt-24 md:pt-28 pb-16 md:pb-20 px-5 md:px-20 relative overflow-hidden">
+      <section className="bg-verde-principal pt-24 md:pt-28 pb-16 md:pb-20 px-5 lg:px-20 relative overflow-hidden">
         <div className="absolute -top-20 -right-20 w-72 md:w-96 h-72 md:h-96 rounded-full bg-white/4" />
         <div className="flex justify-between items-center">
           <div className="relative z-10 max-w-xl">

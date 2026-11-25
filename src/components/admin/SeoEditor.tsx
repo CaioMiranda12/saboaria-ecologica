@@ -49,8 +49,8 @@ export function SeoEditor({ pages }: { pages: Page[] }) {
   }
   return <div className="space-y-6">
     <header><h1 className="text-2xl font-bold text-green-900">SEO das páginas</h1><p className="text-sm text-gray-600">Gerencie como as páginas aparecem em buscadores e redes sociais.</p></header>
-    <form className="space-y-5 rounded-xl border border-green-200 bg-white p-5" onSubmit={e => { e.preventDefault(); void save(); }}>
-      <fieldset disabled={busy || uploading || pickerOpen} className="space-y-4">
+    <form className="space-y-5 rounded-xl border border-green-200 bg-white p-3 sm:p-5" onSubmit={e => { e.preventDefault(); void save(); }}>
+      <fieldset disabled={busy || uploading || pickerOpen} className="min-w-0 space-y-4">
         <label className="block">Página<select className="mt-1 block w-full rounded-lg border p-3" value={path} onChange={e => setPath(e.target.value)}>{drafts.map(p => <option key={p.path} value={p.path}>{p.label} ({p.path}){JSON.stringify(p) !== JSON.stringify(saved.find(s => s.path === p.path)) ? ' — não salvo' : ''}</option>)}</select></label>
         <label className="block">Título SEO<input required maxLength={120} className="mt-1 block w-full rounded-lg border p-3" value={current.title} onChange={e => change('title', e.target.value)} /><span className="text-xs text-gray-600">{current.title.length} caracteres · sugestão: até 60</span></label>
         <label className="block">Descrição SEO<textarea required maxLength={320} rows={4} className="mt-1 block w-full rounded-lg border p-3" value={current.description} onChange={e => change('description', e.target.value)} /><span className="text-xs text-gray-600">{current.description.length} caracteres · sugestão: até 160</span></label>
@@ -58,7 +58,7 @@ export function SeoEditor({ pages }: { pages: Page[] }) {
           <h2 className="font-semibold text-emerald-950">Imagem de compartilhamento (opcional)</h2>
           <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
             <div className="flex aspect-[1200/630] w-full max-w-xs items-center justify-center overflow-hidden rounded-xl border bg-white">{current.imageUrl ? <img src={current.imageUrl} alt="Prévia da imagem de compartilhamento" className="h-full w-full object-contain" /> : <ImageIcon className="text-emerald-400" />}</div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap">
               <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" tabIndex={-1} aria-label="Selecionar imagem no computador" onChange={e => void upload(e.target.files?.[0])} />
               <button type="button" onClick={() => fileRef.current?.click()} className="inline-flex items-center gap-2 rounded-xl bg-emerald-800 px-3 py-2 text-sm text-white"><UploadCloud size={16}/>{uploading ? 'Enviando...' : 'Enviar do computador'}</button>
               <button type="button" onClick={() => setPickerOpen(true)} className="inline-flex items-center gap-2 rounded-xl border border-emerald-300 px-3 py-2 text-sm text-emerald-900"><Images size={16}/> Escolher da biblioteca</button>
@@ -68,9 +68,9 @@ export function SeoEditor({ pages }: { pages: Page[] }) {
           <p className="text-xs text-gray-600">PNG, JPEG ou WebP até 8 MB. Recomendado: 1200 × 630 px. Remover a associação não exclui o arquivo da biblioteca.</p>
         </section>
       </fieldset>
-      <section className="rounded-lg border bg-green-50 p-4 break-words"><h2 className="font-semibold">Prévia ilustrativa de busca</h2><p className="text-xs text-gray-600">Saboaria Ecológica › {current.path}</p><p className="text-lg text-blue-800">{current.title}</p><p className="text-sm text-gray-700">{current.description}</p><p className="mt-2 text-xs text-gray-600">O buscador pode escolher outro título ou descrição.</p></section>
+      <section className="rounded-lg border bg-green-50 p-4 [overflow-wrap:anywhere]"><h2 className="font-semibold">Prévia ilustrativa de busca</h2><p className="text-xs text-gray-600">Saboaria Ecológica › {current.path}</p><p className="text-lg text-blue-800">{current.title}</p><p className="text-sm text-gray-700">{current.description}</p><p className="mt-2 text-xs text-gray-600">O buscador pode escolher outro título ou descrição.</p></section>
       <p className="text-sm text-gray-600">Ao salvar, os metadados públicos são atualizados independentemente dos rascunhos de conteúdo.</p>
-      <button disabled={busy || uploading || pickerOpen || !dirty} className="rounded-lg bg-green-800 px-5 py-3 text-white disabled:opacity-50" type="submit">{busy ? 'Salvando...' : 'Salvar SEO'}</button>
+      <button disabled={busy || uploading || pickerOpen || !dirty} className="w-full sm:w-auto rounded-lg bg-green-800 px-5 py-3 text-white disabled:opacity-50" type="submit">{busy ? 'Salvando...' : 'Salvar SEO'}</button>
     </form>
     {pickerOpen && <MediaPicker onClose={() => setPickerOpen(false)} onSelect={asset => { change('imageUrl', asset.url); setPickerOpen(false); }} />}
   </div>;

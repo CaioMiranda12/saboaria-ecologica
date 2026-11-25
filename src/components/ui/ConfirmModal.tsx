@@ -59,7 +59,7 @@ export function ConfirmModal({
         aria-modal="true"
         aria-labelledby="confirm-modal-title"
         aria-describedby={description ? "confirm-modal-description" : undefined}
-        className="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl"
+        className="relative w-full max-w-sm max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain rounded-2xl bg-white p-6 shadow-xl"
       >
         <button
           type="button"
@@ -83,7 +83,7 @@ export function ConfirmModal({
           </p>
         )}
 
-        <div className="mt-6 flex justify-end gap-3">
+        <div className="mt-6 flex flex-wrap justify-end gap-3">
           <button
             ref={cancelRef}
             type="button"

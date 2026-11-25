@@ -21,10 +21,11 @@ export default async function PrivateLayout({
 
   return (
     <div className="admin-shell min-h-screen flex">
+      <a className="skip-link" href="#admin-conteudo">Ir para o conteúdo administrativo</a>
       <AdminSidebar role={admin.role} />
       <div className="flex-1 flex flex-col min-w-0">
         <AdminTopbar adminEmail={session.email} role={admin.role} />
-        <main className="flex-1 p-5 sm:p-6 md:p-8"><AdminPermissions role={admin.role}>{children}</AdminPermissions></main>
+        <main id="admin-conteudo" tabIndex={-1} className="min-w-0 flex-1 p-3 sm:p-5 xl:p-8"><AdminPermissions role={admin.role}>{children}</AdminPermissions></main>
       </div>
     </div>
   );

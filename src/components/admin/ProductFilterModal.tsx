@@ -56,13 +56,14 @@ export function ProductFilterModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-verde-escuro/40 backdrop-blur-sm flex items-center justify-center p-5"
+      className="fixed inset-0 z-50 bg-verde-escuro/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
+      aria-labelledby="product-filter-title"
     >
-      <div className="bg-white rounded-2xl p-6 max-w-sm w-full" onClick={(event) => event.stopPropagation()}>
-        <h2 className="font-serif text-lg text-verde-escuro mb-5">Filtrar produtos</h2>
+      <div className="bg-white rounded-2xl p-4 sm:p-6 max-w-sm w-full max-h-[calc(100dvh-1.5rem)] overflow-y-auto overscroll-contain" onClick={(event) => event.stopPropagation()}>
+        <h2 id="product-filter-title" className="font-serif text-lg text-verde-escuro mb-5">Filtrar produtos</h2>
 
         <div className="flex flex-col gap-4 mb-6">
           <FormField label="Tipo">
@@ -113,7 +114,7 @@ export function ProductFilterModal({
           </FormField>
         </div>
 
-        <div className="flex justify-end gap-3">
+        <div className="flex flex-wrap justify-end gap-3">
           <button
             onClick={handleClear}
             className="px-4 py-2 rounded-full text-sm font-medium text-verde-muted hover:bg-verde-claro transition-colors"

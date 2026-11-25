@@ -75,3 +75,14 @@ button {
 :where(a, button, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid #155b92; outline-offset: 3px; box-shadow: 0 0 0 2px white; }
 #conteudo-principal { scroll-margin-top: 5rem; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+
+/* Sprint 13.1 — contenção de conteúdo e controles em telas estreitas */
+.admin-shell :where(main, section, article, fieldset, form) { min-width: 0; }
+.admin-shell :where(input, select, textarea) { max-width: 100%; }
+.admin-shell :where(h1,h2,h3,p,dd) { overflow-wrap: anywhere; }
+#conteudo-principal :where(h1,h2,h3,p,dd) { overflow-wrap: anywhere; }
+@media (max-width: 639px) {
+  .admin-shell :where(input:not([type=checkbox]):not([type=radio]):not([type=file]), select, textarea) { font-size: 16px; }
+  .admin-shell :where(.admin-panel,.admin-page-heading,.admin-hero) { min-width: 0; }
+  .admin-shell :where(button, a.admin-action) { min-height: 40px; }
+}

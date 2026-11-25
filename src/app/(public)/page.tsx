@@ -39,7 +39,7 @@ const Home = async () => {
       {/* Hero */}
       {(!hero || hero.enabled) && (
       <section className="min-h-screen grid grid-cols-1 md:grid-cols-2 pt-20">
-        <div className="flex flex-col justify-center px-6 md:px-20 py-16 md:py-20">
+        <div className="flex flex-col justify-center px-6 lg:px-20 py-16 md:py-20">
           <span className="inline-flex items-center gap-2 bg-verde-claro text-verde-principal px-4 py-2 rounded-full text-xs font-medium uppercase tracking-widest mb-8 w-fit">
             <span className="w-1.5 h-1.5 rounded-full bg-verde-medio" />
             Negócio social sustentável
@@ -74,7 +74,7 @@ const Home = async () => {
       )}
 
       {/* Stats */}
-      <div className="grid grid-cols-3 border-y border-verde-medio/15">
+      <div className="grid grid-cols-1 sm:grid-cols-3 border-y border-verde-medio/15">
         {[
           { num: '2023', label: 'Fundada com propósito social' },
           { num: '4+', label: 'Produtos biodegradáveis' },
@@ -89,7 +89,7 @@ const Home = async () => {
 
       {/* Sobre */}
       {(!about || about.enabled) && (
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-24 px-6 md:px-20 py-16 md:py-24 bg-white border-t border-verde-medio/10">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-24 px-6 lg:px-20 py-16 md:py-24 bg-white border-t border-verde-medio/10">
         <div>
           <p className="text-xs font-medium tracking-widest uppercase text-verde-medio mb-3">Quem somos</p>
           <h2 className="font-serif text-3xl md:text-4xl text-verde-principal leading-tight mb-5">
@@ -127,7 +127,7 @@ const Home = async () => {
       )}
 
       {/* Produtos */}
-      <section className="px-6 md:px-20 py-16 md:py-24 bg-creme">
+      <section className="px-6 lg:px-20 py-16 md:py-24 bg-creme">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-10 md:mb-12">
           <div>
             <p className="text-xs font-medium tracking-widest uppercase text-verde-medio mb-3">Nossos produtos</p>
@@ -150,7 +150,7 @@ const Home = async () => {
       </section>
 
       {/* Processo */}
-      <section className="px-6 md:px-20 py-16 md:py-24 bg-white border-t border-verde-medio/10">
+      <section className="px-6 lg:px-20 py-16 md:py-24 bg-white border-t border-verde-medio/10">
         <p className="text-xs font-medium tracking-widest uppercase text-verde-medio mb-3">Como fazemos</p>
         <h2 className="font-serif text-3xl md:text-4xl text-verde-principal mb-10 md:mb-12">
           Do resíduo ao produto <em className="text-verde-medio">sustentável</em>
@@ -169,7 +169,7 @@ const Home = async () => {
       </section>
 
       {/* CTA */}
-      <section className="px-6 md:px-20 py-16 md:py-24 bg-verde-principal text-center flex flex-col items-center">
+      <section className="px-6 lg:px-20 py-16 md:py-24 bg-verde-principal text-center flex flex-col items-center">
         <h2 className="font-serif text-4xl md:text-5xl text-white mb-4">
           Faça parte <em className="text-white/85">desse movimento</em>
         </h2>
