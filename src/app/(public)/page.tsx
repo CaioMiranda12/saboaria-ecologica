@@ -1,3 +1,4 @@
+import { pageMetadata } from "@/lib/seo";
 import CardProduto from '@/components/CardProduto'
 import { listaDeProdutos } from '@/data/produtos'
 import { historiaDaMarca, contatosDaMarca } from '@/data/marca'
@@ -199,3 +200,5 @@ const Home = async () => {
 }
 
 export default Home
+
+export async function generateMetadata() { return pageMetadata("/"); }

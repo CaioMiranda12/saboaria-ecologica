@@ -216,3 +216,12 @@ model PasswordResetToken {
   @@index([expiresAt])
   @@map("password_reset_tokens")
 }
+
+model PageSeo {
+  path String @id
+  title String
+  description String
+  imageUrl String @default("")
+  updatedAt DateTime @updatedAt
+  @@map("page_seo")
+}

@@ -1,3 +1,4 @@
+import { pageMetadata } from "@/lib/seo";
 import { listPartnerships } from "@/services/partnership.service";
 export const dynamic = "force-dynamic";
 import { publicSection, cmsText } from "@/lib/cms-public";
@@ -426,3 +427,5 @@ const Sobre = async () => {
 }
 
 export default Sobre
+
+export async function generateMetadata() { return pageMetadata("/sobre"); }

@@ -8,6 +8,7 @@ const adminNavigation = [
   { href: "/admin/parcerias", label: "Parcerias", icon: Handshake },
   { href: "/admin/midia", label: "Biblioteca de mídia", icon: Images },
   { href: "/admin/minha-conta", label: "Minha conta", icon: CircleUserRound },
+  { href: "/admin/seo", label: "SEO", icon: Files, adminOnly: true },
   { href: "/admin/usuarios", label: "Usuários", icon: UserCog, adminOnly: true },
   { href: "/admin/auditoria", label: "Auditoria", icon: ClipboardList, adminOnly: true },
 ];

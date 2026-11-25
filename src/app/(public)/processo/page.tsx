@@ -1,3 +1,4 @@
+import { pageMetadata } from "@/lib/seo";
 import { publicSection, cmsText } from "@/lib/cms-public";
 import Link from 'next/link'
 import EtapaTimeline from '@/components/EtapaTimeline'
@@ -176,3 +177,5 @@ const Processo = async () => {
 }
 
 export default Processo
+
+export async function generateMetadata() { return pageMetadata("/processo"); }

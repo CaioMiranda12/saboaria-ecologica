@@ -1,3 +1,4 @@
+import { pageMetadata } from "@/lib/seo";
 import ProdutosCatalogo from "@/components/ProdutosCatalogo";
 import { listPublicProducts } from "@/services/product.service";
 import { toProduto } from "@/utils/product-mapper";
@@ -12,3 +13,5 @@ export default async function ProdutosPage() {
 
   return <ProdutosCatalogo produtos={products.map(toProduto)} />;
 }
+
+export async function generateMetadata() { return pageMetadata("/produtos"); }

@@ -1,3 +1,4 @@
+import { pageMetadata } from "@/lib/seo";
 import { publicSection, cmsText } from "@/lib/cms-public";
 import { listTeamMembers } from "@/services/team-member.service";
 
@@ -45,3 +46,5 @@ export default async function Equipe() {
     </section>
   )
 }
+
+export async function generateMetadata() { return pageMetadata("/equipe"); }

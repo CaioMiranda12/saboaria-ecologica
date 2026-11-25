@@ -1,3 +1,4 @@
+import { pageMetadata } from "@/lib/seo";
 import { publicSection, cmsText } from "@/lib/cms-public";
 import { contatosDaMarca } from '@/data/marca'
 import { localizacoes } from '@/data/localizacoes'
@@ -204,3 +205,5 @@ const Contato = async () => {
 }
 
 export default Contato
+
+export async function generateMetadata() { return pageMetadata("/contato"); }
