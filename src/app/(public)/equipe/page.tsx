@@ -9,7 +9,7 @@ export default async function Equipe() {
   const [section, equipe] = await Promise.all([publicSection("equipe", "introducao"), listTeamMembers()]);
   const content = section?.content ?? {};
   return (
-    <section className="px-5 md:px-20 py-14 md:py-20 bg-creme relative">
+    <section className="px-5 md:px-20 py-14 md:py-20 bg-creme relative flex-1">
       <PublicImage
         src='/logo-2.png'
         alt="Saboaria Ecológica"

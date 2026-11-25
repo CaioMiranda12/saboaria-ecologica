@@ -17,8 +17,14 @@ type Props = {
 const CardProduto = ({ produto, onVerDetalhes }: Props) => {
   return (
     <div
-      className="bg-white rounded-2xl overflow-hidden border border-azul-principal/10 hover:-translate-y-1 hover:shadow-lg hover:border-azul-principal transition-all duration-200"
+      className="group relative bg-white rounded-2xl overflow-hidden border border-azul-principal/10 hover:-translate-y-1 hover:shadow-lg hover:border-azul-principal transition-all duration-200"
     >
+      {onVerDetalhes && (
+        <button type="button" onClick={onVerDetalhes}
+          aria-label={`Ver detalhes de ${produto.nomePrincipal}${produto.nomeComplemento ? ` ${produto.nomeComplemento}` : ""}`}
+          aria-haspopup="dialog"
+          className="absolute inset-0 z-10 cursor-pointer rounded-2xl focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-azul-principal" />
+      )}
       <div className={`h-96 bg-linear-to-br ${produto.imagem ? 'bg-white' : "from-[#025197] to-azul-escuro"} flex items-center justify-center`}>
         {produto.imagem ? (
           <PublicImage maxWidth={800}
@@ -54,13 +60,9 @@ const CardProduto = ({ produto, onVerDetalhes }: Props) => {
               </span>
             )}
             {onVerDetalhes && (
-              <button
-                onClick={onVerDetalhes}
-                aria-label={`Ver detalhes de ${produto.nomePrincipal}`}
-                className="text-xs font-medium text-azul-principal bg-verde-claro px-3 py-1 rounded-full hover:bg-azul-principal hover:text-white transition-colors"
-              >
+              <span aria-hidden="true" className="text-xs font-medium text-azul-principal bg-verde-claro px-3 py-1 rounded-full transition-colors group-hover:bg-azul-principal group-hover:text-white group-focus-within:bg-azul-principal group-focus-within:text-white">
                 Ver detalhes
-              </button>
+              </span>
             )}
           </div>
         </div>
