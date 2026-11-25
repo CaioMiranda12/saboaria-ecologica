@@ -8,8 +8,9 @@ export default function PublicLayout({
 }) {
   return (
     <>
+      <a className="skip-link" href="#conteudo-principal">Ir para o conteúdo principal</a>
       <Header />
-      <main>{children}</main>
+      <main id="conteudo-principal" tabIndex={-1}>{children}</main>
       <Footer />
     </>
   );

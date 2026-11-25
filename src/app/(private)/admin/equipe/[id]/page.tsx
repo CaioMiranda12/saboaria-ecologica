@@ -40,7 +40,7 @@ export default function EditTeamMemberPage({ params }: EditTeamMemberPageProps) 
     <div>
       <h1 className="font-serif text-2xl text-verde-escuro mb-6">Editar membro</h1>
       <TeamMemberForm
-        defaultValues={teamMember}
+        defaultValues={{ ...teamMember, imageUrl: teamMember.imageUrl ?? undefined }}
         onSubmit={handleSubmit}
         isSubmitting={updateTeamMember.isPending}
         submitLabel="Salvar alterações"

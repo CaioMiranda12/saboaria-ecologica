@@ -1,3 +1,4 @@
+import PublicImage from "@/components/PublicImage";
 import { pageMetadata } from "@/lib/seo";
 import { publicSection, cmsText } from "@/lib/cms-public";
 import { contatosDaMarca } from '@/data/marca'
@@ -86,7 +87,7 @@ const Contato = async () => {
               {cmsText(content.description, "Tire suas dúvidas, faça seu pedido ou saiba como contribuir com a nossa causa. Estamos prontos para te atender pelos canais abaixo.")}
             </p>
           </div>
-          <img
+          <PublicImage priority maxWidth={800}
             src="/logo.png"
             alt="Saboaria Ecológica"
             className="max-w-100 w-1/2 h-full object-contain"
@@ -139,7 +140,7 @@ const Contato = async () => {
         <div className="bg-verde-principal px-5 md:px-14 py-14 md:py-20 flex flex-col gap-6">
           <div>
             <h3 className="font-serif text-2xl text-white mb-2">Canais de atendimento</h3>
-            <p className="text-white/60 text-sm font-light leading-relaxed mb-5">
+            <p className="text-white/85 text-sm font-light leading-relaxed mb-5">
               Prefere um contato direto? Escolha o canal mais conveniente para você.
             </p>
             <div className="flex flex-col gap-3">
@@ -155,7 +156,7 @@ const Contato = async () => {
                     <div className="[&_svg]:stroke-white/80">{canal.icone}</div>
                   </div>
                   <div>
-                    <p className="text-xs text-white/55 font-light mb-0.5">{canal.nome}</p>
+                    <p className="text-xs text-white/85 font-light mb-0.5">{canal.nome}</p>
                     <p className="text-sm text-white font-medium">{canal.valor}</p>
                   </div>
                 </a>
@@ -177,15 +178,15 @@ const Contato = async () => {
               </svg>
               <p className="text-sm text-white/80 font-medium text-center leading-snug">
                 Av. Ulisses Guimarães, 3132<br />
-                <span className="text-white/55 text-xs font-light">Iparana · Caucaia, CE</span>
+                <span className="text-white/85 text-xs font-light">Iparana · Caucaia, CE</span>
               </p>
-              <p className="text-xs text-white/40 font-light">Clique para abrir no mapa</p>
+              <p className="text-xs text-white/85 font-light">Clique para abrir no mapa</p>
             </div>
           </a>
 
           {/* Horário */}
           <div className="bg-white/6 rounded-2xl px-5 py-4">
-            <p className="text-xs text-white/55 font-light uppercase tracking-widest mb-3">
+            <p className="text-xs text-white/85 font-light uppercase tracking-widest mb-3">
               Horário de atendimento
             </p>
             <div className="flex flex-col divide-y divide-white/6">

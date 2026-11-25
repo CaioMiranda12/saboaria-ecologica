@@ -1,3 +1,4 @@
+import PublicImage from "@/components/PublicImage";
 import type { Produto } from "../data/produtos"
 
 // const corPorTipo: Record<Produto['tipo'], string> = {
@@ -16,12 +17,11 @@ type Props = {
 const CardProduto = ({ produto, onVerDetalhes }: Props) => {
   return (
     <div
-      className="bg-white rounded-2xl overflow-hidden border border-azul-principal/10 hover:-translate-y-1 hover:shadow-lg hover:border-azul-principal transition-all duration-200 cursor-pointer"
-      onClick={onVerDetalhes}
+      className="bg-white rounded-2xl overflow-hidden border border-azul-principal/10 hover:-translate-y-1 hover:shadow-lg hover:border-azul-principal transition-all duration-200"
     >
       <div className={`h-96 bg-linear-to-br ${produto.imagem ? 'bg-white' : "from-[#025197] to-azul-escuro"} flex items-center justify-center`}>
         {produto.imagem ? (
-          <img
+          <PublicImage maxWidth={800}
             src={produto.imagem}
             alt={`${produto.nomePrincipal} ${produto.nomeComplemento}`}
             className="w-full h-full object-contain"
@@ -56,6 +56,7 @@ const CardProduto = ({ produto, onVerDetalhes }: Props) => {
             {onVerDetalhes && (
               <button
                 onClick={onVerDetalhes}
+                aria-label={`Ver detalhes de ${produto.nomePrincipal}`}
                 className="text-xs font-medium text-azul-principal bg-verde-claro px-3 py-1 rounded-full hover:bg-azul-principal hover:text-white transition-colors"
               >
                 Ver detalhes

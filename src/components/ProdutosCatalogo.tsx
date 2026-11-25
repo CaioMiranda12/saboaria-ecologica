@@ -1,6 +1,7 @@
 'use client'
+import PublicImage from "@/components/PublicImage";
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { X } from 'lucide-react'
 import CardProduto from '@/components/CardProduto'
 import type { Produto } from '@/data/produtos'
@@ -24,6 +25,17 @@ const ProdutosCatalogo = ({ produtos }: Props) => {
   const [filtroAtivo, setFiltroAtivo] = useState<FiltroTipo>('todos')
   const [produtoSelecionado, setProdutoSelecionado] = useState<Produto | null>(null)
 
+  const dialogRef = useRef<HTMLDialogElement>(null)
+  useEffect(() => {
+    const dialog = dialogRef.current
+    if (!produtoSelecionado || !dialog) return
+    const previous = document.activeElement as HTMLElement | null
+    dialog.showModal()
+    const overflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { dialog.close(); document.body.style.overflow = overflow; previous?.focus() }
+  }, [produtoSelecionado])
+
   const produtosFiltrados =
     filtroAtivo === 'todos'
       ? produtos
@@ -45,19 +57,19 @@ const ProdutosCatalogo = ({ produtos }: Props) => {
               Produtos artesanais
             </span>
             <h1 className="font-serif text-4xl md:text-5xl text-white leading-tight mb-5">
-              Limpeza <em className="text-white/45">natural</em><br />para cada uso
+              Limpeza <em className="text-white/85">natural</em><br />para cada uso
             </h1>
-            <p className="text-white/60 font-light leading-relaxed text-base">
+            <p className="text-white/85 font-light leading-relaxed text-base">
               Todos os nossos produtos são feitos à mão com óleo reutilizado, ingredientes naturais e embalagens biodegradáveis.
             </p>
           </div>
           <div className="flex flex-col items-center lg:flex-row">
-            <img
+            <PublicImage
               src="/logo.png"
               alt="Saboaria Ecológica"
               className="max-w-100 w-full md:w-1/2 h-full object-contain"
             />
-            <img
+            <PublicImage
               src="/logo-ellas.png"
               alt="Saboaria Ecológica"
               className="max-w-125 w-full md:w-1/2 h-full object-contain"
@@ -72,6 +84,7 @@ const ProdutosCatalogo = ({ produtos }: Props) => {
           <button
             key={valor}
             onClick={() => setFiltroAtivo(valor)}
+            aria-pressed={filtroAtivo === valor}
             className={`px-5 py-2 rounded-full text-xs font-medium uppercase tracking-wider transition-all ${filtroAtivo === valor
               ? 'bg-azul-principal text-white'
               : 'border border-azul-principal/20 text-azul-muted hover:border-azul-principal hover:text-azul-principal'
@@ -80,7 +93,7 @@ const ProdutosCatalogo = ({ produtos }: Props) => {
             {label}
           </button>
         ))}
-        <span className="ml-auto self-center text-xs text-azul-muted font-light">
+        <span role="status" className="ml-auto self-center text-xs text-azul-muted font-light">
           {produtosFiltrados.length} produto{produtosFiltrados.length !== 1 ? 's' : ''}
         </span>
       </div>
@@ -106,9 +119,10 @@ const ProdutosCatalogo = ({ produtos }: Props) => {
 
       {/* Modal */}
       {produtoSelecionado && (
-        <div
-          className="fixed inset-0 z-50 bg-azul-principal/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-6"
-          onClick={() => setProdutoSelecionado(null)}
+        <dialog ref={dialogRef} aria-labelledby="produto-dialog-title"
+          className="fixed inset-0 m-auto max-h-none max-w-none w-full h-full bg-transparent backdrop:bg-azul-principal/60 open:flex items-end sm:items-center justify-center p-0 sm:p-6"
+          onCancel={e => { e.preventDefault(); setProdutoSelecionado(null) }}
+          onClick={e => { if (e.target === e.currentTarget) setProdutoSelecionado(null) }}
         >
           <div
             className="bg-creme w-full sm:max-w-xl rounded-t-3xl sm:rounded-3xl p-6 md:p-8 max-h-[90vh] overflow-y-auto"
@@ -127,7 +141,7 @@ const ProdutosCatalogo = ({ produtos }: Props) => {
                     </span>
                   ))}
                 </div>
-                <h2 className="font-serif text-2xl md:text-3xl text-azul-principal">
+                <h2 id="produto-dialog-title" className="font-serif text-2xl md:text-3xl text-azul-principal">
                   {produtoSelecionado.nomePrincipal}
                 </h2>
                 {produtoSelecionado.nomeComplemento && (
@@ -138,6 +152,7 @@ const ProdutosCatalogo = ({ produtos }: Props) => {
               </div>
               <button
                 onClick={() => setProdutoSelecionado(null)}
+                aria-label="Fechar detalhes do produto"
                 className="w-9 h-9 rounded-full bg-white border border-azul-principal/15 flex items-center justify-center text-azul-muted hover:border-azul-principal transition-colors shrink-0 ml-4"
               >
                 <X size={16} />
@@ -191,7 +206,7 @@ const ProdutosCatalogo = ({ produtos }: Props) => {
               </button>
             </div>
           </div>
-        </div>
+        </dialog>
       )}
 
     </div>

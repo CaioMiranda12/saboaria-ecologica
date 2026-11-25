@@ -1,3 +1,4 @@
+import PublicImage from "@/components/PublicImage";
 import { pageMetadata } from "@/lib/seo";
 import CardProduto from '@/components/CardProduto'
 import { listaDeProdutos } from '@/data/produtos'
@@ -66,7 +67,7 @@ const Home = async () => {
         </div>
         <div className="relative bg-verde-principal flex items-center justify-center overflow-hidden min-h-64 md:min-h-0">
           <div className="absolute inset-0 opacity-5 bg-[repeating-linear-gradient(45deg,#fff,#fff_1px,transparent_1px,transparent_30px)]" />
-          <img src={heroImage} alt="Saboaria Ecológica" className="max-h-[420px] w-full object-contain" />
+          <PublicImage priority src={heroImage} alt="Saboaria Ecológica" className="max-h-[420px] w-full object-contain" />
         </div>
       </section>
 
@@ -115,7 +116,7 @@ const Home = async () => {
           </div>
         </div>
         <div className="drop-shadow-xl">
-          <img
+          <PublicImage
             src={aboutImage}
             alt="Economia Circular"
             className="w-full h-full object-contain"
@@ -170,9 +171,9 @@ const Home = async () => {
       {/* CTA */}
       <section className="px-6 md:px-20 py-16 md:py-24 bg-verde-principal text-center flex flex-col items-center">
         <h2 className="font-serif text-4xl md:text-5xl text-white mb-4">
-          Faça parte <em className="text-white/50">desse movimento</em>
+          Faça parte <em className="text-white/85">desse movimento</em>
         </h2>
-        <p className="text-white/60 font-light mb-10 max-w-md leading-relaxed">
+        <p className="text-white/85 font-light mb-10 max-w-md leading-relaxed">
           Entre em contato e saiba como adquirir nossos produtos ou como contribuir com a nossa causa.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">

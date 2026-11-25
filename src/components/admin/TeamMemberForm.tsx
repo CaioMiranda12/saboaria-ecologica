@@ -1,6 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { teamMemberFormSchema, type TeamMemberFormValues } from "@/schemas/team-member.schema";
 import { Controller } from "react-hook-form";
@@ -23,7 +24,7 @@ export function TeamMemberForm({ defaultValues, onSubmit, isSubmitting, submitLa
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<TeamMemberFormValues>({
+  } = useForm<z.input<typeof teamMemberFormSchema>, unknown, TeamMemberFormValues>({
     resolver: zodResolver(teamMemberFormSchema),
     defaultValues: {
       name: defaultValues?.name ?? "",

@@ -1,3 +1,4 @@
+import PublicImage from "@/components/PublicImage";
 import { pageMetadata } from "@/lib/seo";
 import { listPartnerships } from "@/services/partnership.service";
 export const dynamic = "force-dynamic";
@@ -168,7 +169,7 @@ const Sobre = async () => {
         <div className="relative z-10 flex flex-col gap-4">
           {imagensDaPagina.hero && (
             <div className="rounded-2xl overflow-hidden h-52 md:h-60">
-              <img
+              <PublicImage
                 src={cmsText(content.imageUrl, imagensDaPagina.hero)}
                 alt="Saboaria Ecológica"
                 className="w-full h-full object-contain"
@@ -177,7 +178,7 @@ const Sobre = async () => {
           )}
           <div className="bg-white/10 border border-white/15 rounded-2xl p-6">
             <h3 className="font-serif text-2xl text-white mb-2">Fundada em {ano}</h3>
-            <p className="text-white/60 text-sm font-light leading-relaxed">
+            <p className="text-white/85 text-sm font-light leading-relaxed">
               Um negócio social que nasceu da necessidade de transformar óleo saturado de frituras em produtos de limpeza ecológicos e acessíveis, gerando renda para mulheres de comunidades vulneráveis e preservando recursos naturais.
             </p>
           </div>
@@ -206,7 +207,7 @@ const Sobre = async () => {
           </h2>
           {imagensDaPagina.trajetoria && (
             <div className="rounded-2xl overflow-hidden h-52 md:h-full">
-              <img
+              <PublicImage
                 src={imagensDaPagina.trajetoria}
                 alt="Trajetória da Saboaria Ecológica"
                 className="w-full h-full object-contain"
@@ -229,7 +230,7 @@ const Sobre = async () => {
           </div>
         </div>
         <div className="bg-verde-principal px-6 md:px-16 py-16 md:py-20 flex flex-col justify-center gap-5">
-          <p className="text-white/60 text-xs font-medium tracking-widest uppercase">Impacto consolidado 2023–2025</p>
+          <p className="text-white/85 text-xs font-medium tracking-widest uppercase">Impacto consolidado 2023–2025</p>
           {numerosDeImpacto.map((item) => (
             <div key={item.numero} className="bg-white/10 border border-white/15 rounded-2xl p-6">
               <p className="font-serif text-3xl font-bold text-white mb-1">{item.numero}</p>
@@ -250,7 +251,7 @@ const Sobre = async () => {
         </p>
         {imagensDaPagina.oficina && (
           <div className="rounded-2xl overflow-hidden h-60 md:h-80 mb-10">
-            <img
+            <PublicImage
               src={imagensDaPagina.oficina}
               alt="Oficina da Saboaria Ecológica"
               className="w-full h-full"
@@ -322,7 +323,7 @@ const Sobre = async () => {
           </div>
           {imagensDaPagina.produtos && (
             <div className="rounded-2xl overflow-hidden md:sticky md:top-28 h-72 md:h-150">
-              <img
+              <PublicImage
                 src={imagensDaPagina.produtos}
                 alt="Produtos da Saboaria Ecológica"
                 className="w-full h-full object-cover"
@@ -334,11 +335,11 @@ const Sobre = async () => {
 
       {/* ODS */}
       <section className="px-6 md:px-20 py-16 md:py-20 bg-verde-principal border-t border-white/10">
-        <p className="text-xs font-medium tracking-widest uppercase text-white/60 mb-3">Alinhamento global</p>
+        <p className="text-xs font-medium tracking-widest uppercase text-white/85 mb-3">Alinhamento global</p>
         <h2 className="font-serif text-3xl md:text-4xl text-white mb-4">
-          Objetivos de <em className="text-white/50">Desenvolvimento Sustentável</em>
+          Objetivos de <em className="text-white/85">Desenvolvimento Sustentável</em>
         </h2>
-        <p className="text-white/60 font-light text-sm leading-relaxed max-w-2xl mb-10">
+        <p className="text-white/85 font-light text-sm leading-relaxed max-w-2xl mb-10">
           A atuação da Saboaria Ecológica está diretamente alinhada à Agenda 2030 da ONU. Os resultados gerados contribuem de forma mensurável e verificável para três dos Objetivos de Desenvolvimento Sustentável, reforçando a credibilidade institucional do projeto junto a parceiros, investidores e editais públicos e privados.
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
@@ -346,7 +347,7 @@ const Sobre = async () => {
             <div key={item.numero} className="bg-white/10 border border-white/15 rounded-2xl p-6 flex-1">
               <span className="font-serif text-3xl font-bold text-white block mb-2">ODS {item.numero}</span>
               <p className="text-white/85 text-sm font-medium mb-1">{item.titulo}</p>
-              <p className="text-white/55 text-xs font-light leading-relaxed">{item.descricao}</p>
+              <p className="text-white/85 text-xs font-light leading-relaxed">{item.descricao}</p>
             </div>
           ))}
         </div>
@@ -390,7 +391,7 @@ const Sobre = async () => {
                   key={parceiro.id}
                   className="inline-flex items-center gap-2 text-xs font-medium bg-creme border border-verde-principal/15 text-verde-escuro px-4 py-2 rounded-xl"
                 >
-                  {parceiro.logoUrl && <img src={parceiro.logoUrl} alt="" className="h-10 w-16 object-contain" />}
+                  {parceiro.logoUrl && <PublicImage maxWidth={160} width={64} height={40} src={parceiro.logoUrl} alt="" className="h-10 w-16 object-contain" />}
                   {parceiro.name}
                 </span>
               ))}
@@ -402,9 +403,9 @@ const Sobre = async () => {
       {/* CTA */}
       <section className="px-6 md:px-20 py-16 md:py-20 bg-verde-principal flex flex-col items-center text-center">
         <h2 className="font-serif text-3xl md:text-4xl text-white mb-3">
-          Conheça nossos <em className="text-white/50">produtos</em>
+          Conheça nossos <em className="text-white/85">produtos</em>
         </h2>
-        <p className="text-white/60 font-light mb-8 max-w-md leading-relaxed text-sm">
+        <p className="text-white/85 font-light mb-8 max-w-md leading-relaxed text-sm">
           Cada compra é um ato de consciência. Veja o que produzimos com responsabilidade e cuidado.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">

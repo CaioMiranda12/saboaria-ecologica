@@ -1,6 +1,7 @@
 "use client";
 
 import { Controller, useForm } from "react-hook-form";
+import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   productFormSchema,
@@ -31,7 +32,7 @@ export function ProductForm({ defaultValues, onSubmit, isSubmitting, submitLabel
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<ProductFormInput>({
+  } = useForm<z.input<typeof productFormInputSchema>, unknown, ProductFormInput>({
     resolver: zodResolver(productFormInputSchema),
     defaultValues: {
       mainName: defaultValues?.mainName ?? "",

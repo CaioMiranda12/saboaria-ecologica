@@ -9,7 +9,7 @@ export type SectionSnapshot = z.infer<typeof cmsPageUpdateSchema>['sections'];
 const paths: Record<CmsPageSlug, string> = { inicio: '/', sobre: '/sobre', processo: '/processo', equipe: '/equipe', contato: '/contato' };
 
 export async function getPublishedSections(slug: CmsPageSlug) {
-  const page = await prisma.cmsPage.findUnique({ where: { slug }, include: { publication: true } });
+  const page = await prisma.cmsPage.findUnique({ where: { slug }, select: { publication: { select: { sections: true } } } });
   if (!page?.publication) return [];
   const parsed = cmsPageUpdateSchema.safeParse({ sections: page.publication.sections });
   return parsed.success ? parsed.data.sections.filter(s => s.enabled) : [];

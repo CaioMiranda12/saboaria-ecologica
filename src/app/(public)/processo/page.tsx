@@ -1,3 +1,4 @@
+import PublicImage from "@/components/PublicImage";
 import { pageMetadata } from "@/lib/seo";
 import { publicSection, cmsText } from "@/lib/cms-public";
 import Link from 'next/link'
@@ -36,7 +37,7 @@ const Processo = async () => {
               {cmsText(content.description, "Cada produto nasce de um processo artesanal responsável, que transforma óleo saturado de fritura em limpeza eficaz e biodegradável, sem agredir o meio ambiente.")}
             </p>
           </div>
-          <img
+          <PublicImage priority maxWidth={800}
             src="/logo.png"
             alt="Saboaria Ecológica"
             className="max-w-100 w-1/2 h-full object-contain"
@@ -149,9 +150,9 @@ const Processo = async () => {
       {/* CTA */}
       <section className="px-5 md:px-20 py-16 md:py-20 bg-verde-principal flex flex-col items-center text-center">
         <h2 className="font-serif text-3xl md:text-4xl text-white mb-3">
-          Conheça os <em className="text-white/45">produtos</em>
+          Conheça os <em className="text-white/85">produtos</em>
         </h2>
-        <p className="text-white/60 font-light text-sm leading-relaxed mb-8 max-w-md">
+        <p className="text-white/85 font-light text-sm leading-relaxed mb-8 max-w-md">
           Cada item é resultado desse processo cuidadoso. Veja o que produzimos para a sua casa e o planeta.
         </p>
         <div className="flex flex-col sm:flex-row gap-3">

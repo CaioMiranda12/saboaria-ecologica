@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { verifyAdminToken } from "@/lib/jwt";
 import { AUTH_COOKIE_NAME } from "@/constants/auth";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
   const isApiRequest = request.nextUrl.pathname.startsWith("/api/");
 

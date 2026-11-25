@@ -1,3 +1,4 @@
+import PublicImage from "@/components/PublicImage";
 import { pageMetadata } from "@/lib/seo";
 import { publicSection, cmsText } from "@/lib/cms-public";
 import { listTeamMembers } from "@/services/team-member.service";
@@ -9,7 +10,7 @@ export default async function Equipe() {
   const content = section?.content ?? {};
   return (
     <section className="px-5 md:px-20 py-14 md:py-20 bg-creme relative">
-      <img
+      <PublicImage
         src='/logo-2.png'
         alt="Saboaria Ecológica"
         className="absolute top-16 right-6 w-24 md:w-32 object-contain z-40"
@@ -30,7 +31,7 @@ export default async function Equipe() {
               key={membro.id}
               className="bg-white border border-verde-medio/10 rounded-2xl p-6 flex gap-4 items-start"
             >
-              {membro.imageUrl ? <img src={membro.imageUrl} alt={membro.name} className="w-12 h-12 rounded-full object-cover shrink-0" /> : <div className="w-12 h-12 rounded-full bg-verde-principal flex items-center justify-center font-serif font-bold text-white text-sm shrink-0">
+              {membro.imageUrl ? <PublicImage maxWidth={96} width={48} height={48} src={membro.imageUrl} alt={membro.name} className="w-12 h-12 rounded-full object-cover shrink-0" /> : <div className="w-12 h-12 rounded-full bg-verde-principal flex items-center justify-center font-serif font-bold text-white text-sm shrink-0">
                 {membro.initials}
               </div>}
               <div>

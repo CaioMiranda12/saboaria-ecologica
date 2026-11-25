@@ -6,6 +6,7 @@ import { useRef, useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { MediaPicker } from "@/components/admin/MediaPicker";
 import { useForm } from "react-hook-form";
+import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2, Pencil, Check, X, Handshake, Search, Image as ImageIcon, ArrowUpDown, UploadCloud, Images, Loader2, GripVertical, ArrowUp, ArrowDown } from "lucide-react";
 import { toast } from "react-toastify";
@@ -98,7 +99,7 @@ export default function AdminPartnershipsPage() {
     watch,
     setValue,
     formState: { errors },
-  } = useForm<PartnershipFormValues>({
+  } = useForm<z.input<typeof partnershipFormSchema>, unknown, PartnershipFormValues>({
     resolver: zodResolver(partnershipFormSchema),
     defaultValues: { name: "", order: 0, logoUrl: "" },
   });
