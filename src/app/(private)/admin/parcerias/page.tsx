@@ -1,5 +1,7 @@
 "use client";
 
+import { useCanDeleteRecords } from "@/components/admin/AdminPermissions";
+
 import { useRef, useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { MediaPicker } from "@/components/admin/MediaPicker";
@@ -149,6 +151,7 @@ type PartnershipTagProps = {
 };
 
 function PartnershipTag({ id, name, order, logoUrl }: PartnershipTagProps) {
+  const canDelete = useCanDeleteRecords();
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(name);
   const [editedLogo, setEditedLogo] = useState(logoUrl ?? "");
@@ -176,6 +179,7 @@ function PartnershipTag({ id, name, order, logoUrl }: PartnershipTagProps) {
   };
 
   const handleConfirmDelete = () => {
+    if (!canDelete) return;
     deletePartnership.mutate(id, {
       onSuccess: () => {
         toast.success("Parceria removida");
@@ -187,7 +191,7 @@ function PartnershipTag({ id, name, order, logoUrl }: PartnershipTagProps) {
 
   return <article className="admin-record-card flex flex-col gap-3 p-4 sm:p-5">
     <div className="flex items-start gap-3"><div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-emerald-100 bg-white">{logoUrl?<img src={logoUrl} alt={`Logotipo de ${name}`} className="h-full w-full object-contain p-2"/>:<ImageIcon size={24} className="text-emerald-300"/>}</div><div className="min-w-0 flex-1"><h3 className="break-words font-semibold text-emerald-950">{name}</h3><p className="mt-1 text-xs text-emerald-700">Use as setas ou arraste para alterar a posição</p><p className="mt-1 text-xs text-emerald-700">{logoUrl?"Logotipo cadastrado":"Sem logotipo"}</p></div></div>
-    {isEditing?<div className="space-y-3 border-t border-emerald-100 pt-3"><label className="block text-xs font-semibold text-emerald-900">Nome<input value={editedName} onChange={e=>setEditedName(e.target.value)} className="admin-control mt-1 w-full p-2.5 text-sm" autoFocus/></label><PartnershipLogoInput value={editedLogo} onChange={setEditedLogo} /><div className="flex gap-2"><button type="button" onClick={handleSave} disabled={updatePartnership.isPending||!editedName.trim()} className="flex items-center gap-1 rounded-xl bg-emerald-800 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50"><Check size={15}/> Salvar</button><button type="button" onClick={()=>{setEditedName(name);setEditedLogo(logoUrl??"");setIsEditing(false)}} className="flex items-center gap-1 rounded-xl border border-emerald-200 px-3 py-2 text-xs text-emerald-900"><X size={15}/> Cancelar</button></div></div>:<div className="mt-auto flex gap-2 border-t border-emerald-100 pt-3"><button type="button" onClick={()=>setIsEditing(true)} className="flex flex-1 items-center justify-center gap-1 rounded-xl border border-emerald-200 bg-white px-3 py-2 text-xs font-semibold text-emerald-900 hover:bg-emerald-50"><Pencil size={14}/> Editar</button><button type="button" onClick={()=>setIsConfirmOpen(true)} className="flex items-center gap-1 rounded-xl border border-rose-200 px-3 py-2 text-xs text-rose-800 hover:bg-rose-50"><Trash2 size={14}/> Excluir</button></div>}
-    <ConfirmDialog isOpen={isConfirmOpen} title="Remover parceria" description={`Tem certeza que deseja remover "${name}"?`} isConfirming={deletePartnership.isPending} onConfirm={handleConfirmDelete} onCancel={()=>setIsConfirmOpen(false)}/>
+    {isEditing?<div className="space-y-3 border-t border-emerald-100 pt-3"><label className="block text-xs font-semibold text-emerald-900">Nome<input value={editedName} onChange={e=>setEditedName(e.target.value)} className="admin-control mt-1 w-full p-2.5 text-sm" autoFocus/></label><PartnershipLogoInput value={editedLogo} onChange={setEditedLogo} /><div className="flex gap-2"><button type="button" onClick={handleSave} disabled={updatePartnership.isPending||!editedName.trim()} className="flex items-center gap-1 rounded-xl bg-emerald-800 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50"><Check size={15}/> Salvar</button><button type="button" onClick={()=>{setEditedName(name);setEditedLogo(logoUrl??"");setIsEditing(false)}} className="flex items-center gap-1 rounded-xl border border-emerald-200 px-3 py-2 text-xs text-emerald-900"><X size={15}/> Cancelar</button></div></div>:<div className="mt-auto flex gap-2 border-t border-emerald-100 pt-3"><button type="button" onClick={()=>setIsEditing(true)} className="flex flex-1 items-center justify-center gap-1 rounded-xl border border-emerald-200 bg-white px-3 py-2 text-xs font-semibold text-emerald-900 hover:bg-emerald-50"><Pencil size={14}/> Editar</button>{canDelete && <button type="button" onClick={()=>setIsConfirmOpen(true)} className="flex items-center gap-1 rounded-xl border border-rose-200 px-3 py-2 text-xs text-rose-800 hover:bg-rose-50"><Trash2 size={14}/> Excluir</button>}</div>}
+    <ConfirmDialog isOpen={canDelete && isConfirmOpen} title="Remover parceria" description={`Tem certeza que deseja remover "${name}"?`} isConfirming={deletePartnership.isPending} onConfirm={handleConfirmDelete} onCancel={()=>setIsConfirmOpen(false)}/>
   </article>;
 }

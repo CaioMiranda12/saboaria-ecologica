@@ -1,8 +1,10 @@
 import { publicSection, cmsText } from "@/lib/cms-public";
-import { equipe } from "@/data/marca";
+import { listTeamMembers } from "@/services/team-member.service";
+
+export const dynamic = "force-dynamic";
 
 export default async function Equipe() {
-  const section = await publicSection("equipe", "introducao");
+  const [section, equipe] = await Promise.all([publicSection("equipe", "introducao"), listTeamMembers()]);
   const content = section?.content ?? {};
   return (
     <section className="px-5 md:px-20 py-14 md:py-20 bg-creme relative">
@@ -21,17 +23,18 @@ export default async function Equipe() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {equipe.length === 0 && <p className="text-verde-muted">Nenhum integrante cadastrado no momento.</p>}
           {equipe.map((membro) => (
             <div
-              key={membro.nome}
+              key={membro.id}
               className="bg-white border border-verde-medio/10 rounded-2xl p-6 flex gap-4 items-start"
             >
-              <div className="w-12 h-12 rounded-full bg-verde-principal flex items-center justify-center font-serif font-bold text-white text-sm shrink-0">
-                {membro.iniciais}
-              </div>
+              {membro.imageUrl ? <img src={membro.imageUrl} alt={membro.name} className="w-12 h-12 rounded-full object-cover shrink-0" /> : <div className="w-12 h-12 rounded-full bg-verde-principal flex items-center justify-center font-serif font-bold text-white text-sm shrink-0">
+                {membro.initials}
+              </div>}
               <div>
-                <p className="text-sm font-semibold text-verde-escuro">{membro.nome}</p>
-                <p className="text-xs text-verde-principal font-medium mb-2">{membro.cargo}</p>
+                <p className="text-sm font-semibold text-verde-escuro">{membro.name}</p>
+                <p className="text-xs text-verde-principal font-medium mb-2">{membro.role}</p>
                 <p className="text-xs text-verde-muted font-light leading-relaxed">{membro.bio}</p>
               </div>
             </div>

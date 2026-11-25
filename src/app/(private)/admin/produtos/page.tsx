@@ -1,5 +1,7 @@
 "use client";
 
+import { useCanDeleteRecords } from "@/components/admin/AdminPermissions";
+
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Plus, Pencil, Trash2, Search, Filter, ImageIcon } from "lucide-react";
@@ -25,6 +27,7 @@ function isFiltersActive(filters: ProductFilters) {
 }
 
 export default function AdminProductsPage() {
+  const canDelete = useCanDeleteRecords();
   const { data: products, isLoading } = useProducts();
   const deleteProduct = useDeleteProduct();
   const confirmDialog = useConfirmDialog<{ id: string; name: string }>();
@@ -59,6 +62,7 @@ export default function AdminProductsPage() {
   }, [products, search, filters, visibility, sort]);
 
   const handleConfirmDelete = () => {
+    if (!canDelete) return;
     if (!confirmDialog.target) return;
 
     deleteProduct.mutate(confirmDialog.target.id, {
@@ -170,13 +174,13 @@ export default function AdminProductsPage() {
                       >
                         <Pencil size={16} />
                       </Link>
-                      <button
+                      {canDelete && <button
                         onClick={() => confirmDialog.open({ id: product.id, name: product.mainName })}
                         className="p-2 rounded-lg text-verde-muted hover:text-red-600 hover:bg-red-50 transition-colors"
                         aria-label="Remover"
                       >
                         <Trash2 size={16} />
-                      </button>
+                      </button>}
                     </div>
                   </td>
                 </tr>
@@ -195,7 +199,7 @@ export default function AdminProductsPage() {
       />
 
       <ConfirmDialog
-        isOpen={confirmDialog.isOpen}
+        isOpen={canDelete && confirmDialog.isOpen}
         title="Remover produto"
         description={`Tem certeza que deseja remover "${confirmDialog.target?.name}"? Essa ação não pode ser desfeita.`}
         isConfirming={deleteProduct.isPending}

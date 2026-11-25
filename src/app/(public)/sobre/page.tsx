@@ -1,3 +1,5 @@
+import { listPartnerships } from "@/services/partnership.service";
+export const dynamic = "force-dynamic";
 import { publicSection, cmsText } from "@/lib/cms-public";
 import Link from 'next/link'
 import { historiaDaMarca, contatosDaMarca } from '@/data/marca'
@@ -133,17 +135,6 @@ const reconhecimentos = [
   },
 ]
 
-const parcerias = [
-  'Instituto Aço Cearense',
-  'Grupo Mulheres do Brasil',
-  'Universidade de Fortaleza (UNIFOR)',
-  'FBuni',
-  'Coalizão pelo Impacto',
-  'SENAI',
-  'ALECE',
-  'Ninna Hub',
-  'Feira do Porto do Pecém',
-]
 
 const ods = [
   { numero: '6', titulo: 'Água Potável e Saneamento', descricao: 'Prevenção da contaminação hídrica pelo reaproveitamento do óleo de cozinha usado.' },
@@ -152,7 +143,7 @@ const ods = [
 ]
 
 const Sobre = async () => {
-  const section = await publicSection("sobre", "institucional");
+  const [section, parcerias] = await Promise.all([publicSection("sobre", "institucional"), listPartnerships()]);
   const content = section?.content ?? {};
   const ano = cmsText(content.foundedYear, historiaDaMarca.fundacao);
   const pilares = pilaresInstitucionais.map((pilar, i) => ({...pilar, texto: cmsText(content[["mission","vision","values"][i]], pilar.texto)}));
@@ -392,12 +383,14 @@ const Sobre = async () => {
               A força do projeto está também em sua rede. A Saboaria Ecológica atua em articulação com instituições de ensino, organizações do terceiro setor, iniciativa privada e poder público, construindo pontes entre diferentes setores em prol de um objetivo comum: o desenvolvimento sustentável com equidade social.
             </p>
             <div className="flex flex-wrap gap-2">
+              {parcerias.length === 0 && <p className="text-sm text-verde-muted">Nenhuma parceria cadastrada no momento.</p>}
               {parcerias.map((parceiro) => (
                 <span
-                  key={parceiro}
-                  className="text-xs font-medium bg-creme border border-verde-principal/15 text-verde-escuro px-4 py-2 rounded-full"
+                  key={parceiro.id}
+                  className="inline-flex items-center gap-2 text-xs font-medium bg-creme border border-verde-principal/15 text-verde-escuro px-4 py-2 rounded-xl"
                 >
-                  {parceiro}
+                  {parceiro.logoUrl && <img src={parceiro.logoUrl} alt="" className="h-10 w-16 object-contain" />}
+                  {parceiro.name}
                 </span>
               ))}
             </div>

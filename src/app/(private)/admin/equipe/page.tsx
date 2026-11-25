@@ -1,5 +1,7 @@
 "use client";
 
+import { useCanDeleteRecords } from "@/components/admin/AdminPermissions";
+
 import Link from "next/link";
 import { useState } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
@@ -10,6 +12,7 @@ import { useConfirmDialog } from "@/hooks/useConfirmDialog";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 
 export default function AdminTeamPage() {
+  const canDelete = useCanDeleteRecords();
   const { data: teamMembers, isLoading } = useTeamMembers();
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("order");
@@ -18,6 +21,7 @@ export default function AdminTeamPage() {
   const confirmDialog = useConfirmDialog<{ id: string; name: string }>();
 
   const handleConfirmDelete = () => {
+    if (!canDelete) return;
     if (!confirmDialog.target) return;
 
     deleteTeamMember.mutate(confirmDialog.target.id, {
@@ -71,13 +75,13 @@ export default function AdminTeamPage() {
                 >
                   <Pencil size={16} />
                 </Link>
-                <button
+                {canDelete && <button
                   onClick={() => confirmDialog.open({ id: member.id, name: member.name })}
                   className="p-2 rounded-lg text-verde-muted hover:text-red-600 hover:bg-red-50 transition-colors"
                   aria-label="Remover"
                 >
                   <Trash2 size={16} />
-                </button>
+                </button>}
               </div>
             </div>
           ))}
@@ -85,7 +89,7 @@ export default function AdminTeamPage() {
       )}
 
       <ConfirmDialog
-        isOpen={confirmDialog.isOpen}
+        isOpen={canDelete && confirmDialog.isOpen}
         title="Remover membro da equipe"
         description={`Tem certeza que deseja remover "${confirmDialog.target?.name}"? Essa ação não pode ser desfeita.`}
         isConfirming={deleteTeamMember.isPending}

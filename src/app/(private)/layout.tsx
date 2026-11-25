@@ -1,3 +1,4 @@
+import { AdminPermissions } from "@/components/admin/AdminPermissions";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { getAdminSession } from "@/lib/session";
@@ -23,7 +24,7 @@ export default async function PrivateLayout({
       <AdminSidebar role={admin.role} />
       <div className="flex-1 flex flex-col min-w-0">
         <AdminTopbar adminEmail={session.email} role={admin.role} />
-        <main className="flex-1 p-5 sm:p-6 md:p-8">{children}</main>
+        <main className="flex-1 p-5 sm:p-6 md:p-8"><AdminPermissions role={admin.role}>{children}</AdminPermissions></main>
       </div>
     </div>
   );
