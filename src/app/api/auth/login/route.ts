@@ -10,7 +10,7 @@ import {
 import { AUTH_COOKIE_NAME, AUTH_COOKIE_MAX_AGE_SECONDS } from "@/constants/auth";
 
 export async function POST(request: Request) {
-  const body = await request.json();
+  const body = await request.json().catch(() => null);
   const parseResult = loginSchema.safeParse(body);
 
   if (!parseResult.success) {

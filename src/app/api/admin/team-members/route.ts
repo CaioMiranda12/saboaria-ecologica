@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Não autorizado" }, { status: 401 });
   }
 
-  const body = await request.json();
+  const body = await request.json().catch(() => null);
   const parseResult = teamMemberFormSchema.safeParse(body);
 
   if (!parseResult.success) {

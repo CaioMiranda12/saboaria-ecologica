@@ -20,6 +20,19 @@ export function signAdminToken(payload: AdminTokenPayload) {
 }
 
 export async function verifyAdminToken(token: string) {
-  const { payload } = await jwtVerify<AdminTokenPayload>(token, secretKey);
+  const { payload } = await jwtVerify<AdminTokenPayload>(token, secretKey, {
+    algorithms: [JWT_ALGORITHM],
+    requiredClaims: ["exp", "iat", "adminId", "email", "sessionVersion"],
+  });
+  if (
+    typeof payload.adminId !== "string" ||
+    !payload.adminId ||
+    typeof payload.email !== "string" ||
+    !payload.email ||
+    !Number.isInteger(payload.sessionVersion) ||
+    payload.sessionVersion < 0
+  ) {
+    throw new Error("Invalid admin token payload");
+  }
   return payload;
 }

@@ -18,7 +18,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
   }
 
   const { id } = await params;
-  const body = await request.json();
+  const body = await request.json().catch(() => null);
   const parseResult = partnershipFormSchema.safeParse(body);
 
   if (!parseResult.success) {
