@@ -5,9 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ExternalLink, Menu, X, ChevronRight, LogOut } from "lucide-react";
 import { SignOutButton } from "@/components/SignOutButton";
-import { adminNavigation } from "./admin-navigation";
+import { navigationFor } from "./admin-navigation";
 
-export function AdminTopbar({ adminEmail }: { adminEmail: string }) {
+export function AdminTopbar({ adminEmail, role }: { adminEmail: string; role: "ADMIN" | "EDITOR" }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean).slice(1);
@@ -21,7 +21,7 @@ export function AdminTopbar({ adminEmail }: { adminEmail: string }) {
       </div>
     </div>
     {open && <nav id="admin-mobile-menu" aria-label="Menu administrativo móvel" className="md:hidden border-t border-verde-medio/15 p-3 bg-white shadow-lg space-y-1">
-      {adminNavigation.map(({href,label,icon:Icon}) => <Link key={href} href={href} onClick={() => setOpen(false)} aria-current={(href === "/admin" ? pathname === href : pathname.startsWith(href)) ? "page" : undefined} className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium ${pathname === href ? "bg-verde-claro text-verde-escuro" : "text-verde-muted hover:bg-verde-claro"}`}><Icon size={18}/>{label}</Link>)}
+      {navigationFor(role).map(({href,label,icon:Icon}) => <Link key={href} href={href} onClick={() => setOpen(false)} aria-current={(href === "/admin" ? pathname === href : pathname.startsWith(href)) ? "page" : undefined} className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium ${pathname === href ? "bg-verde-claro text-verde-escuro" : "text-verde-muted hover:bg-verde-claro"}`}><Icon size={18}/>{label}</Link>)}
       <Link href="/" target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className="sm:hidden flex items-center gap-3 px-3 py-3 text-sm text-verde-escuro"><ExternalLink size={18}/>Visualizar site</Link>
       <div className="border-t border-verde-medio/15 pt-2 px-3"><SignOutButton icon={<LogOut size={18}/>} className="flex w-full items-center gap-3 rounded-xl bg-emerald-50 px-3 py-3 text-sm font-semibold text-emerald-900 hover:bg-emerald-100"/></div>
     </nav>}

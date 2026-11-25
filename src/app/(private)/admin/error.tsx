@@ -1,0 +1,2 @@
+"use client";
+export default function ErrorPage({reset}:{error:Error;reset:()=>void}){return <section role="alert" className="rounded-2xl border border-emerald-200 bg-white p-6"><h2 className="font-semibold text-verde-escuro">Não foi possível carregar esta área.</h2><p className="mt-2 text-sm">Tente novamente em instantes.</p><button onClick={reset} className="mt-4 rounded-lg bg-emerald-800 px-4 py-2 text-white">Tentar novamente</button></section>}
