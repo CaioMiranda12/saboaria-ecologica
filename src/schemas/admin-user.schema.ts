@@ -4,8 +4,8 @@ export const userCreateSchema = z.object({
   email: z
     .string()
     .trim()
-    .email()
     .max(254)
+    .pipe(z.email())
     .transform((v) => v.toLowerCase()),
   password: z.string().min(12).max(128),
   role: z.enum(["ADMIN", "EDITOR"]),

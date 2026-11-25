@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { getAdminSession } from "@/lib/session";
 import { CMS_EDITOR_FIELDS } from "@/constants/cms-editor-fields";
 import { isCmsPageSlug } from "@/constants/cms-pages";
@@ -36,7 +37,7 @@ export async function PUT(request: Request, context: Context) {
   const parsed = cmsPageUpdateSchema.safeParse(body);
   if (!parsed.success)
     return NextResponse.json(
-      { message: "Dados inválidos", errors: parsed.error.flatten() },
+      { message: "Dados inválidos", errors: z.flattenError(parsed.error) },
       { status: 400 },
     );
   if (slug === "inicio") {

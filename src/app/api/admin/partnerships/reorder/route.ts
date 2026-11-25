@@ -6,7 +6,7 @@ import { recordAudit } from "@/lib/audit";
 
 const schema = z.object({
   ids: z
-    .array(z.string().cuid())
+    .array(z.cuid())
     .min(1)
     .max(500)
     .refine((ids) => new Set(ids).size === ids.length, "IDs repetidos"),

@@ -8,7 +8,7 @@ export const siteContentFormSchema = z.object({
   foundedYear: z.string().min(4, "Informe o ano de fundação"),
   whatsapp: z.string().min(8, "Informe um número válido"),
   instagram: z.string().min(1, "Informe o usuário do Instagram"),
-  email: z.string().email("Informe um e-mail válido"),
+  email: z.email("Informe um e-mail válido"),
   linkedin: z.string().min(1, "Informe o identificador do LinkedIn"),
   address: z.string().min(5, "Informe o endereço"),
 });

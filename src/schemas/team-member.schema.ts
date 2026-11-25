@@ -10,7 +10,7 @@ export const teamMemberFormSchema = z.object({
     .max(3, "Máximo 3 caracteres")
     .transform((value) => value.toUpperCase()),
   order: z.coerce.number().int().default(0),
-  imageUrl: z.string().url("Informe uma URL válida").or(z.literal("")).optional(),
+  imageUrl: z.url("Informe uma URL válida").or(z.literal("")).optional(),
 });
 
 export type TeamMemberFormValues = z.infer<typeof teamMemberFormSchema>;

@@ -40,8 +40,8 @@ export type ProductFormValues = z.infer<typeof productFormSchema>;
 export const productFormInputSchema = productFormSchema
   .omit({ ingredients: true, variants: true })
   .extend({
-    ingredientsText: z.string().optional().default(""),
-    variantsText: z.string().optional().default(""),
+    ingredientsText: z.string().default(""),
+    variantsText: z.string().default(""),
   });
 
 export type ProductFormInput = z.infer<typeof productFormInputSchema>;

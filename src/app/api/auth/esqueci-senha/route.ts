@@ -4,7 +4,7 @@ import { GENERIC_MESSAGE, requestPasswordReset } from "@/lib/password-reset";
 import { prisma } from "@/lib/prisma";
 import { createHash } from "node:crypto";
 
-const schema = z.object({ email: z.string().trim().toLowerCase().email().max(254) });
+const schema = z.object({ email: z.string().trim().toLowerCase().max(254).pipe(z.email()) });
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   const parsed = schema.safeParse(body);
