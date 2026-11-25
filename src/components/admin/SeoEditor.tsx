@@ -1,4 +1,5 @@
 "use client";
+import { isAllowedMediaFile } from "@/constants/media";
 import PublicImage from "@/components/PublicImage";
 import { useRef, useState } from "react";
 import { MediaPicker } from "@/components/admin/MediaPicker";
@@ -16,12 +17,8 @@ export function SeoEditor({ pages }: { pages: Page[] }) {
   const fileRef = useRef<HTMLInputElement>(null);
   async function upload(file?: File) {
     if (!file) return;
-    if (
-      !["image/png", "image/jpeg", "image/webp"].includes(file.type) ||
-      !file.size ||
-      file.size > 8 * 1024 * 1024
-    ) {
-      toast.error("Selecione PNG, JPEG ou WebP de até 8 MB.");
+    if (!isAllowedMediaFile(file)) {
+      toast.error("Selecione PNG, JPEG ou WebP de até 4 MB.");
       if (fileRef.current) fileRef.current.value = "";
       return;
     }
@@ -30,6 +27,8 @@ export function SeoEditor({ pages }: { pages: Page[] }) {
       const body = new FormData();
       body.append("file", file);
       const response = await fetch("/api/admin/upload", { method: "POST", body });
+      if (response.status === 413)
+        throw new Error("A imagem excede o limite de envio. Reduza para até 4 MB.");
       const data = await response.json();
       if (!response.ok || !data.asset?.url) throw new Error(data.message || "Falha no envio.");
       change("imageUrl", data.asset.url);
@@ -186,7 +185,7 @@ export function SeoEditor({ pages }: { pages: Page[] }) {
               </div>
             </div>
             <p className="text-xs text-gray-600">
-              PNG, JPEG ou WebP até 8 MB. Recomendado: 1200 × 630 px. Remover a associação não
+              PNG, JPEG ou WebP até 4 MB. Recomendado: 1200 × 630 px. Remover a associação não
               exclui o arquivo da biblioteca.
             </p>
           </section>

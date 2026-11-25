@@ -1,4 +1,5 @@
 "use client";
+import { isAllowedMediaFile } from "@/constants/media";
 import PublicImage from "@/components/PublicImage";
 import { useEffect, useRef, useState, type DragEvent } from "react";
 import { Images, UploadCloud, Loader2, Check, Copy, ExternalLink } from "lucide-react";
@@ -34,12 +35,8 @@ export default function MediaPage() {
   }, []);
   async function upload(file?: File) {
     if (!file) return;
-    if (
-      !["image/png", "image/jpeg", "image/webp"].includes(file.type) ||
-      file.size > 8 * 1024 * 1024 ||
-      file.size === 0
-    ) {
-      setError("Escolha uma imagem PNG, JPEG ou WebP de até 8 MB.");
+    if (!isAllowedMediaFile(file)) {
+      setError("Escolha uma imagem PNG, JPEG ou WebP de até 4 MB.");
       return;
     }
     setBusy(true);
@@ -49,6 +46,8 @@ export default function MediaPage() {
       const form = new FormData();
       form.append("file", file);
       const response = await fetch("/api/admin/upload", { method: "POST", body: form });
+      if (response.status === 413)
+        throw new Error("A imagem excede o limite de envio. Reduza para até 4 MB.");
       const data = await response.json();
       if (!response.ok) throw Error(data.message || "Erro ao enviar imagem");
       setAssets((prev) => [data.asset, ...prev]);
@@ -104,7 +103,7 @@ export default function MediaPage() {
           Arraste uma imagem até aqui ou selecione um arquivo
         </p>
         <p className="mt-1 text-xs text-verde-muted">
-          PNG, JPEG ou WebP, até 8 MB. Otimização automática pelo Cloudinary.
+          PNG, JPEG ou WebP, até 4 MB. Otimização automática pelo Cloudinary.
         </p>
         <input
           ref={fileInput}

@@ -1,5 +1,3 @@
-export const MAX_MEDIA_BYTES = 8 * 1024 * 1024;
-export const MEDIA_TYPES = ["image/png", "image/jpeg", "image/webp"];
 export function validMediaSignature(buffer: Buffer, mime: string) {
   if (mime === "image/png")
     return (

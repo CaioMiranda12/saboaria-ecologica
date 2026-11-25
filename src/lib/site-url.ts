@@ -11,8 +11,12 @@ export function siteOrigin(): string | null {
   return null;
 }
 export function publicIndexOrigin(): string | null {
+  if (process.env.ALLOW_INDEXING !== "true") return null;
+  if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== "production") return null;
   const origin = siteOrigin();
   if (!origin || !origin.startsWith("https:") || new URL(origin).hostname === "localhost")
     return null;
+  const hostname = new URL(origin).hostname;
+  if (hostname === "vercel.app" || hostname.endsWith(".vercel.app")) return null;
   return origin;
 }

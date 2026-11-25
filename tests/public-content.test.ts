@@ -12,11 +12,14 @@ it("otimiza Cloudinary versionado", () =>
 it("preserva URLs externas", () =>
   expect(publicImageUrl("https://example.com/a.jpg", 800)).toBe("https://example.com/a.jpg"));
 it("não indexa localhost", () => {
+  vi.stubEnv("ALLOW_INDEXING", "true");
   vi.stubEnv("APP_URL", "http://localhost:3000");
   expect(siteOrigin()).toBe("http://localhost:3000");
   expect(publicIndexOrigin()).toBeNull();
 });
 it("aceita origem HTTPS e rejeita caminhos", () => {
+  vi.stubEnv("ALLOW_INDEXING", "true");
+  vi.stubEnv("VERCEL_ENV", "production");
   vi.stubEnv("APP_URL", "https://example.com");
   expect(publicIndexOrigin()).toBe("https://example.com");
   vi.stubEnv("APP_URL", "https://example.com/admin");

@@ -1,4 +1,5 @@
 "use client";
+import { isAllowedMediaFile } from "@/constants/media";
 import PublicImage from "@/components/PublicImage";
 
 import { useCanDeleteRecords } from "@/components/admin/AdminPermissions";
@@ -50,12 +51,8 @@ function PartnershipLogoInput({
   const fileRef = useRef<HTMLInputElement>(null);
   async function upload(file?: File) {
     if (!file) return;
-    if (
-      !["image/png", "image/jpeg", "image/webp"].includes(file.type) ||
-      file.size === 0 ||
-      file.size > 8 * 1024 * 1024
-    ) {
-      setError("Selecione PNG, JPEG ou WebP com até 8 MB.");
+    if (!isAllowedMediaFile(file)) {
+      setError("Selecione PNG, JPEG ou WebP com até 4 MB.");
       return;
     }
     setUploading(true);
@@ -64,6 +61,8 @@ function PartnershipLogoInput({
       const data = new FormData();
       data.append("file", file);
       const response = await fetch("/api/admin/upload", { method: "POST", body: data });
+      if (response.status === 413)
+        throw new Error("A imagem excede o limite de envio. Reduza para até 4 MB.");
       const result = await response.json();
       if (!response.ok || !result.asset?.url)
         throw new Error(result.message || "Não foi possível enviar a imagem.");

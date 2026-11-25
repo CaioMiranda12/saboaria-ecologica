@@ -7,8 +7,7 @@ import { Loader2, UploadCloud, X, Images } from "lucide-react";
 import { httpClient } from "@/lib/http";
 import { MediaPicker } from "@/components/admin/MediaPicker";
 
-const ACCEPTED_TYPES = ["image/png", "image/jpeg", "image/webp"];
-const MAX_SIZE_BYTES = 8 * 1024 * 1024;
+import { MEDIA_TYPES, MAX_MEDIA_BYTES } from "@/constants/media";
 
 type FileMeta = { name: string; size: number | null };
 
@@ -53,12 +52,16 @@ export function ImageUpload({ value, onChange, error, disabled }: ImageUploadPro
   async function handleFile(file?: File) {
     if (!file) return;
 
-    if (!ACCEPTED_TYPES.includes(file.type)) {
+    if (!MEDIA_TYPES.includes(file.type)) {
       setLocalError("Formato inválido. Envie PNG, JPEG ou WebP.");
       return;
     }
-    if (file.size > MAX_SIZE_BYTES) {
-      setLocalError(`A imagem tem ${formatSize(file.size)}. O limite é 8 MB.`);
+    if (file.size === 0) {
+      setLocalError("A imagem está vazia.");
+      return;
+    }
+    if (file.size > MAX_MEDIA_BYTES) {
+      setLocalError(`A imagem tem ${formatSize(file.size)}. O limite é 4 MB.`);
       return;
     }
 
@@ -74,6 +77,10 @@ export function ImageUpload({ value, onChange, error, disabled }: ImageUploadPro
       setMeta({ name: file.name, size: file.size });
       onChange(data.url);
     } catch (err) {
+      if (isAxiosError(err) && err.response?.status === 413) {
+        setLocalError("A imagem excede o limite de envio. Reduza para até 4 MB.");
+        return;
+      }
       const apiMessage = isAxiosError(err) ? err.response?.data?.message : undefined;
       setLocalError(apiMessage ?? "Não foi possível enviar a imagem. Tente novamente.");
     } finally {
@@ -101,7 +108,7 @@ export function ImageUpload({ value, onChange, error, disabled }: ImageUploadPro
       <input
         ref={inputRef}
         type="file"
-        accept={ACCEPTED_TYPES.join(",")}
+        accept={MEDIA_TYPES.join(",")}
         className="hidden"
         disabled={isBlocked}
         onClick={(event) => event.stopPropagation()}
@@ -168,7 +175,7 @@ export function ImageUpload({ value, onChange, error, disabled }: ImageUploadPro
             <>
               <UploadCloud size={28} className="text-verde-principal" />
               <span className="text-sm font-medium text-verde-escuro">Clique para enviar</span>
-              <span className="text-xs text-verde-escuro/60">PNG, JPEG ou WebP até 8 MB</span>
+              <span className="text-xs text-verde-escuro/60">PNG, JPEG ou WebP até 4 MB</span>
             </>
           )}
         </button>
