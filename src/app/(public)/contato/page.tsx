@@ -2,8 +2,11 @@ import PublicImage from "@/components/PublicImage";
 import { pageMetadata } from "@/lib/seo";
 import { publicSection, cmsText } from "@/lib/cms-public";
 import { contatosDaMarca } from "@/data/marca";
-import { localizacoes } from "@/data/localizacoes";
-import { MapaBrasil } from "@/components/MapaBrasil";
+import { publicLocations } from "@/lib/locations";
+import Link from "next/link";
+import { LocationsPublic } from "@/components/LocationsPublic";
+
+export const dynamic = "force-dynamic";
 
 const canaisDeContato = [
   {
@@ -70,7 +73,10 @@ const horarioDeAtendimento = [
 ];
 
 const Contato = async () => {
-  const section = await publicSection("contato", "contatos");
+  const [section, locations] = await Promise.all([
+    publicSection("contato", "contatos"),
+    publicLocations(),
+  ]);
   const content = section?.content ?? {};
   const whatsapp = cmsText(content.whatsapp, contatosDaMarca.whatsapp).replace(/\D/g, "");
   const instagram = cmsText(content.instagram, contatosDaMarca.instagram).replace(/^@/, "");
@@ -147,11 +153,17 @@ const Contato = async () => {
               Presença por todo o <em className="text-verde-principal">Brasil</em>
             </h2>
             <p className="text-sm leading-relaxed font-light text-verde-muted">
-              Passe o mouse (ou toque) sobre os pontos para conhecer cada localização.
+              Conheça as sedes cadastradas e veja os detalhes na página exclusiva.
             </p>
           </div>
 
-          <MapaBrasil localizacoes={localizacoes} />
+          <LocationsPublic locations={locations} compact />
+          <Link
+            href="/mapa"
+            className="rounded-full border border-verde-principal px-5 py-2.5 text-sm font-medium text-verde-principal hover:bg-verde-claro"
+          >
+            Ver mapa completo
+          </Link>
         </div>
 
         {/* Info lateral */}
@@ -182,33 +194,12 @@ const Contato = async () => {
             </div>
           </div>
 
-          {/* Mapa */}
-          <a
-            href="https://maps.google.com/?q=Av.+Ulisses+Guimarães,+3132,+Iparana"
-            target="_blank"
-            rel="noreferrer"
-            className="block overflow-hidden rounded-2xl border border-white/10 bg-white/6 no-underline transition-colors hover:bg-white/10"
+          <Link
+            href="/mapa"
+            className="rounded-2xl border border-white/10 bg-white/6 p-5 text-center text-sm text-white hover:bg-white/10"
           >
-            <div className="flex h-32 flex-col items-center justify-center gap-2">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="rgba(255,255,255,0.5)"
-                strokeWidth="2"
-              >
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <p className="text-center text-sm leading-snug font-medium text-white/80">
-                Av. Ulisses Guimarães, 3132
-                <br />
-                <span className="text-xs font-light text-white/85">Iparana · Caucaia, CE</span>
-              </p>
-              <p className="text-xs font-light text-white/85">Clique para abrir no mapa</p>
-            </div>
-          </a>
+            Consultar endereços das sedes
+          </Link>
 
           {/* Horário */}
           <div className="rounded-2xl bg-white/6 px-5 py-4">

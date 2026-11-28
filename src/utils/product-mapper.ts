@@ -1,5 +1,6 @@
 import type { Product } from "@prisma/client";
 import type { Produto } from "@/data/produtos";
+import { safePurchaseUrl } from "@/lib/purchase-url";
 import { optimizeImageUrl } from "@/utils/cloudinary";
 
 const TIPO_POR_TYPE: Record<Product["type"], Produto["tipo"]> = {
@@ -21,6 +22,7 @@ function withoutEmpty(items: string[]) {
 export function toProduto(product: Product): Produto {
   return {
     id: product.id,
+    purchaseUrl: safePurchaseUrl(product.purchaseUrl),
     nomePrincipal: product.mainName,
     nomeComplemento: product.complementName ?? "",
     descricao: product.shortDescription,

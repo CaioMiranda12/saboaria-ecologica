@@ -4,6 +4,7 @@ import PublicImage from "@/components/PublicImage";
 import { useState, useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import CardProduto from "@/components/CardProduto";
+import { safePurchaseUrl } from "@/lib/purchase-url";
 import type { Produto } from "@/data/produtos";
 import { contatosDaMarca } from "@/data/marca";
 
@@ -25,6 +26,7 @@ const ProdutosCatalogo = ({ produtos }: Props) => {
   const [filtroAtivo, setFiltroAtivo] = useState<FiltroTipo>("todos");
   const [produtoSelecionado, setProdutoSelecionado] = useState<Produto | null>(null);
 
+  const purchaseUrl = safePurchaseUrl(produtoSelecionado?.purchaseUrl);
   const dialogRef = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -220,7 +222,17 @@ const ProdutosCatalogo = ({ produtos }: Props) => {
             </div>
 
             {/* Ações */}
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex flex-col flex-wrap gap-3 sm:flex-row">
+              {purchaseUrl && (
+                <a
+                  href={purchaseUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 rounded-full bg-verde-principal px-6 py-3 text-center text-sm font-medium text-white transition-colors hover:bg-verde-escuro"
+                >
+                  Comprar <span className="sr-only">(abre em nova aba)</span>
+                </a>
+              )}
               <a
                 href={`https://wa.me/${contatosDaMarca.whatsapp}?text=${mensagemWhatsApp(produtoSelecionado)}`}
                 target="_blank"

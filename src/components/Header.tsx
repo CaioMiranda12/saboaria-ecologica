@@ -11,6 +11,8 @@ const links = [
   ["/produtos", "Produtos"],
   ["/processo", "Processo"],
   ["/equipe", "Equipe"],
+  ["/mapa", "Mapa"],
+  ["/parcerias", "Parcerias"],
   ["/contato", "Contato"],
 ];
 
@@ -39,7 +41,7 @@ const Header = () => {
         </Link>
 
         {/* Desktop */}
-        <div className="hidden gap-4 lg:flex xl:gap-8">
+        <div className="hidden gap-4 xl:flex 2xl:gap-8">
           {links.map(([path, label]) => (
             <Link
               key={path}
@@ -54,7 +56,7 @@ const Header = () => {
 
         <Link
           href="/contato"
-          className="hidden rounded-full bg-verde-principal px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-verde-escuro lg:block"
+          className="hidden rounded-full bg-verde-principal px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-verde-escuro xl:block"
         >
           Fale conosco
         </Link>
@@ -62,7 +64,7 @@ const Header = () => {
         {/* Mobile toggle */}
         <button
           onClick={() => setMenuAberto((prev) => !prev)}
-          className="shrink-0 p-2.5 text-verde-principal lg:hidden"
+          className="shrink-0 p-2.5 text-verde-principal xl:hidden"
           ref={toggleRef}
           type="button"
           aria-expanded={menuAberto}
@@ -78,7 +80,7 @@ const Header = () => {
         <div
           id="menu-mobile"
           hidden={!menuAberto}
-          className={`${menuAberto ? "flex" : "hidden"} max-h-[calc(100dvh-72px)] flex-col gap-3 overflow-y-auto overscroll-contain border-t border-verde-medio/10 bg-creme px-4 pb-6 sm:px-6 lg:hidden`}
+          className={`${menuAberto ? "flex" : "hidden"} max-h-[calc(100dvh-72px)] flex-col gap-3 overflow-y-auto overscroll-contain border-t border-verde-medio/10 bg-creme px-4 pb-6 sm:px-6 xl:hidden`}
         >
           {links.map(([path, label]) => (
             <Link

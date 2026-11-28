@@ -1,6 +1,5 @@
-// MOCK: localizações da Saboaria Ecológica exibidas no mapa da página de contato.
-// Futuramente estes dados virão do banco e serão editáveis na área admin;
-// o formato abaixo já espelha o que um modelo `Location` precisaria ter.
+// Arquivo histórico de dados ilustrativos. Não é utilizado pelo mapa público.
+// As sedes reais são cadastradas em /admin/localizacoes e persistidas no banco.
 
 export type Localizacao = {
   id: string;

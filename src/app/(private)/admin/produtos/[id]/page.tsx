@@ -47,6 +47,7 @@ export default function EditProductPage({ params }: EditProductPageProps) {
           usageInstructions: product.usageInstructions ?? undefined,
           badge: product.badge ?? undefined,
           imageUrl: product.imageUrl ?? undefined,
+          purchaseUrl: product.purchaseUrl ?? undefined,
         }}
         onSubmit={handleSubmit}
         isSubmitting={updateProduct.isPending}

@@ -27,7 +27,8 @@ export async function GET(request: Request) {
         }
       : {}),
     ...(action && ["CREATE", "UPDATE", "DELETE"].includes(action) ? { action } : {}),
-    ...(resource && ["products", "team-members", "partnerships", "admins"].includes(resource)
+    ...(resource &&
+    ["products", "team-members", "partnerships", "admins", "locations"].includes(resource)
       ? { resource }
       : {}),
     ...(dateStart || dateEnd

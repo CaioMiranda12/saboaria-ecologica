@@ -86,6 +86,17 @@ export async function listCmsVersions(slug: CmsPageSlug) {
   });
 }
 
+/** Read-only snapshot, scoped to the requested CMS page. */
+export async function getCmsVersionPreview(slug: CmsPageSlug, versionId: string) {
+  const version = await prisma.cmsVersion.findFirst({
+    where: { id: versionId, page: { slug } },
+    select: { id: true, sections: true },
+  });
+  if (!version) return null;
+  const parsed = cmsPageUpdateSchema.safeParse({ sections: version.sections });
+  return parsed.success ? { id: version.id, sections: parsed.data.sections } : null;
+}
+
 export async function restoreCmsVersion(slug: CmsPageSlug, versionId: string, actor: CmsActor) {
   const version = await prisma.cmsVersion.findFirst({ where: { id: versionId, page: { slug } } });
   if (!version) throw new Error("Versão não encontrada");

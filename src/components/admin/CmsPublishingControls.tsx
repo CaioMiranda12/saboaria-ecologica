@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { CmsPageSlug } from "@/constants/cms-pages";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import CmsVersionPreview from "./CmsVersionPreview";
 
 type Version = {
   id: string;
@@ -83,7 +84,7 @@ export default function CmsPublishingControls({
     setPending({ kind: "restore", id });
   }
   async function execute() {
-    if (!pending || busy) return;
+    if (!pending || busy || dirty) return;
     const operation = pending;
     setBusy(true);
     setError("");
@@ -218,14 +219,10 @@ export default function CmsPublishingControls({
         </ul>
       </details>
       <ConfirmDialog
-        isOpen={pending !== null}
-        title={pending?.kind === "publish" ? "Publicar página?" : "Restaurar versão?"}
-        description={
-          pending?.kind === "publish"
-            ? "O conteúdo salvo ficará visível imediatamente no site público."
-            : "O conteúdo desta versão substituirá seu rascunho atual. O site público não será alterado até uma nova publicação."
-        }
-        confirmLabel={pending?.kind === "publish" ? "Sim, publicar" : "Restaurar rascunho"}
+        isOpen={pending?.kind === "publish"}
+        title="Publicar página?"
+        description="O conteúdo salvo ficará visível imediatamente no site público."
+        confirmLabel="Sim, publicar"
         isConfirming={busy}
         onCancel={() => {
           if (!busy) setPending(null);
@@ -234,6 +231,23 @@ export default function CmsPublishingControls({
           void execute();
         }}
       />
+      {pending?.kind === "restore" && (
+        <CmsVersionPreview
+          key={`${slug}:${pending.id}`}
+          slug={slug}
+          versionId={pending.id}
+          createdAt={versions.find((version) => version.id === pending.id)?.createdAt}
+          actorName={versions.find((version) => version.id === pending.id)?.actorName}
+          busy={busy}
+          dirty={dirty}
+          onCancel={() => {
+            if (!busy) setPending(null);
+          }}
+          onConfirm={() => {
+            void execute();
+          }}
+        />
+      )}
     </section>
   );
 }

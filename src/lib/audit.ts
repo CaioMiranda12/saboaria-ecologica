@@ -36,6 +36,7 @@ const SAFE_PRODUCT_FIELDS = [
   "isPublished",
   "displayOrder",
   "price",
+  "purchaseUrl",
 ] as const;
 export function productChanges(
   before: Record<string, unknown> | null,

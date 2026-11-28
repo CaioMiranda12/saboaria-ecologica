@@ -27,6 +27,7 @@ export function AdminTopbar({
     produtos: "Produtos",
     equipe: "Equipe",
     parcerias: "Parcerias",
+    localizacoes: "Sedes",
     usuarios: "Usuários",
     "minha-conta": "Minha conta",
     auditoria: "Auditoria",

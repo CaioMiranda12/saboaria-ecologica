@@ -19,6 +19,7 @@ const resources: Record<string, string> = {
   products: "Produtos",
   "team-members": "Equipe",
   partnerships: "Parcerias",
+  locations: "Sedes",
   admins: "Usuários",
 };
 const fields: Record<string, string> = {
@@ -29,6 +30,7 @@ const fields: Record<string, string> = {
   isPublished: "Publicado",
   displayOrder: "Ordem",
   price: "Preço",
+  purchaseUrl: "Link de compra",
 };
 const formatDate = (date: string) =>
   new Intl.DateTimeFormat("pt-BR", {

@@ -52,6 +52,7 @@ export function ProductForm({
       usageInstructions: defaultValues?.usageInstructions ?? "",
       badge: defaultValues?.badge ?? "",
       imageUrl: defaultValues?.imageUrl ?? "",
+      purchaseUrl: defaultValues?.purchaseUrl ?? "",
       isFeatured: defaultValues?.isFeatured ?? false,
       isPublished: defaultValues?.isPublished ?? true,
       displayOrder: defaultValues?.displayOrder ?? 0,
@@ -114,6 +115,20 @@ export function ProductForm({
       <FormField label="Modo de uso" error={errors.usageInstructions?.message}>
         <textarea {...register("usageInstructions")} rows={2} className={formInputClass} />
       </FormField>
+
+      <FormField label="Link de compra (opcional)" error={errors.purchaseUrl?.message}>
+        <input
+          {...register("purchaseUrl")}
+          type="url"
+          inputMode="url"
+          maxLength={2048}
+          placeholder="https://loja.exemplo.com/produto"
+          className={formInputClass}
+        />
+      </FormField>
+      <p className="-mt-4 text-xs text-verde-muted">
+        Preencha para exibir o botão Comprar no catálogo público. Deixe vazio para ocultá-lo.
+      </p>
 
       <FormField label="Imagem do produto">
         <Controller

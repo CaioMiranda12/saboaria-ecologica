@@ -32,7 +32,9 @@ it("habilita o sitemap apenas para o domínio definitivo autorizado", () => {
   vi.stubEnv("APP_URL", "https://example.com");
   vi.stubEnv("ALLOW_INDEXING", "true");
   vi.stubEnv("VERCEL_ENV", "production");
-  expect(sitemap()).toHaveLength(6);
+  expect(sitemap()).toHaveLength(8);
+  expect(sitemap().map((entry) => entry.url)).toContain("https://example.com/mapa");
+  expect(sitemap().map((entry) => entry.url)).toContain("https://example.com/parcerias");
   expect(robots().sitemap).toBe("https://example.com/sitemap.xml");
 });
 

@@ -14,6 +14,7 @@ export type Produto = {
   consultarFragrancias?: boolean;
   consultarTamanhos?: boolean;
   imagem?: string | null;
+  purchaseUrl?: string | null;
 };
 
 export const listaDeProdutos: Produto[] = [

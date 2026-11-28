@@ -476,7 +476,7 @@ const Sobre = async () => {
               {parcerias.length === 0 && (
                 <p className="text-sm text-verde-muted">Nenhuma parceria cadastrada no momento.</p>
               )}
-              {parcerias.map((parceiro) => (
+              {parcerias.slice(0, 6).map((parceiro) => (
                 <span
                   key={parceiro.id}
                   className="inline-flex items-center gap-2 rounded-xl border border-verde-principal/15 bg-creme px-4 py-2 text-xs font-medium text-verde-escuro"
@@ -498,6 +498,15 @@ const Sobre = async () => {
           </div>
         </div>
       </section>
+
+      <div className="bg-creme px-6 pb-12 text-center">
+        <Link
+          href="/parcerias"
+          className="inline-flex rounded-full border border-verde-principal px-5 py-2.5 text-sm font-medium text-verde-principal hover:bg-verde-claro"
+        >
+          Conhecer todas as parcerias
+        </Link>
+      </div>
 
       {/* CTA */}
       <section className="flex flex-col items-center bg-verde-principal px-6 py-16 text-center md:py-20 lg:px-20">

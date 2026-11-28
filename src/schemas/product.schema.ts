@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { safePurchaseUrl } from "@/lib/purchase-url";
 
 export const productTypeValues = ["BAR", "PASTE", "LIQUID", "POWDER", "SOAP"] as const;
 
@@ -31,6 +32,12 @@ export const productFormSchema = z.object({
   hasFragranceOptions: z.boolean().default(false),
   hasSizeOptions: z.boolean().default(false),
   imageUrl: z.string().refine(isValidImageUrl, "Informe uma URL válida").optional(),
+  purchaseUrl: z
+    .string()
+    .trim()
+    .max(2048, "Link muito longo")
+    .refine((value) => !value || safePurchaseUrl(value) !== null, "Informe um link HTTPS válido")
+    .optional(),
 });
 
 export type ProductFormValues = z.infer<typeof productFormSchema>;

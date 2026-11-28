@@ -1,135 +1,150 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { BRAZIL_MAP, lonLatToXY } from "@/data/brazil-map";
-import type { Localizacao } from "@/data/localizacoes";
+import { groupPoints, type LocationView } from "@/lib/location-map";
 
-type MapaBrasilProps = {
-  localizacoes: Localizacao[];
+type Props = {
+  localizacoes: LocationView[];
+  onSelect: (locations: LocationView[]) => void;
+  expanded?: boolean;
 };
 
-export function MapaBrasil({ localizacoes }: MapaBrasilProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [activeId, setActiveId] = useState<string | null>(null);
+export function MapaBrasil({ localizacoes, onSelect, expanded = false }: Props) {
+  const container = useRef<HTMLDivElement>(null);
+  const id = useId();
+  const [width, setWidth] = useState(280);
+  const [active, setActive] = useState<string | null>(null);
 
-  // Em telas touch, toque fora do mapa fecha o tooltip aberto
   useEffect(() => {
-    if (!activeId) return;
+    const node = container.current;
+    if (!node || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(([entry]) =>
+      setWidth(Math.max(1, entry.contentRect.width)),
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
-    function handlePointerDown(event: PointerEvent) {
-      if (!containerRef.current?.contains(event.target as Node)) setActiveId(null);
-    }
-
-    document.addEventListener("pointerdown", handlePointerDown);
-    return () => document.removeEventListener("pointerdown", handlePointerDown);
-  }, [activeId]);
+  const points = localizacoes.map((item) => ({
+    ...lonLatToXY(item.longitude, item.latitude),
+    item,
+  }));
+  const left = Math.min(-18, ...points.map((p) => p.x - 18));
+  const top = Math.min(-20, ...points.map((p) => p.y - 20));
+  const viewWidth = Math.max(488, ...points.map((p) => p.x + 18)) - left;
+  const viewHeight = Math.max(499, ...points.map((p) => p.y + 20)) - top;
+  const groups = groupPoints(points, (34 * viewWidth) / width);
+  const cardWidth = Math.max(1, Math.min(288, width - 16));
 
   return (
-    <div className="flex w-full flex-col items-center gap-4">
-      <div
-        ref={containerRef}
-        className="relative w-full max-w-md"
-        style={{ aspectRatio: `${BRAZIL_MAP.width} / ${BRAZIL_MAP.height}` }}
+    <div
+      ref={container}
+      className={`relative mx-auto w-full ${expanded ? "max-w-2xl" : "max-w-md"}`}
+    >
+      <svg
+        viewBox={`${left} ${top} ${viewWidth} ${viewHeight}`}
+        className="h-auto w-full"
+        role="img"
+        aria-label="Mapa do Brasil com as sedes cadastradas"
       >
-        <svg
-          viewBox={`0 0 ${BRAZIL_MAP.width} ${BRAZIL_MAP.height}`}
-          className="absolute inset-0 h-full w-full"
-          role="img"
-          aria-label="Mapa do Brasil com as localizações da Saboaria Ecológica"
-        >
-          <path
-            d={BRAZIL_MAP.path}
-            className="fill-verde-claro stroke-verde-principal/40"
-            strokeWidth={1}
-            strokeLinejoin="round"
-          />
-        </svg>
-
-        {localizacoes.map((local) => {
-          const { x, y } = lonLatToXY(local.longitude, local.latitude);
-          const left = (x / BRAZIL_MAP.width) * 100;
-          const top = (y / BRAZIL_MAP.height) * 100;
-          const isActive = activeId === local.id;
-
-          // O tooltip abre para o lado/direção com mais espaço livre
-          const openBelow = top < 35;
-          const horizontal =
-            left < 25 ? "left-0" : left > 75 ? "right-0" : "left-1/2 -translate-x-1/2";
-
-          return (
-            <div
-              key={local.id}
-              className={`absolute -translate-x-1/2 -translate-y-1/2 ${isActive ? "z-20" : "z-10"}`}
-              style={{ left: `${left}%`, top: `${top}%` }}
+        <path
+          d={BRAZIL_MAP.path}
+          className="fill-verde-claro stroke-verde-principal/40"
+          strokeWidth={1}
+          strokeLinejoin="round"
+        />
+      </svg>
+      {groups.map((group) => {
+        const first = group.items[0];
+        const key = first.id;
+        const multiple = group.items.length > 1;
+        const label = multiple ? `${group.items.length} sedes` : first.name;
+        const tooltipId = `${id}-${key}`;
+        const visible = active === key;
+        const x = (group.x - left) / viewWidth;
+        const y = (group.y - top) / viewHeight;
+        // Keep the card inside the horizontal bounds of the map, including coastal points.
+        const cardLeft = Math.max(8, Math.min(x * width - cardWidth / 2, width - cardWidth - 8));
+        return (
+          <div
+            key={key}
+            className={`absolute h-7 w-7 -translate-x-1/2 -translate-y-1/2 ${visible ? "z-20" : "z-0"}`}
+            style={{ left: `${x * 100}%`, top: `${y * 100}%` }}
+            onMouseEnter={() => setActive(key)}
+            onMouseLeave={() => setActive((current) => (current === key ? null : current))}
+          >
+            <button
+              type="button"
+              aria-label={label}
+              aria-describedby={visible ? tooltipId : undefined}
+              aria-haspopup="dialog"
+              onFocus={() => setActive(key)}
+              onBlur={() => setActive((current) => (current === key ? null : current))}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") setActive(null);
+              }}
+              onClick={() => {
+                setActive(null);
+                onSelect(group.items);
+              }}
+              className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-verde-principal text-xs font-bold text-white shadow transition-colors hover:bg-verde-escuro focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-verde-escuro"
             >
-              <button
-                type="button"
-                aria-label={`${local.cidade}, ${local.estado}`}
-                aria-describedby={isActive ? `mapa-tooltip-${local.id}` : undefined}
-                onPointerEnter={(event) => event.pointerType === "mouse" && setActiveId(local.id)}
-                onPointerLeave={(event) => event.pointerType === "mouse" && setActiveId(null)}
-                onFocus={() => setActiveId(local.id)}
-                onBlur={() => setActiveId(null)}
-                onClick={(event) => {
-                  // Mouse e teclado já são tratados por hover/foco; o clique é só para touch
-                  const type = (event.nativeEvent as PointerEvent).pointerType;
-                  if (type === "touch" || type === "pen") {
-                    setActiveId((current) => (current === local.id ? null : local.id));
-                  }
-                }}
-                className="relative flex h-6 w-6 items-center justify-center rounded-full focus-visible:ring-2 focus-visible:ring-verde-principal/50 focus-visible:outline-none"
+              {multiple ? group.items.length : "•"}
+            </button>
+            {visible && (
+              <div
+                className={`absolute ${y < 0.4 ? "top-full pt-2" : "bottom-full pb-2"}`}
+                style={{ left: cardLeft - x * width + 14, width: cardWidth }}
               >
-                {local.sede && (
-                  <span className="absolute h-6 w-6 animate-ping rounded-full bg-verde-principal/30" />
-                )}
-                <span
-                  className={`relative block rounded-full border-2 border-white bg-verde-principal shadow-md transition-transform duration-200 ${
-                    local.sede ? "h-4 w-4" : "h-3 w-3"
-                  } ${isActive ? "scale-125" : ""}`}
-                />
-              </button>
-
-              {isActive && (
                 <div
-                  id={`mapa-tooltip-${local.id}`}
+                  id={tooltipId}
                   role="tooltip"
-                  className={`pointer-events-none absolute w-60 rounded-2xl border border-verde-medio/15 bg-white p-4 text-left shadow-xl ${horizontal} ${
-                    openBelow ? "top-full mt-2" : "bottom-full mb-2"
-                  }`}
+                  className="rounded-xl border border-verde-principal/20 bg-white p-3 text-left text-verde-escuro shadow-lg"
                 >
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="font-serif text-base font-bold text-verde-escuro">
-                      {local.cidade}
-                      <span className="ml-1.5 text-xs font-normal text-verde-muted">
-                        {local.estado}
-                      </span>
-                    </p>
-                    {local.sede && (
-                      <span className="rounded-full bg-verde-claro px-2 py-0.5 text-[10px] font-medium tracking-wider text-verde-principal uppercase">
-                        Sede
-                      </span>
-                    )}
-                  </div>
-                  <p className="mt-1.5 text-xs leading-relaxed font-light text-verde-escuro/70">
-                    {local.descricao}
+                  {multiple ? (
+                    <>
+                      <p className="font-semibold text-verde-principal">{label} nesta região</p>
+                      {group.items.slice(0, 3).map((location) => (
+                        <div
+                          key={location.id}
+                          className="mt-2 border-t border-verde-principal/10 pt-2 text-xs"
+                        >
+                          <p className="line-clamp-1 font-medium">{location.name}</p>
+                          <p className="text-verde-muted">
+                            {location.city} – {location.state}
+                          </p>
+                        </div>
+                      ))}
+                      {group.items.length > 3 && (
+                        <p className="mt-2 text-xs">+ {group.items.length - 3} sedes</p>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <p className="line-clamp-2 font-semibold text-verde-principal">
+                        {first.name}
+                      </p>
+                      <p className="mt-1 text-xs font-medium">
+                        {first.city} – {first.state}
+                      </p>
+                      <p className="mt-1 line-clamp-2 text-xs text-verde-muted">{first.address}</p>
+                      {first.description && (
+                        <p className="mt-2 line-clamp-3 text-xs leading-relaxed">
+                          {first.description}
+                        </p>
+                      )}
+                    </>
+                  )}
+                  <p className="mt-2 text-xs font-medium text-verde-principal">
+                    Clique para ver os detalhes
                   </p>
                 </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="flex items-center gap-5 text-xs text-verde-muted">
-        <span className="flex items-center gap-2">
-          <span className="block h-3 w-3 rounded-full border-2 border-white bg-verde-principal shadow" />
-          Parceiros e pontos de apoio
-        </span>
-        <span className="flex items-center gap-2">
-          <span className="block h-4 w-4 rounded-full border-2 border-white bg-verde-principal shadow" />
-          Sede
-        </span>
-      </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

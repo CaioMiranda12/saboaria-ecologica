@@ -30,6 +30,18 @@ export const seoPages = [
     description: "Conheça a equipe da Saboaria Ecológica.",
   },
   {
+    path: "/mapa",
+    label: "Mapa",
+    title: "Onde estamos | Saboaria Ecológica",
+    description: "Conheça as localizações da Saboaria Ecológica.",
+  },
+  {
+    path: "/parcerias",
+    label: "Parcerias",
+    title: "Parcerias | Saboaria Ecológica",
+    description: "Conheça a rede de apoio da Saboaria Ecológica.",
+  },
+  {
     path: "/contato",
     label: "Contato",
     title: "Contato | Saboaria Ecológica",

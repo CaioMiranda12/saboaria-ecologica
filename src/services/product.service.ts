@@ -8,6 +8,7 @@ import {
   findPublicProducts,
   updateProduct,
 } from "@/repositories/product.repository";
+import { safePurchaseUrl } from "@/lib/purchase-url";
 import { createSlug } from "@/utils/slug";
 import type { ProductFormValues } from "@/schemas/product.schema";
 
@@ -67,6 +68,7 @@ function mapFormValuesToProductData(values: ProductFormValues) {
     hasFragranceOptions: values.hasFragranceOptions,
     hasSizeOptions: values.hasSizeOptions,
     imageUrl: values.imageUrl || null,
+    purchaseUrl: safePurchaseUrl(values.purchaseUrl),
   };
 }
 
