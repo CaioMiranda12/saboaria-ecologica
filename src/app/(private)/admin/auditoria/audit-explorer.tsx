@@ -20,6 +20,7 @@ const resources: Record<string, string> = {
   "team-members": "Equipe",
   partnerships: "Parcerias",
   locations: "Sedes",
+  media: "Biblioteca de mídia",
   admins: "Usuários",
 };
 const fields: Record<string, string> = {

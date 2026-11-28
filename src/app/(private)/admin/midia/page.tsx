@@ -1,10 +1,18 @@
 "use client";
 import { isAllowedMediaFile } from "@/constants/media";
+import Link from "next/link";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import type { MediaReference } from "@/lib/media-references";
 import PublicImage from "@/components/PublicImage";
 import { useEffect, useRef, useState, type DragEvent } from "react";
 import { Images, UploadCloud, Loader2, Check, Copy, ExternalLink } from "lucide-react";
 import type { MediaAsset } from "@/components/admin/MediaPicker";
 export default function MediaPage() {
+  const [canRemove, setCanRemove] = useState(false);
+  const [usages, setUsages] = useState<{ name: string; items: MediaReference[] } | null>(null);
+  const [pending, setPending] = useState<{ asset: MediaAsset; replace: boolean } | null>(null);
+  const replacementInput = useRef<HTMLInputElement>(null);
+  const replacementTarget = useRef<MediaAsset | null>(null);
   const [assets, setAssets] = useState<MediaAsset[]>([]);
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -22,7 +30,10 @@ export default function MediaPage() {
         return response.json();
       })
       .then((data) => {
-        if (!controller.signal.aborted) setAssets(data.assets);
+        if (!controller.signal.aborted) {
+          setAssets(data.assets);
+          setCanRemove(data.canRemove === true);
+        }
       })
       .catch((e) => {
         if (!controller.signal.aborted)
@@ -33,7 +44,7 @@ export default function MediaPage() {
       });
     return () => controller.abort();
   }, []);
-  async function upload(file?: File) {
+  async function upload(file?: File, replace?: MediaAsset) {
     if (!file) return;
     if (!isAllowedMediaFile(file)) {
       setError("Escolha uma imagem PNG, JPEG ou WebP de até 4 MB.");
@@ -51,12 +62,63 @@ export default function MediaPage() {
       const data = await response.json();
       if (!response.ok) throw Error(data.message || "Erro ao enviar imagem");
       setAssets((prev) => [data.asset, ...prev]);
-      setNotice("Imagem enviada com sucesso!");
+      if (replace) {
+        const removed = await removeAsset(replace);
+        if (removed) setNotice("Imagem substituída na biblioteca.");
+        else setNotice("Nova imagem enviada; a anterior foi preservada.");
+      } else setNotice("Imagem enviada com sucesso!");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Erro inesperado");
     } finally {
       setBusy(false);
       if (fileInput.current) fileInput.current.value = "";
+    }
+  }
+  async function inspect(asset: MediaAsset, operation: "view" | "remove" | "replace") {
+    setBusy(true);
+    setError("");
+    setNotice("");
+    setUsages(null);
+    try {
+      const response = await fetch(`/api/admin/media/${asset.id}`, { cache: "no-store" });
+      const data = await response.json();
+      if (!response.ok) throw Error(data.message || "Não foi possível verificar o uso.");
+      if (data.usages.length || operation === "view")
+        setUsages({ name: asset.filename, items: data.usages });
+      else setPending({ asset, replace: operation === "replace" });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Erro inesperado");
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function removeAsset(asset: MediaAsset) {
+    const response = await fetch(`/api/admin/media/${asset.id}`, { method: "DELETE" });
+    const data = await response.json();
+    if (!response.ok) {
+      if (response.status === 409) setUsages({ name: asset.filename, items: data.usages });
+      else setError(data.message || "Não foi possível remover a imagem.");
+      return false;
+    }
+    setAssets((prev) => prev.filter((item) => item.id !== asset.id));
+    return true;
+  }
+  async function confirmOperation() {
+    if (!pending) return;
+    const { asset, replace } = pending;
+    setPending(null);
+    if (replace) {
+      replacementTarget.current = asset;
+      replacementInput.current?.click();
+      return;
+    }
+    setBusy(true);
+    try {
+      if (await removeAsset(asset)) setNotice("Imagem removida da biblioteca.");
+    } catch {
+      setError("Não foi possível remover a imagem.");
+    } finally {
+      setBusy(false);
     }
   }
   async function saveAlt(id: string) {
@@ -85,6 +147,64 @@ export default function MediaPage() {
   }
   return (
     <div className="mx-auto max-w-6xl space-y-6">
+      <input
+        ref={replacementInput}
+        type="file"
+        accept="image/png,image/jpeg,image/webp"
+        className="sr-only"
+        aria-label="Selecionar imagem substituta"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          const target = replacementTarget.current;
+          replacementTarget.current = null;
+          e.target.value = "";
+          if (target && file) void upload(file, target);
+        }}
+      />
+      <ConfirmDialog
+        isOpen={pending !== null}
+        title={pending?.replace ? "Trocar imagem" : "Remover imagem"}
+        description={
+          pending?.replace
+            ? "Selecione um novo arquivo. A imagem anterior será removida da biblioteca somente se continuar sem uso; o arquivo original permanecerá no Cloudinary."
+            : "Esta imagem não possui referências cadastradas. Remover da biblioteca? O arquivo original permanecerá no Cloudinary."
+        }
+        confirmLabel={pending?.replace ? "Selecionar arquivo" : "Remover"}
+        onCancel={() => setPending(null)}
+        onConfirm={() => void confirmOperation()}
+      />
+      {usages && (
+        <section
+          role="status"
+          className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-verde-escuro"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="font-semibold">Uso da imagem: {usages.name}</h2>
+            <button onClick={() => setUsages(null)} className="rounded-lg border px-3 py-2">
+              Fechar
+            </button>
+          </div>
+          {usages.items.length ? (
+            <>
+              <p className="my-2">
+                Imagem em uso. Abra o local correspondente para trocar ou remover a referência.
+                Versões históricas são preservadas.
+              </p>
+              <ul className="space-y-2">
+                {usages.items.map((item, i) => (
+                  <li key={`${item.href}-${i}`}>
+                    <Link href={item.href} className="underline">
+                      {item.label} → Abrir no painel
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <p className="mt-2">Nenhuma referência cadastrada encontrada.</p>
+          )}
+        </section>
+      )}
       <div>
         <h1 className="flex items-center gap-3 font-serif text-3xl text-verde-escuro">
           <Images /> Biblioteca de mídia
@@ -223,6 +343,40 @@ export default function MediaPage() {
                   )}
                   <div className="flex flex-wrap gap-2">
                     <button
+                      disabled={busy}
+                      onClick={() => {
+                        void inspect(a, "view");
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                      className="rounded-lg border px-3 py-2 text-xs"
+                    >
+                      Onde é usada?
+                    </button>
+                    {canRemove && (
+                      <>
+                        <button
+                          disabled={busy}
+                          onClick={() => {
+                            void inspect(a, "replace");
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }}
+                          className="rounded-lg border px-3 py-2 text-xs"
+                        >
+                          Trocar imagem
+                        </button>
+                        <button
+                          disabled={busy}
+                          onClick={() => {
+                            void inspect(a, "remove");
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }}
+                          className="rounded-lg border border-red-200 px-3 py-2 text-xs text-red-700"
+                        >
+                          Remover
+                        </button>
+                      </>
+                    )}
+                    <button
                       onClick={() => {
                         setEditing(a.id);
                         setAlt(a.altText);
@@ -255,8 +409,8 @@ export default function MediaPage() {
         </div>
       )}
       <p className="text-xs text-verde-muted">
-        Para evitar imagens quebradas no site, a exclusão permanente de arquivos não está disponível
-        nesta versão.
+        A remoção retira a imagem da biblioteca, mas preserva o arquivo original no Cloudinary.
+        Imagens em uso ou no histórico não podem ser removidas.
       </p>
     </div>
   );
