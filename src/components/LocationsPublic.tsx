@@ -26,31 +26,41 @@ export function LocationsPublic({
     );
   return (
     <div className="w-full space-y-5">
-      <MapaBrasil localizacoes={locations} onSelect={open} expanded={!compact} />
-      <p className="text-sm text-verde-muted">
-        {compact
-          ? "Passe o mouse sobre um marcador para ver a prévia ou selecione-o para abrir os detalhes."
-          : "Passe o mouse sobre um marcador para ver a prévia. Selecione um marcador ou uma sede na lista para abrir os detalhes."}{" "}
-        Marcadores com números representam várias sedes próximas.
-      </p>
-      {!compact && (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {locations.map((l) => (
-            <button
-              type="button"
-              key={l.id}
-              onClick={() => open([l])}
-              className="rounded-xl border border-verde-principal/15 bg-white p-4 text-left hover:border-verde-principal focus-visible:outline-2"
-            >
-              <strong className="block text-verde-principal">{l.name}</strong>
-              <span className="block text-sm text-verde-muted">
-                {l.city} – {l.state}
-              </span>
-              <span className="mt-2 block text-sm">{l.address}</span>
-            </button>
-          ))}
+      <div
+        className={
+          compact
+            ? "space-y-5"
+            : "grid items-start gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]"
+        }
+      >
+        <div className="min-w-0 space-y-5">
+          <MapaBrasil localizacoes={locations} onSelect={open} expanded={!compact} />
+          <p className="text-sm text-verde-muted">
+            {compact
+              ? "Passe o mouse sobre um marcador para ver a prévia ou selecione-o para abrir os detalhes."
+              : "Passe o mouse sobre um marcador para ver a prévia. Selecione um marcador ou uma sede na lista para abrir os detalhes."}{" "}
+            Marcadores com números representam várias sedes próximas.
+          </p>
         </div>
-      )}
+        {!compact && (
+          <div className="grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-1">
+            {locations.map((l) => (
+              <button
+                type="button"
+                key={l.id}
+                onClick={() => open([l])}
+                className="rounded-xl border border-verde-principal/15 bg-white p-4 text-left hover:border-verde-principal focus-visible:outline-2"
+              >
+                <strong className="block text-verde-principal">{l.name}</strong>
+                <span className="block text-sm text-verde-muted">
+                  {l.city} – {l.state}
+                </span>
+                <span className="mt-2 block text-sm">{l.address}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
       <dialog
         ref={dialog}
         aria-labelledby={titleId}
